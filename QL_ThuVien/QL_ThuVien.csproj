@@ -1,0 +1,727 @@
+﻿<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3C84DEB1-8B4B-4AD9-9DC9-40CD15CD37E6}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>QL_ThuVien</RootNamespace>
+    <AssemblyName>QL_ThuVien</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <Use64BitIISExpress />
+    <IISExpressSSLPort>44394</IISExpressSSLPort>
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.6.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
+      <HintPath>..\packages\Portable.BouncyCastle.1.8.6\lib\net40\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=1.2.0.246, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.1.2.0\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Office.Interop.Excel.15.0.4795.1001\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.5.1.0\lib\net45\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI, Version=2.5.3.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.5.3\lib\net45\NPOI.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OOXML, Version=2.5.3.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.5.3\lib\net45\NPOI.OOXML.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXml4Net, Version=2.5.3.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.5.3\lib\net45\NPOI.OpenXml4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXmlFormats, Version=2.5.3.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.5.3\lib\net45\NPOI.OpenXmlFormats.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Data.Linq">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.9\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Http, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.9\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.9\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Web.Razor">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.7\lib\net45\System.Web.Webpages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages.Deployment">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.7\lib\net45\System.Web.Webpages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages.Razor">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.7\lib\net45\System.Web.Webpages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Helpers">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\CSS\CustomLayout.css" />
+    <Content Include="Assets\CSS\ErrorPage.css" />
+    <Content Include="Assets\CSS\Login.css" />
+    <Content Include="Assets\CSS\main.css" />
+    <Content Include="Assets\CSS\nucleo-icons.css" />
+    <Content Include="Assets\CSS\nucleo-svg.css" />
+    <Content Include="Assets\CSS\PreLoad.css" />
+    <Content Include="Assets\CSS\Reset.css" />
+    <Content Include="Assets\CSS\soft-ui-dashboard.css" />
+    <Content Include="Assets\CSS\soft-ui-dashboard.min.css" />
+    <Content Include="Assets\Fonts\nucleo-icons.svg" />
+    <Content Include="Assets\HinhAnhSP\000001.jpg" />
+    <Content Include="Assets\HinhAnhSP\000002.jpg" />
+    <Content Include="Assets\HinhAnhSP\000003.jpg" />
+    <Content Include="Assets\HinhAnhSP\000004.jpg" />
+    <Content Include="Assets\HinhAnhSP\000005.jpg" />
+    <Content Include="Assets\HinhAnhSP\000006.jpg" />
+    <Content Include="Assets\HinhAnhSP\000007.jpg" />
+    <Content Include="Assets\HinhAnhSP\000008.jpg" />
+    <Content Include="Assets\HinhAnhSP\000009.jpg" />
+    <Content Include="Assets\HinhAnhSP\000010.jpg" />
+    <Content Include="Assets\HinhAnhSP\000011.jpg" />
+    <Content Include="Assets\HinhAnhSP\000012.jpg" />
+    <Content Include="Assets\HinhAnhSP\000013.jpg" />
+    <Content Include="Assets\HinhAnhSP\000014.jpg" />
+    <Content Include="Assets\HinhAnhSP\000015.jpg" />
+    <Content Include="Assets\HinhAnhSP\000016.jpg" />
+    <Content Include="Assets\HinhAnhSP\000017.jpg" />
+    <Content Include="Assets\HinhAnhSP\000018.jpg" />
+    <Content Include="Assets\HinhAnhSP\000019.jpg" />
+    <Content Include="Assets\HinhAnhSP\000020.jpg" />
+    <Content Include="Assets\HinhAnhSP\000021.jpg" />
+    <Content Include="Assets\HinhAnhSP\000022.jpg" />
+    <Content Include="Assets\HinhAnhSP\000023.jpg" />
+    <Content Include="Assets\HinhAnhSP\000024.jpg" />
+    <Content Include="Assets\HinhAnhSP\000025.jpg" />
+    <Content Include="Assets\HinhAnhSP\000026.jpg" />
+    <Content Include="Assets\HinhAnhSP\000027.jpg" />
+    <Content Include="Assets\HinhAnhSP\000028.jpg" />
+    <Content Include="Assets\HinhAnhSP\000029.jpg" />
+    <Content Include="Assets\HinhAnhSP\000030.jpg" />
+    <Content Include="Assets\HinhAnhSP\000031.jpg" />
+    <Content Include="Assets\HinhAnhSP\000032.jpg" />
+    <Content Include="Assets\HinhAnhSP\000033.jpg" />
+    <Content Include="Assets\HinhAnhSP\000034.jpg" />
+    <Content Include="Assets\HinhAnhSP\000035.jpg" />
+    <Content Include="Assets\HinhAnhSP\000036.jpg" />
+    <Content Include="Assets\HinhAnhSP\000037.jpg" />
+    <Content Include="Assets\HinhAnhSP\000038.jpg" />
+    <Content Include="Assets\HinhAnhSP\000039.jpg" />
+    <Content Include="Assets\HinhAnhSP\000040.jpg" />
+    <Content Include="Assets\HinhAnhSP\000041.jpg" />
+    <Content Include="Assets\HinhAnhSP\000042.jpg" />
+    <Content Include="Assets\HinhAnhSP\000043.jpg" />
+    <Content Include="Assets\HinhAnhSP\000044.jpg" />
+    <Content Include="Assets\HinhAnhSP\000045.jpg" />
+    <Content Include="Assets\HinhAnhSP\000046.jpg" />
+    <Content Include="Assets\HinhAnhSP\000047.jpg" />
+    <Content Include="Assets\HinhAnhSP\000048.jpg" />
+    <Content Include="Assets\HinhAnhSP\000049.jpg" />
+    <Content Include="Assets\HinhAnhSP\000050.jpg" />
+    <Content Include="Assets\HinhAnhSP\000051.jpg" />
+    <Content Include="Assets\HinhAnhSP\000052.jpg" />
+    <Content Include="Assets\HinhAnhSP\000053.jpg" />
+    <Content Include="Assets\HinhAnhSP\000054.jpg" />
+    <Content Include="Assets\HinhAnhSP\000055.jpg" />
+    <Content Include="Assets\HinhAnhSP\000056.jpg" />
+    <Content Include="Assets\HinhAnhSP\000057.jpg" />
+    <Content Include="Assets\HinhAnhSP\000058.jpg" />
+    <Content Include="Assets\HinhAnhSP\000059.jpg" />
+    <Content Include="Assets\HinhAnhSP\000060.jpg" />
+    <Content Include="Assets\HinhAnhSP\000061.jpg" />
+    <Content Include="Assets\HinhAnhSP\000062.jpg" />
+    <Content Include="Assets\HinhAnhSP\000063.jpg" />
+    <Content Include="Assets\HinhAnhSP\000064.jpg" />
+    <Content Include="Assets\HinhAnhSP\a123.jpg" />
+    <Content Include="Assets\HinhAnhSP\aadasdsa.jpg" />
+    <Content Include="Assets\HinhAnhSP\asp.net-mvc.jpg" />
+    <Content Include="Assets\Img\apple-icon.png" />
+    <Content Include="Assets\Img\astronaut.svg" />
+    <Content Include="Assets\Img\bg1.jpg" />
+    <Content Include="Assets\Img\bg_purple.png" />
+    <Content Include="Assets\Img\bruce-mars.jpg" />
+    <Content Include="Assets\Img\curved-images\curved-10.jpg" />
+    <Content Include="Assets\Img\curved-images\curved-11.jpg" />
+    <Content Include="Assets\Img\curved-images\curved-6.jpg" />
+    <Content Include="Assets\Img\curved-images\curved-8.jpg" />
+    <Content Include="Assets\Img\curved-images\curved0.jpg" />
+    <Content Include="Assets\Img\curved-images\curved1.jpg" />
+    <Content Include="Assets\Img\curved-images\curved10.jpg" />
+    <Content Include="Assets\Img\curved-images\curved11-small.jpg" />
+    <Content Include="Assets\Img\curved-images\curved11.jpg" />
+    <Content Include="Assets\Img\curved-images\curved12.jpg" />
+    <Content Include="Assets\Img\curved-images\curved13.jpg" />
+    <Content Include="Assets\Img\curved-images\curved14.jpg" />
+    <Content Include="Assets\Img\curved-images\curved19.jpg" />
+    <Content Include="Assets\Img\curved-images\curved2.jpg" />
+    <Content Include="Assets\Img\curved-images\curved21.jpg" />
+    <Content Include="Assets\Img\curved-images\curved3.jpg" />
+    <Content Include="Assets\Img\curved-images\curved4.jpg" />
+    <Content Include="Assets\Img\curved-images\curved5-small.jpg" />
+    <Content Include="Assets\Img\curved-images\curved5.jpg" />
+    <Content Include="Assets\Img\curved-images\curved6-small.jpg" />
+    <Content Include="Assets\Img\curved-images\curved6.jpg" />
+    <Content Include="Assets\Img\curved-images\curved7.jpg" />
+    <Content Include="Assets\Img\curved-images\curved8.jpg" />
+    <Content Include="Assets\Img\curved-images\curved9.jpg" />
+    <Content Include="Assets\Img\curved-images\white-curved.jpg" />
+    <Content Include="Assets\Img\down-arrow-dark.svg" />
+    <Content Include="Assets\Img\down-arrow-white.svg" />
+    <Content Include="Assets\Img\down-arrow.svg" />
+    <Content Include="Assets\Img\earth.svg" />
+    <Content Include="Assets\Img\favicon.png" />
+    <Content Include="Assets\Img\home-decor-1.jpg" />
+    <Content Include="Assets\Img\home-decor-2.jpg" />
+    <Content Include="Assets\Img\home-decor-3.jpg" />
+    <Content Include="Assets\Img\IMG_8204_1.jpg" />
+    <Content Include="Assets\Img\ivana-square.jpg" />
+    <Content Include="Assets\Img\ivancik.jpg" />
+    <Content Include="Assets\Img\kal-visuals-square.jpg" />
+    <Content Include="Assets\Img\logo-ct-dark.png" />
+    <Content Include="Assets\Img\logo-ct.png" />
+    <Content Include="Assets\Img\Logo.png" />
+    <Content Include="Assets\Img\logos\mastercard.png" />
+    <Content Include="Assets\Img\logos\visa.png" />
+    <Content Include="Assets\Img\marie.jpg" />
+    <Content Include="Assets\Img\moon.svg" />
+    <Content Include="Assets\Img\overlay_stars.svg" />
+    <Content Include="Assets\Img\rocket.svg" />
+    <Content Include="Assets\Img\shapes\pattern-lines.svg" />
+    <Content Include="Assets\Img\shapes\shape-1.svg" />
+    <Content Include="Assets\Img\shapes\shape-2.svg" />
+    <Content Include="Assets\Img\shapes\shape-3.svg" />
+    <Content Include="Assets\Img\shapes\wave-down.svg" />
+    <Content Include="Assets\Img\shapes\wave-up.svg" />
+    <Content Include="Assets\Img\shapes\waves-gray.svg" />
+    <Content Include="Assets\Img\shapes\waves-white.svg" />
+    <Content Include="Assets\Img\small-logos\icon-sun-cloud.png" />
+    <Content Include="Assets\Img\small-logos\logo-atlassian.svg" />
+    <Content Include="Assets\Img\small-logos\logo-invision.svg" />
+    <Content Include="Assets\Img\small-logos\logo-jira.svg" />
+    <Content Include="Assets\Img\small-logos\logo-slack.svg" />
+    <Content Include="Assets\Img\small-logos\logo-spotify.svg" />
+    <Content Include="Assets\Img\small-logos\logo-webdev.svg" />
+    <Content Include="Assets\Img\small-logos\logo-xd.svg" />
+    <Content Include="Assets\Img\team-1.jpg" />
+    <Content Include="Assets\Img\team-2.jpg" />
+    <Content Include="Assets\Img\team-3.jpg" />
+    <Content Include="Assets\Img\team-4.jpg" />
+    <Content Include="Assets\Img\theme\angular.jpg" />
+    <Content Include="Assets\Img\theme\bootstrap.jpg" />
+    <Content Include="Assets\Img\theme\dribbble.png" />
+    <Content Include="Assets\Img\theme\dropbox.png" />
+    <Content Include="Assets\Img\theme\mastercard.png" />
+    <Content Include="Assets\Img\theme\paypal.png" />
+    <Content Include="Assets\Img\theme\react.jpg" />
+    <Content Include="Assets\Img\theme\sketch.jpg" />
+    <Content Include="Assets\Img\theme\slack.png" />
+    <Content Include="Assets\Img\theme\spotify.jpeg" />
+    <Content Include="Assets\Img\theme\tim.png" />
+    <Content Include="Assets\Img\theme\unass.jpg" />
+    <Content Include="Assets\Img\theme\visa.png" />
+    <Content Include="Assets\Img\theme\vue.jpg" />
+    <Content Include="Assets\Img\vr-bg.jpg" />
+    <Content Include="Assets\Scripts\core\bootstrap.bundle.min.js" />
+    <Content Include="Assets\Scripts\core\bootstrap.min.js" />
+    <Content Include="Assets\Scripts\core\popper.min.js" />
+    <Content Include="Assets\Scripts\DVNCustom.js" />
+    <Content Include="Assets\Scripts\ManagePerms.js" />
+    <Content Include="Assets\Scripts\ModalConf.js" />
+    <Content Include="Assets\Scripts\Preload.js" />
+    <Content Include="Assets\Scripts\plugins\bootstrap-notify.js" />
+    <Content Include="Assets\Scripts\plugins\Chart.extension.js" />
+    <Content Include="Assets\Scripts\plugins\chartjs.min.js" />
+    <Content Include="Assets\Scripts\plugins\perfect-scrollbar.min.js" />
+    <Content Include="Assets\Scripts\plugins\smooth-scrollbar.min.js" />
+    <Content Include="Assets\Scripts\soft-ui-dashboard.js" />
+    <Content Include="Assets\Scripts\soft-ui-dashboard.min.js" />
+    <Content Include="Content\PagedList.css" />
+    <Content Include="Global.asax" />
+    <Content Include="Assets\CSS\soft-ui-dashboard.css.map" />
+    <Content Include="Assets\Fonts\nucleo-icons.eot" />
+    <Content Include="Assets\Fonts\nucleo-icons.ttf" />
+    <Content Include="Assets\Fonts\nucleo-icons.woff" />
+    <Content Include="Assets\Fonts\nucleo-icons.woff2" />
+    <Content Include="Assets\Fonts\nucleo.eot" />
+    <Content Include="Assets\Fonts\nucleo.ttf" />
+    <Content Include="Assets\Fonts\nucleo.woff" />
+    <Content Include="Assets\Fonts\nucleo.woff2" />
+    <Content Include="Assets\Scripts\soft-ui-dashboard.js.map" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\bootstrap-grid.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\bootstrap-reboot.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\bootstrap-utilities.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\bootstrap.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\forms\_floating-labels.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\forms\_form-check.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\forms\_form-control.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\forms\_form-range.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\forms\_form-select.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\forms\_form-text.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\forms\_input-group.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\forms\_labels.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\forms\_validation.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\helpers\_clearfix.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\helpers\_color-bg.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\helpers\_colored-links.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\helpers\_position.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\helpers\_ratio.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\helpers\_stacks.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\helpers\_stretched-link.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\helpers\_text-truncation.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\helpers\_visually-hidden.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\helpers\_vr.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\mixins\_alert.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\mixins\_backdrop.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\mixins\_border-radius.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\mixins\_box-shadow.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\mixins\_breakpoints.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\mixins\_buttons.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\mixins\_caret.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\mixins\_clearfix.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\mixins\_color-scheme.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\mixins\_container.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\mixins\_deprecate.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\mixins\_forms.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\mixins\_gradients.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\mixins\_grid.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\mixins\_image.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\mixins\_list-group.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\mixins\_lists.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\mixins\_pagination.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\mixins\_reset-text.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\mixins\_resize.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\mixins\_table-variants.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\mixins\_text-truncate.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\mixins\_transition.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\mixins\_utilities.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\mixins\_visually-hidden.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\utilities\_api.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\vendor\_rfs.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\_accordion.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\_alert.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\_badge.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\_breadcrumb.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\_button-group.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\_buttons.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\_card.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\_carousel.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\_close.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\_containers.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\_dropdown.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\_forms.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\_functions.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\_grid.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\_helpers.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\_images.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\_list-group.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\_maps.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\_mixins.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\_modal.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\_nav.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\_navbar.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\_offcanvas.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\_pagination.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\_placeholders.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\_popover.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\_progress.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\_reboot.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\_root.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\_spinners.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\_tables.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\_toasts.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\_tooltip.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\_transitions.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\_type.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\_utilities.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\bootstrap\_variables.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\cards\card-background.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\custom\_styles.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\custom\_variables.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\forms\_form-check.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\forms\_form-select.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\forms\_form-switch.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\forms\_forms.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\forms\_input-group.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\forms\_inputs.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\forms\_labels.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\mixins\mixins.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\mixins\_badge.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\mixins\_colored-shadows.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\mixins\_hover.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\mixins\_social-buttons.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\plugins\free\plugins.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\plugins\free\_flatpickr.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\plugins\free\_nouislider.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\plugins\free\_perfect-scrollbar.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\plugins\free\_prism.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\theme.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\variables\_animations.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\variables\_avatars.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\variables\_badge.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\variables\_breadcrumb.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\variables\_cards-extend.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\variables\_cards.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\variables\_choices.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\variables\_dark-version.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\variables\_dropdowns.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\variables\_fixed-plugin.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\variables\_form-switch.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\variables\_full-calendar.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\variables\_header.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\variables\_info-areas.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\variables\_misc-extend.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\variables\_misc.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\variables\_navbar-vertical.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\variables\_navbar.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\variables\_pagination.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\variables\_rtl.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\variables\_social-buttons.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\variables\_table.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\variables\_timeline.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\variables\_utilities-extend.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\variables\_utilities.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\variables\_virtual-reality.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\_alert.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\_avatars.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\_badge.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\_breadcrumbs.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\_buttons.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\_cards.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\_dark-version.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\_dropdown.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\_dropup.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\_fixed-plugin.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\_footer.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\_forms.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\_gradients.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\_header.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\_info-areas.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\_misc.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\_nav.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\_navbar-vertical.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\_navbar.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\_pagination.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\_popovers.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\_progress.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\_rtl.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\_social-buttons.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\_tables.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\_tilt.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\_timeline.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\_tooltips.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\_typography.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\_utilities-extend.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\_utilities.scss" />
+    <Content Include="Assets\SCSS\soft-ui-dashboard\_variables.scss" />
+    <Content Include="Assets\Scripts\Login.js" />
+    <Content Include="Views\Shared\EmailTemplates\MailTemplate1.htm" />
+    <Content Include="Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Shared\_MainLayout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\FilterAtributes\AuthorizeRoleAttribute.cs" />
+    <Compile Include="App_Start\FilterAtributes\TrackLoginFilter.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
+    <Compile Include="Areas\Admin\Controllers\CPController.cs" />
+    <Compile Include="Areas\Admin\Controllers\CP_V2Controller.cs" />
+    <Compile Include="Areas\UserPage\Controllers\FormRegistrationController.cs" />
+    <Compile Include="Areas\UserPage\Controllers\GioSachController.cs" />
+    <Compile Include="Areas\UserPage\UserPageAreaRegistration.cs" />
+    <Compile Include="Containers\ServicesContainer.cs" />
+    <Compile Include="Controllers\AuthController.cs" />
+    <Compile Include="Controllers\BookController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
+    <Compile Include="Controllers\LibCardController.cs" />
+    <Compile Include="Controllers\NotificationController.cs" />
+    <Compile Include="Controllers\RegistrationQueueController.cs" />
+    <Compile Include="Controllers\RoomController.cs" />
+    <Compile Include="Controllers\ProvinceAPIController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ChiTietMuonPhong.cs" />
+    <Compile Include="Models\ChuDe.cs" />
+    <Compile Include="Models\GioSach.cs" />
+    <Compile Include="Models\NguoiSuDung.cs" />
+    <Compile Include="Models\NhanVien.cs" />
+    <Compile Include="Models\NhaXuatBan.cs" />
+    <Compile Include="Models\Perms.cs" />
+    <Compile Include="Models\PhieuMuon.cs" />
+    <Compile Include="Models\QLTV.cs">
+      <DependentUpon>QLTV.dbml</DependentUpon>
+    </Compile>
+    <Compile Include="Models\QLTV.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>QLTV.dbml</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sach.cs" />
+    <Compile Include="Models\TaiKhoanV2.cs" />
+    <Compile Include="Models\TaiKhoan.cs" />
+    <Compile Include="Models\TaiKhoanNguoiDung.cs" />
+    <Compile Include="Models\TestUser.cs" />
+    <Compile Include="Models\TheThuVien.cs" />
+    <Compile Include="Models\TheThuVienV2.cs" />
+    <Compile Include="Models\ThongBao.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\web.config" />
+    <Content Include="NLog.config" />
+    <Content Include="Areas\Admin\Views\web.config" />
+    <Content Include="Areas\Admin\Views\CP\Index.cshtml" />
+    <Content Include="Models\QLTV.dbml">
+      <Generator>MSLinqToSQLGenerator</Generator>
+      <LastGenOutput>QLTV.designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Areas\Admin\Views\CP\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\CP\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\CP\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\AdminNavbar.cshtml" />
+    <Content Include="Areas\Admin\Views\CP\CreateNV.cshtml" />
+    <Content Include="Areas\UserPage\Views\web.config" />
+    <Content Include="Areas\UserPage\Views\Shared\_MainLayout.cshtml" />
+    <Content Include="Areas\UserPage\Views\Shared\Navbar.cshtml" />
+    <Content Include="Areas\UserPage\Views\Shared\SideNav.cshtml" />
+    <Content Include="Areas\UserPage\Views\FormRegistration\BorrowBook.cshtml" />
+    <Content Include="Areas\UserPage\Views\FormRegistration\LibCard.cshtml" />
+    <Content Include="Areas\UserPage\Views\FormRegistration\BorrowRoom.cshtml" />
+    <Content Include="Areas\UserPage\Views\Shared\Footer.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\Footer.cshtml" />
+    <Content Include="Areas\Admin\Views\CP_V2\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\CP_V2\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\CP_V2\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\CP_V2\Edit.cshtml" />
+    <Content Include="Areas\UserPage\Views\GioSach\GioSachPartial.cshtml" />
+    <Content Include="Areas\UserPage\Views\GioSach\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\CP_V2\ManagePermissions.cshtml" />
+    <Content Include="Logs\2022-11-30-api.log" />
+    <Content Include="Logs\2022-12-01-api.log" />
+    <Content Include="Logs\2022-12-02-api.log" />
+    <Content Include="Logs\2022-12-04-api.log" />
+    <Content Include="Logs\2022-12-05-api.log" />
+    <Content Include="Logs\2022-12-09-api.log" />
+    <Content Include="Logs\2022-12-11-api.log" />
+    <Content Include="Logs\2022-12-12-api.log" />
+    <Content Include="Logs\2022-12-13-api.log" />
+    <Content Include="Logs\2022-12-15-api.log" />
+    <Content Include="Logs\2022-12-17-api.log" />
+    <Content Include="Logs\2022-12-18-api.log" />
+    <Content Include="Logs\2022-12-19-api.log" />
+    <Content Include="Logs\2022-12-20-api.log" />
+    <Content Include="Logs\2022-12-21-api.log" />
+    <Content Include="Logs\2022-12-22-api.log" />
+    <Content Include="Logs\2022-12-23-api.log" />
+    <Content Include="Logs\2022-12-26-api.log" />
+    <Content Include="Logs\2022-12-27-api.log" />
+    <Content Include="Logs\2022-12-28-api.log" />
+    <Content Include="Logs\2022-12-29-api.log" />
+    <Content Include="Logs\2022-12-30-api.log" />
+    <Content Include="Logs\2022-12-31-api.log" />
+    <Content Include="Logs\2023-01-01-api.log" />
+    <Content Include="Logs\2023-01-02-api.log" />
+    <Content Include="Logs\2023-01-03-api.log" />
+    <Content Include="Logs\2023-01-04-api.log" />
+    <Content Include="Logs\2023-01-05-api.log" />
+    <Content Include="Logs\2023-01-06-api.log" />
+    <Content Include="Logs\2023-01-08-api.log" />
+    <Content Include="Logs\2023-01-09-api.log" />
+    <Content Include="Logs\2023-01-10-api.log" />
+    <Content Include="Logs\2023-01-11-api.log" />
+    <None Include="Models\QLTV.dbml.layout">
+      <DependentUpon>QLTV.dbml</DependentUpon>
+    </None>
+    <None Include="packages.config" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Shared\SideNav.cshtml" />
+    <Content Include="Views\Shared\Plugin.cshtml" />
+    <Content Include="Views\Shared\Navbar.cshtml" />
+    <Content Include="Views\Home\TestMail.cshtml" />
+    <Content Include="Views\Auth\Index.cshtml" />
+    <Content Include="Views\Error\Index.cshtml" />
+    <Content Include="Views\Book\Index.cshtml" />
+    <Content Include="Views\Book\BorrowBook.cshtml" />
+    <Content Include="Views\Book\SendBackBook.cshtml" />
+    <Content Include="Views\Room\EmptyRoom.cshtml" />
+    <Content Include="Views\Room\LendRoom.cshtml" />
+    <Content Include="Views\Home\LibaryStats.cshtml" />
+    <Content Include="Views\Home\InventoryLibary.cshtml" />
+    <Content Include="Views\Home\HandleViolation.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\_AdminLayout.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\AdminSideNav.cshtml" />
+    <Content Include="Views\Book\Create.cshtml" />
+    <Content Include="Views\Home\AddHandleViolation.cshtml" />
+    <Content Include="Views\Book\Edit.cshtml" />
+    <Content Include="Views\Room\Index.cshtml" />
+    <Content Include="Views\Home\BookLookUp.cshtml" />
+    <Content Include="Views\Notification\Create.cshtml" />
+    <Content Include="Views\Notification\Counter.cshtml" />
+    <Content Include="Views\Notification\Index.cshtml" />
+    <Content Include="Views\Notification\Edit.cshtml" />
+    <Content Include="Views\Book\BoostrapTableTest.cshtml" />
+    <Content Include="Views\Shared\Footer.cshtml" />
+    <Content Include="Views\RegistrationQueue\LibCard.cshtml" />
+    <Content Include="Views\RegistrationQueue\BorrowBook.cshtml" />
+    <Content Include="Views\RegistrationQueue\BorrowRoom.cshtml" />
+    <Content Include="Views\LibCard\Create.cshtml" />
+    <Content Include="Views\LibCard\Edit.cshtml" />
+    <Content Include="Views\LibCard\Index.cshtml" />
+    <Content Include="Views\Auth\CaptchaPartial.cshtml" />
+    <Content Include="Views\Book\CreateFromFile.cshtml" />
+    <Content Include="Views\Book\ExportFromFile.cshtml" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Areas\Admin\Data\" />
+    <Folder Include="Areas\UserPage\Data\" />
+    <Folder Include="excelfolder\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\QL_ThuVien.Intergrate\QL_ThuVien.Intergrate.csproj">
+      <Project>{e076c928-75c0-4a78-92a4-a026c5883af5}</Project>
+      <Name>QL_ThuVien.Intergrate</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>55359</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>https://localhost:44394/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

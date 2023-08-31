@@ -1,0 +1,24 @@
+﻿@model QL_ThuVien.Intergrate.Models.SMail
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+
+}
+<h2>Index</h2>
+<fieldset>
+    <legend>
+        Send Email
+    </legend>
+    @using (Html.BeginForm())
+    {
+        @Html.ValidationSummary()
+        <p>To: </p>
+        <p>@Html.TextBoxFor(m => m.To)</p>
+        <p>Subject: </p>
+        <p>@Html.TextBoxFor(m => m.Subject)</p>
+        <p>Body: </p>
+        <p>@Html.TextAreaFor(m => m.Body)</p>
+        <input type="submit" value="Send" />
+    }
+</fieldset>
+

@@ -1,0 +1,101 @@
+﻿@{
+    ViewBag.Title = "AddHandleViolation";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+<div class="test">
+    <div class="header ml-0">
+        <h2 class="position-relative" style="color: #440ccb ">PHIẾU NHẬP VI PHẠM</h2>
+        <hr class="bg-dark"></hr>
+    </div>
+</div>
+<div class="container">
+    <form action="/action_page.php">
+        <div class="row">
+            <div class="col-25">
+                <label for="fname">Họ Và Tên <span style="color: red">(*)</span>:</label>
+            </div>
+            <div class="col-75">
+                <input class="form-control" type="text" id="fname" name="firstname" placeholder="Họ và tên..">
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <input type="submit" value="Submit">
+        </div>
+    </form>
+
+    <style>
+        .test {
+            max-width: max-content;
+            padding: 20px;
+            display: block;
+        }
+
+        .header {
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        input[type=text], select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+        }
+
+        label {
+            padding: 12px 12px 12px 0;
+            display: inline-block;
+        }
+
+        input[type=submit] {
+            background-color: #440ccb;
+            color: white;
+            margin: auto;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            float: right;
+            max-width: 250px;
+        }
+
+        .container {
+            border-radius: 5px;
+            background-color: #f2f2f2;
+            padding: 20px;
+        }
+
+        .col-25 {
+            float: left;
+            width: 25%;
+            margin-top: 6px;
+        }
+
+        .col-75 {
+            float: left;
+            width: 75%;
+            margin-top: 6px;
+        }
+
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+    </style>
+    <script>
+        var win = navigator.platform.indexOf('Win') > -1;
+        if (win && document.querySelector('#sidenav-scrollbar')) {
+            var options = {
+                damping: '0.5'
+            }
+            Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+        }
+    </script>

@@ -1,0 +1,10 @@
+diff a/QL_ThuVien/Controllers/HomeController.cs b/QL_ThuVien/Controllers/HomeController.cs	(rejected hunks)
+@@ -12,7 +12,7 @@
+         // GET: Home
+         public ActionResult Index()
+         {
+-            var A = new Class1();
++            var A = new Class1(); 
+             return View();
+         }
+     }

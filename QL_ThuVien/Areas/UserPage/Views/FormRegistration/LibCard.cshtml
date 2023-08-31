@@ -1,0 +1,353 @@
+﻿@{
+    ViewBag.Title = "Phiếu đăng ký cấp thẻ thư viện";
+    Layout = "~/Areas/UserPage/Views/Shared/_MainLayout.cshtml";
+}
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
+          rel="stylesheet" />
+    <link href="https://provinces.open-api.vn/api/?depth=3"
+          rel="stylesheet" />
+
+</head>
+<div class="test">
+    <div class="header ml-0">
+        <h2 class="position-relative" style="color: #440ccb ">PHIẾU ĐĂNG KÝ CẤP THẺ THƯ VIỆN</h2>
+        <hr class="bg-dark"></hr>
+    </div>
+</div>
+<div class="container">
+    <form action="/action_page.php" autocomplete="on">
+        <div class="row">
+            <div class="col-2">
+                <label for="fname">Họ Và Tên <span style="color: red">(*)</span>:</label>
+            </div>
+            <div class="col-75">
+                <input class="form-control" type="text" id="fname"  placeholder="Họ và tên..">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                <label for="lname">Số CMND <span style="color: red">(*)</span>:</label>
+            </div>
+            <div class="col-75">
+                <input class="form-control" type="text" id="lname" name="lastname" placeholder="Số chứng minh nhân dân..">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                <label for="fname">Số Điện Thoại <span style="color: red">(*)</span>:</label>
+            </div>
+            <div class="col-75">
+                <input class="form-control" type="text" id="fname"  placeholder="Số điện thoại..">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                <label for="fname">Email <span style="color: red">(*)</span>:</label>
+            </div>
+            <div class="col-75">
+                <input class="form-control" type="text" id="fname"  placeholder="Email..">
+            </div>
+        </div>
+        <div class="d-flex">
+            <div class="row align-items-baseline">
+                <div class="col-25">
+                    <label for="fname">Tỉnh/Thành <span style="color: red">(*)</span>:</label>
+                </div>
+                <div class="col-50">
+                    <input style="margin-left: 104px;" class="form-control form-control-province" type="text" id="input"  placeholder="Tỉnh/Thành..">
+                </div>
+            </div>
+            <ul class="list" id="scroll"></ul>
+            <div class="row align-items-baseline">
+                <div class="col-25">
+                    <label for="fname">Quận/Huyện <span style="color: red">(*)</span>:</label>
+                </div>
+                <div class="col-50">
+                    <input class="form-control form-control-ward" type="text" id="input1"  placeholder="Quận/Huyện..">
+                </div>
+            </div>
+            <ul class="list " id="scroll"></ul>
+            <div class="row align-items-baseline">
+                <div class="col-25">
+                    <label for="fname">Phường/Xã <span style="color: red">(*)</span>:</label>
+                </div>
+                <div class="col-38">
+                    <input class="form-control form-control-district" type="text" id="input2"  placeholder="Phường/Xã..">
+                </div>
+            </div>
+            <ul class="list" id="scroll"></ul>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                <label for="fname">Địa chỉ cụ thể <span style="color: red">(*)</span>:</label>
+            </div>
+            <div class="col-75">
+                <input class="form-control" type="text" id="fname"  placeholder="Địa chỉ cụ thể..">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                <label for="fname">Ngày/Tháng/Năm sinh <span style="color: red">(*)</span>:</label>
+            </div>
+            <div class="col-75">
+                <input class="form-control" type="date" id="fname"  placeholder="Ngày tháng năm sinh..">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                <label for="subject">Ảnh Thẻ <span style="color: red">(*)</span>:</label>
+            </div>
+            <div class="col-75">
+                <input class="form-control" type="file" id="fname" name="firstname">
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <input type="submit" value="Submit">
+        </div>
+    </form>
+
+    <style>
+            .test {
+                max-width: max-content;
+                padding: 20px;
+                display: block;
+            }
+
+            .header {
+                text-align: center;
+                justify-content: center;
+                align-items: center;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            input[type=text], select, textarea {
+                width: 100%;
+                padding: 12px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                resize: vertical;
+            }
+
+            label {
+                padding: 12px 12px 12px 0;
+                display: inline-block;
+            }
+
+            input[type=submit] {
+            background-color: #440ccb;
+            color: white;
+            margin: auto;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            float: right;
+            max-width: 250px;
+        }
+
+            .container {
+                border-radius: 5px;
+                background-color: #f2f2f2;
+                padding: 20px;
+            }
+
+            .col-25 {
+                float: left;
+                width: 20%;
+                margin-top: 6px;
+            }
+        .col-38 {
+            float: left;
+            width: 172px;
+            margin-top: 6px;
+        }
+            .col-50 {
+                float: left;
+                width: 50%;
+                margin-top: 6px;
+            }
+            .col-75 {
+                float: left;
+                width: 75%;
+                margin-top: 6px;
+            }
+
+            .row:after {
+                content: "";
+                display: table;
+                clear: both;
+            }
+
+            ul {
+                list-style: none;
+            }
+
+            .list {
+                width: 100%;
+                background-color: #ffffff;
+                border-radius: 0 0 5px 5px;
+                position: absolute;
+            }
+
+            .list-items {
+                padding: 10px 5px;
+            }
+
+                .list-items:hover {
+                    background-color: #dddddd;
+                }
+
+            .form-control-province {
+                margin-left: 2rem;
+                margin-right: 1rem;
+                width: 210px !important;
+            }
+
+            .form-control-ward {
+                margin-left: 10px;
+                margin-right: 10px;
+                width: 210px !important;
+            }
+
+            .form-control-district {
+                margin-left: 10px;
+                margin-right: 3px;
+                width: 205px !important;
+            }
+    </style>
+    <script>
+        var win = navigator.platform.indexOf('Win') > -1;
+        if (win && document.querySelector('#sidenav-scrollbar')) {
+            var options = {
+                damping: '0.5'
+            }
+            Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+        }
+    </script>
+    <script>
+        let names = []
+        let namesDistricts = []
+        let namesWards = []
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "https://provinces.open-api.vn/api/?depth=3", true);
+        xhr.onload = function (e) {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    response.forEach(item => names.push(item))
+                } else {
+                    console.error(xhr.statusText);
+                }
+            }
+        };
+        xhr.onerror = function (e) {
+            console.error(xhr.statusText);
+        };
+        xhr.send(null);
+        //Sort names in ascending order
+        //reference
+        let input = document.getElementById("input");
+        let input1 = document.getElementById("input1");
+        let input2 = document.getElementById("input2");
+        //Execute function on keyup
+        input.addEventListener("keyup", (e) => {
+            removeElements();
+            for (let i of names) {
+                if (
+                    i.name.toLowerCase().startsWith(input.value.toLowerCase()) &&
+                    input.value != ""
+                ) {
+                    //create li element
+                    let listItem = document.createElement("li");
+                    //One common class name
+                    listItem.classList.add("list-items");
+                    listItem.style.cursor = "pointer";
+                    listItem.setAttribute("onclick", "displayNames('" + i.name + "')");
+                    //Display matched part in bold
+                    let word = "<b>" + i.name.substr(0, input.value.length) + "</b>";
+                    word += i.name.substr(input.value.length);
+                    //display the value in array
+                    listItem.innerHTML = word;
+                    document.querySelector(".list").appendChild(listItem);
+                    namesDistricts.push(i.districts)
+                }
+            }
+        });
+        input1.addEventListener("keyup", (e) => {
+            removeElements();
+            for (let item of namesDistricts) {
+                for (let i of item) {
+                    console.log(i.name)
+                    if (
+                        i.name.toLowerCase().startsWith(input1.value.toLowerCase()) &&
+                        input1.value != ""
+                    ) {
+                        //create li element
+                        let listItem = document.createElement("li");
+                        //One common class name
+                        listItem.classList.add("list-items");
+                        listItem.style.cursor = "pointer";
+                        listItem.setAttribute("onclick", "displayNames1('" + i.name + "')");
+                        //Display matched part in bold
+                        let word = "<b>" + i.name.substr(0, input1.value.length) + "</b>";
+                        word += i.name.substr(input1.value.length);
+                        //display the value in array
+                        listItem.innerHTML = word;
+                        document.querySelector(".list").appendChild(listItem);
+                        namesWards.push(i.wards)
+                    }
+                }
+
+            }
+        });
+        input2.addEventListener("keyup", (e) => {
+            removeElements();
+            for (let item of namesWards) {
+                for (let i of item) {
+                    console.log(i.name)
+                    if (
+                        i.name.toLowerCase().startsWith(input2.value.toLowerCase()) &&
+                        input2.value != ""
+                    ) {
+                        //create li element
+                        let listItem = document.createElement("li");
+                        //One common class name
+                        listItem.classList.add("list-items");
+                        listItem.style.cursor = "pointer";
+                        listItem.setAttribute("onclick", "displayNames2('" + i.name + "')");
+                        //Display matched part in bold
+                        let word = "<b>" + i.name.substr(0, input2.value.length) + "</b>";
+                        word += i.name.substr(input2.value.length);
+                        //display the value in array
+                        listItem.innerHTML = word;
+                        document.querySelector(".list").appendChild(listItem);
+                    }
+                }
+            }
+        });
+        function displayNames(value) {
+            input.value = value;
+            removeElements();
+        }
+        function displayNames1(value) {
+            input1.value = value;
+            removeElements();
+        }
+        function displayNames2(value) {
+            input2.value = value;
+            removeElements();
+            const element = document.getElementsByClassName("list");
+            element.scrollTop;
+        }
+        function removeElements() {
+            let items = document.querySelectorAll(".list-items");
+            items.forEach((item) => {
+                item.remove();
+            });
+        }
+    </script>

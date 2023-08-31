@@ -1,0 +1,21 @@
+﻿@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700');
+/* Reset CSS */
+* {
+    padding: 0;
+    margin: 0;
+    border: none;
+    font-family: Calibri, sans-serif;
+    /*font-family: Open Sans;*/
+}
+
+:root {
+    --beforeFooter: 100%;
+    --left-right-wd: 15%;
+}
+
+html {
+    scroll-behavior: smooth !important;
+    -webkit-font-smoothing: antialiased;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+}

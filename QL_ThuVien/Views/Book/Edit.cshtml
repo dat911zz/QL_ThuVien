@@ -1,0 +1,177 @@
+﻿@model QL_ThuVien.Models.SACH
+@{
+    ViewBag.Title = "Sửa sách";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+    string errs = "";
+}
+
+<div class="test">
+    <div class="header ml-0">
+        <h2 class="position-relative" style="color: #cb0c9f ">CHỈNH SỬA THÔNG TIN SÁCH</h2>
+        <hr class="bg-dark" />
+    </div>
+</div>
+
+<div class="container">
+    @using (Html.BeginForm("Edit", "Book", FormMethod.Post, new { @id = "frmBookAction", enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.MASACH)
+        <div class="form-horizontal">
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="row">
+                <div class="col-25">
+                    <label for="fname">Mã nhà xuất bản <span style="color: red">(*)</span>:</label>
+                </div>
+                <div class="col-75">
+                    @Html.DropDownList("MANXB", Session["NXBSelectList"] as SelectList, "-Vui lòng chọn Nhà xuất bản-", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                    <label for="fname">Mã chủ đề <span style="color: red">(*)</span>:</label>
+                </div>
+                <div class="col-75">
+                    @Html.DropDownList("MACHUDE", Session["CDSelectList"] as SelectList, "-Vui lòng chọn Chủ đề-", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                    <label for="lname">Tên sách <span style="color: red">(*)</span>:</label>
+                </div>
+                <div class="col-75">
+                    @Html.EditorFor(model => model.TENSACH, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.TENSACH, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                    <label for="lname">Mô tả <span style="color: red">(*)</span>:</label>
+                </div>
+                <div class="col-75">
+                    @Html.EditorFor(model => model.MOTA, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.MOTA, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                    <label for="lname">Năm xuất bản <span style="color: red">(*)</span>:</label>
+                </div>
+                <div class="col-75">
+                    @*@Html.EditorFor(model => model.NAMXUATBAN, new { htmlAttributes = new { type = "date", @class = "form-control" } })*@
+                    <input class="form-control" type="date" id="NAMXUATBAN" name="NAMXUATBAN" value="@Model.NAMXUATBAN.Value.ToString("yyyy-MM-dd")" />
+                    @Html.ValidationMessageFor(model => model.NAMXUATBAN, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-25">
+                    <label for="lname">Giá sách <span style="color: red">(*)</span>:</label>
+                </div>
+                <div class="col-75">
+                    @Html.EditorFor(model => model.GIASACH, new { htmlAttributes = new {@class = "form-control", @min = 0, @max = "1000000000" } })
+                    @Html.ValidationMessageFor(model => model.GIASACH, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                    <label for="lname">Ảnh bìa <span style="color: red">(*)</span>:</label>
+                </div>
+                <div class="col-75">
+                    <input type="file" accept="image/*" name="uploadImg" class="form-control" value="" />
+                </div>
+            </div>
+            <div class="row" style="margin-top: 20px;">
+                <input value="Sửa" onclick="SubmitConfrim()" class="btn btn-primary" />
+            </div>
+        </div>
+    }
+    <div>
+        @Html.ActionLink("Trở về trang trước", "Index")
+    </div>
+</div>
+<style>
+    .test {
+        max-width: max-content;
+        padding: 20px;
+        display: block;
+    }
+
+    .header {
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    input[type=text], select, textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        resize: vertical;
+    }
+
+    label {
+        padding: 12px 12px 12px 0;
+        display: inline-block;
+        font-size: 16px;
+    }
+
+    input[type=submit] {
+        background-color: #cb0c9f;
+        color: white;
+        margin: auto;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        float: right;
+        max-width: 250px;
+    }
+
+    .container {
+        border-radius: 5px;
+        background-color: #f2f2f2;
+        padding: 20px;
+    }
+
+    .col-25 {
+        float: left;
+        width: 25%;
+        margin-top: 6px;
+    }
+
+    .col-75 {
+        float: left;
+        width: 75%;
+        margin-top: 6px;
+    }
+
+    .row:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+</style>
+<script type="text/javascript">
+    var SubmitConfrim = () => {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Cảnh Báo!',
+            html: '<div>Bạn có muốn thực hiện hành động này?</div>',
+            showCancelButton: true,
+            confirmButtonText: 'Sửa',
+            cancelButtonText: 'Hủy'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('#frmBookAction').submit()
+            }
+        })
+    };
+</script>
+<script src="~/Assets/Scripts/DVNCustom.js"></script>

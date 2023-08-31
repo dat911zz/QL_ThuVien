@@ -1,0 +1,52 @@
+﻿@model IEnumerable<QL_ThuVien.Models.THONGBAO>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+    bool isValidUser = QL_ThuVien.Intergrate.Services.Helper.SecurityHelper.HasPermission(HttpContext.Current);
+}
+
+<h2>THÔNG BÁO HIỆN CÓ</h2>
+<table class="table">
+    <tr>
+        <th>
+            Thời gian tạo
+        </th>
+        <th>
+            Tiêu đề
+        </th>
+        <th>
+            Nội dung
+        </th>
+        @if (isValidUser)
+        {
+            <th>
+                Thao tác
+            </th>
+        }
+    </tr>
+
+@foreach (var item in Model) {
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.THOIGIAN)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.TIEUDE)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.NOIDUNG)
+    </td>
+    @if (isValidUser)
+    {
+        <td class="text-center">
+            <a class="btn btn-secondary btn-edit m-l-0 px-075" href="/Notification/Edit/@item.MATHONGBAO">
+                <span><img src="https://img.icons8.com/plasticine/25/null/pencil.png" /></span>
+                Sửa
+            </a>
+            <a class="btn btn-danger px-075" onclick="DVNConfirm('Xóa', 'Thông báo', '/Notification/Delete', @item.MATHONGBAO);"><span><img src="https://img.icons8.com/carbon-copy/26/null/delete-forever--v1.png" /></span> Xóa</a>
+        </td>
+    }
+</tr>
+}
+
+</table>

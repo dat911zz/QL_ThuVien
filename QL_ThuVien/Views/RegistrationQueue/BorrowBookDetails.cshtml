@@ -1,0 +1,223 @@
+﻿@model QL_ThuVien.Models.PHIEUMUON
+@{
+    ViewBag.Title = "Chi tiết phiếu mượn";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+<style>
+    .dataTables_filter > label, .dataTables_length > label {
+        font-size: 1rem;
+    }
+
+    table {
+        border-collapse: collapse;
+        table-layout: fixed;
+        width: 310px;
+    }
+
+    .table th {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .table td, .table th {
+        white-space: normal !important;
+    }
+
+    .short-tent {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 5;
+        -webkit-box-orient: vertical;
+        word-break: break-word;
+        min-height: 3em;
+    }
+
+    a.btn.btn-secondary.btn-edit.m-l-0.px-075, a.btn.btn-danger.px-075 {
+        padding-left: 0.75rem !important;
+    }
+
+    table.dataTable thead > tr > th {
+        text-align: center;
+        background-color: #333333;
+        color: #ffffff;
+    }
+</style>
+<div>
+    <div class="test">
+        <div class="header ml-0">
+            <h2 class="position-relative" style="color: #440ccb ">CHI TIẾT PHIẾU MƯỢN</h2>
+            <hr class="bg-dark"></hr>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <span style="font-weight: bold">
+                    Mã phiếu mượn:
+                </span>
+                <span>
+                    @Html.DisplayFor(model => model.MAPHIEUMUON)
+                </span>
+            </div>
+            <div class="col">
+                <span style="font-weight: bold">
+                    Mã thẻ thư viện:
+                </span>
+                <span>
+                    @Html.DisplayFor(model => model.THETHUVIEN.MATTV)
+                </span>
+            </div>
+            <div class="col">
+                <span style="font-weight: bold">
+                    Họ tên:
+                </span>
+                <span>
+                    @Html.DisplayFor(model => model.THETHUVIEN.HOTEN)
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<div class="test">
+    <div class="header ml-0">
+        <h2 class="position-relative" style="color: #440ccb ">CHI TIẾT MƯỢN SÁCH</h2>
+        <hr class="bg-dark"></hr>
+    </div>
+</div>
+<div class="container">
+    <div class="table">
+        <table class="table table-striped" id="table_id" width="100%" cellspacing="0">
+            <colgroup>
+                <col style="width: 15%;">
+                <col style="width: 8%;">
+                <col style="width: 15%;">
+                <col style="width: 8%;">
+                <col style="width: 8%;">
+                <col style="width: auto;">
+                <col style="width: auto;">
+                <col style="width: 10%;">
+            </colgroup>
+            <thead>
+                <tr class="text-center">
+                    <th>Ảnh bìa</th>
+                    <th>Mã bản sao</th>
+                    <th>Tên sách</th>
+                    <th>Nhà xuất bản</th>
+                    <th>Chủ đề</th>
+                    <th>Năm xuất bản</th>
+                    <th>Giá sách</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.CHITIETMUONSACHes)
+                {
+                    <tr>
+                        <td><img src="~/Assets/HinhAnhSP/@item.BANSAOSACH.SACH.ANHBIA" style="height: 10rem; width: 100%" alt="ANHBIA_@item.BANSAOSACH.SACH.ANHBIA" /></td>
+                        <td class="text-center">@item.MABANSAO</td>
+                        <td class="text-center">@item.BANSAOSACH.SACH.TENSACH</td>
+                        <td class="text-center">@item.BANSAOSACH.SACH.NHAXUATBAN</td>
+                        <td class="text-center">@item.BANSAOSACH.SACH.CHUDE</td>
+                        <td class="text-center">@item.BANSAOSACH.SACH.NAMXUATBAN</td>
+                        <td class="text-center">@(item.BANSAOSACH.SACH.GIASACH?.ToString("#,###.##đ", new System.Globalization.CultureInfo("en-US", false).NumberFormat))</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="6" style="font-weight: bold">Tổng tiền thế chân:</td>
+                    <td>@(Model.CHITIETMUONSACHes.Sum(x => x.BANSAOSACH.SACH.GIASACH)?.ToString("#,###.##đ", new System.Globalization.CultureInfo("en-US", false).NumberFormat))</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+<p>
+    <a class="btn btn-success px-075"
+       onclick="DVNConfirm('Duyệt', 'phiếu mượn', '/RegistrationQueue/ApproveBorrowBook', @Model.MAPHIEUMUON)">
+        <span><img src="https://img.icons8.com/ios/24/null/pass.png" /></span> DUYỆT
+    </a>
+</p>
+<style>
+    .test {
+        max-width: max-content;
+        display: block;
+    }
+
+    label {
+        padding: 12px 12px 12px 0;
+        display: inline-block;
+    }
+
+    input[type=submit] {
+        background-color: #440CCB;
+        color: white;
+        margin: auto;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        float: right;
+        max-width: 250px;
+    }
+
+    .container {
+        border-radius: 5px;
+        background-color: #f2f2f2;
+        padding: 20px;
+    }
+
+    .col-25 {
+        float: left;
+        width: 20%;
+        margin-top: 6px;
+    }
+
+    .col-75 {
+        float: left;
+        width: 75%;
+        margin-top: 6px;
+    }
+
+    .row:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $('#table_id').DataTable().destroy();
+        $('#table_id').DataTable({
+            pageResize: false,
+            scrollY: 500,
+            scrollX: true,
+            lengthMenu: [
+                [5, 10, 25, 50, -1],
+                [5, 10, 25, 50, 'Tất cả'],
+            ],
+            language: {
+                "lengthMenu": "Hiện _MENU_ trường",
+                "zeroRecords": "Không tìm thấy dữ liệu!",
+                "info": "_PAGE_ / _PAGES_",
+                "infoEmpty": "Không có dữ liệu!",
+                "infoFiltered": "(Lọc dữ liệu từ _MAX_ bản ghi)",
+                "paginate": {
+                    "first": "<<",
+                    "last": ">>",
+                    "next": ">",
+                    "previous": "<"
+                },
+                "loadingRecords": "Đang tải...",
+                "processing": "",
+                "search": "Tìm kiếm:",
+            },
+            displayLength: 5,
+            dom: "<'toolbar'><'row'<'col-sm-5'l><'col-sm-7 t_filter'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-4'i><'col-sm-6'p>>",
+            fnInitComplete: function () {
+                /*$('div.toolbar').html('Custom tool bar!')   */
+            }
+        });
+    });
+</script>

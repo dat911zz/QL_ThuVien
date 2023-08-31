@@ -1,0 +1,324 @@
+﻿@model QL_ThuVien.Models.NHANVIEN
+
+@{
+    ViewBag.Title = "Thêm nhân viên";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Thêm nhân viên</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            <div class="control-label col-md-2">
+                <label>Họ tên <span style="color: red">(*)</span>:</label>
+            </div>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.HOTEN, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HOTEN, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="control-label col-md-2">
+                <label>Ngày sinh <span style="color: red">(*)</span>:</label>
+            </div>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.NGAYSINH, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
+                @Html.ValidationMessageFor(model => model.NGAYSINH, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="control-label col-md-2">
+                <label>Số điện thoại <span style="color: red">(*)</span>:</label>
+            </div>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.SODIENTHOAI, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SODIENTHOAI, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row  d-inline-flex  align-items-baseline">
+                <div class="col-2">
+                    <label for="fname">Tỉnh/Thành <span style="color: red">(*)</span>:</label>
+                </div>
+                <div class="col-4">
+                    <input class="form-control form-control-province" type="text" id="province" name="province" placeholder="Tỉnh/Thành..">
+                </div>
+            </div>
+            <ul class="list" id="scroll"></ul>
+            <div class="row d-inline-flex  align-items-baseline">
+                <div class="col-2">
+                    <label for="fname">Quận/Huyện <span style="color: red">(*)</span>:</label>
+                </div>
+                <div class="col-4">
+                    <input class="form-control form-control-district" type="text" id="district" name="district" placeholder="Quận/Huyện..">
+                </div>
+            </div>
+            <ul class="list " id="scroll"></ul>
+            <div class="row d-inline-flex  align-items-baseline">
+                <div class="col-2">
+                    <label for="fname">Phường/Xã <span style="color: red">(*)</span>:</label>
+                </div>
+                <div class="col-4">
+                    <input class="form-control form-control-ward" type="text" id="ward" name="ward" placeholder="Phường/Xã..">
+                </div>
+            </div>
+            <ul class="list" id="scroll"></ul>
+        </div>
+        <div class="form-group">
+            <div class="control-label col-md-2">
+                <label for="fname">Địa chỉ cụ thể <span style="color: red">(*)</span>:</label>
+            </div>
+            <div class="col-md-10">
+                <input class="form-control" type="text" id="fname" name="address" placeholder="Địa chỉ cụ thể..">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="control-label col-md-2">
+                <label>Email <span style="color: red">(*)</span>:</label>
+            </div>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.EMAIL, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.EMAIL, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Tạo" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+<style>
+    .test {
+        max-width: max-content;
+        padding: 20px;
+        display: block;
+    }
+
+    .header {
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    input[type=text], select, textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        resize: vertical;
+    }
+
+    label {
+        padding: 12px 12px 12px 0;
+        display: inline-block;
+    }
+
+    /*input[type=submit] {
+        background-color: #440ccb;
+        color: white;
+        margin: auto;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        float: right;
+        max-width: 250px;
+    }*/
+
+    .container {
+        border-radius: 5px;
+        background-color: #f2f2f2;
+        padding: 20px;
+    }
+
+    .col-25 {
+        float: left;
+        width: 20%;
+        margin-top: 6px;
+    }
+
+    .col-75 {
+        float: left;
+        width: 75%;
+        margin-top: 6px;
+    }
+
+    .row:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    ul {
+        list-style: none;
+    }
+
+    .list {
+        width: 100%;
+        background-color: #ffffff;
+        border-radius: 0 0 5px 5px;
+        position: absolute;
+    }
+
+    .list-items {
+        padding: 10px 5px;
+    }
+
+        .list-items:hover {
+            background-color: #dddddd;
+        }
+
+    .form-control-province {
+        margin-left: 2rem;
+        margin-right: 1rem;
+        width: 210px !important;
+    }
+
+    .form-control-ward {
+        margin-left: 10px;
+        margin-right: 10px;
+        width: 210px !important;
+    }
+
+    .form-control-district {
+        margin-left: 10px;
+        margin-right: 3px;
+        width: 205px !important;
+    }
+</style>
+
+<script>
+    let names = []
+    let namesDistricts = []
+    let namesWards = []
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "https://provinces.open-api.vn/api/?depth=3", true);
+    xhr.onload = function (e) {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                var response = JSON.parse(xhr.responseText);
+                response.forEach(item => names.push(item))
+            } else {
+                console.error(xhr.statusText);
+            }
+        }
+    };
+    xhr.onerror = function (e) {
+        console.error(xhr.statusText);
+    };
+    xhr.send(null);
+    //Sort names in ascending order
+    //reference
+    let input = document.getElementById("province");
+    let input1 = document.getElementById("district");
+    let input2 = document.getElementById("ward");
+    //Execute function on keyup
+    input.addEventListener("keyup", (e) => {
+        removeElements();
+        for (let i of names) {
+            if (
+                i.name.toLowerCase().startsWith(input.value.toLowerCase()) &&
+                input.value != ""
+            ) {
+                //create li element
+                let listItem = document.createElement("li");
+                //One common class name
+                listItem.classList.add("list-items");
+                listItem.style.cursor = "pointer";
+                listItem.setAttribute("onclick", "displayNames('" + i.name + "')");
+                //Display matched part in bold
+                let word = "<b>" + i.name.substr(0, input.value.length) + "</b>";
+                word += i.name.substr(input.value.length);
+                //display the value in array
+                listItem.innerHTML = word;
+                document.querySelector(".list").appendChild(listItem);
+                namesDistricts.push(i.districts)
+            }
+        }
+    });
+    input1.addEventListener("keyup", (e) => {
+        removeElements();
+        for (let item of namesDistricts) {
+            for (let i of item) {
+                console.log(i.name)
+                if (
+                    i.name.toLowerCase().startsWith(input1.value.toLowerCase()) &&
+                    input1.value != ""
+                ) {
+                    //create li element
+                    let listItem = document.createElement("li");
+                    //One common class name
+                    listItem.classList.add("list-items");
+                    listItem.style.cursor = "pointer";
+                    listItem.setAttribute("onclick", "displayNames1('" + i.name + "')");
+                    //Display matched part in bold
+                    let word = "<b>" + i.name.substr(0, input1.value.length) + "</b>";
+                    word += i.name.substr(input1.value.length);
+                    //display the value in array
+                    listItem.innerHTML = word;
+                    document.querySelector(".list").appendChild(listItem);
+                    namesWards.push(i.wards)
+                }
+            }
+
+        }
+    });
+    input2.addEventListener("keyup", (e) => {
+        removeElements();
+        for (let item of namesWards) {
+            for (let i of item) {
+                console.log(i.name)
+                if (
+                    i.name.toLowerCase().startsWith(input2.value.toLowerCase()) &&
+                    input2.value != ""
+                ) {
+                    //create li element
+                    let listItem = document.createElement("li");
+                    //One common class name
+                    listItem.classList.add("list-items");
+                    listItem.style.cursor = "pointer";
+                    listItem.setAttribute("onclick", "displayNames2('" + i.name + "')");
+                    //Display matched part in bold
+                    let word = "<b>" + i.name.substr(0, input2.value.length) + "</b>";
+                    word += i.name.substr(input2.value.length);
+                    //display the value in array
+                    listItem.innerHTML = word;
+                    document.querySelector(".list").appendChild(listItem);
+                }
+            }
+        }
+    });
+    function displayNames(value) {
+        input.value = value;
+        removeElements();
+    }
+    function displayNames1(value) {
+        input1.value = value;
+        removeElements();
+    }
+    function displayNames2(value) {
+        input2.value = value;
+        removeElements();
+        const element = document.getElementsByClassName("list");
+        element.scrollTop;
+    }
+    function removeElements() {
+        let items = document.querySelectorAll(".list-items");
+        items.forEach((item) => {
+            item.remove();
+        });
+    }   
+</script>

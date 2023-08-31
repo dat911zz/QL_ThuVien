@@ -1,0 +1,128 @@
+﻿@model IEnumerable<QL_ThuVien.Models.TheThuVienV2>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+    int count = 1;
+}
+
+
+<style>
+    .dataTables_filter > label, .dataTables_length > label {
+        font-size: 1rem;
+    }
+
+    table.dataTable {
+        /*table-layout: fixed;*/
+    }
+
+    .short-tent {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 5;
+        -webkit-box-orient: vertical;
+        word-break: break-word;
+        min-height: 3em;
+    }
+
+    table.dataTable thead > tr > th {
+        text-align: center;
+        background-color: #333333;
+        color: #ffffff;
+    }
+</style>
+<body>
+    <div class="test">
+        <div class="header ml-0">
+            <h2 class="position-relative" style="color: #440ccb ">DANH SÁCH THẺ THƯ VIỆN</h2>
+            <hr class="bg-dark">
+        </div>
+    </div>
+    <div style="float: right; margin-bottom: 10px;">
+        <a href="@Url.Action("Create","LibCard")" class="btn btn-info m-1">+ Thêm thẻ thư viện</a>
+    </div>
+    <div class="container">
+        <div class="table">
+            <table class="table table-striped" id="table_id" width="100%" cellspacing="0">
+                <colgroup>
+                    <col style="width: 3%;">
+                    <col style="width: 15%;">
+                    <col style="width: 15%;">
+                    <col style="width: 15%;">
+                </colgroup>
+                <thead>
+                    <tr class="text-center">
+                        <th>STT</th>
+                        <th>Họ tên</th>
+                        <th>Số điện thoại</th>
+                        <th>Email</th>
+                        <th>Ngày cấp </th>
+                        <th>Ngày hết hạn</th>
+                        <th class="text-center">Công Cụ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@(count++)</td>
+                            <td class="text-center">@item.HoTen</td>
+                            <td class="text-center">@item.SoDienThoai</td>
+                            <td class="text-center">@item.Email</td>
+                            <td class="text-center">@item.NgayCap</td>
+                            <td class="text-center">@item.NgayHetHan</td>
+                            <td class="text-center">
+                                <a class="btn btn-secondary btn-edit m-l-0 px-075" href="@Url.Action("Edit","LibCard")"><span><img src="https://img.icons8.com/windows/23/null/pencil.png" /></span>Sửa</a>
+                                <a class="btn btn-danger btn-edit m-l-0 px-075" onclick="DVNConfirm('Xóa', 'Thẻ thư viện', '/LibCard/Delete', @item.MaTTV)">
+                                    <span><img src="https://img.icons8.com/plasticine/30/null/waste.png" />Xóa</span>
+                                </a>
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+</body>
+
+<script>
+    $(document).ready(function () {
+        $('#table_id').DataTable().destroy();
+        $('#table_id').DataTable({
+            pageResize: false,
+            scrollY: 500,
+            scrollX: true,
+            lengthMenu: [
+                [5, 10, 25, 50, -1],
+                [5, 10, 25, 50, 'Tất cả'],
+            ],
+            language: {
+                "lengthMenu": "Hiện _MENU_ trường",
+                "zeroRecords": "Không tìm thấy dữ liệu!",
+                "info": "_PAGE_ / _PAGES_",
+                "infoEmpty": "Không có dữ liệu!",
+                "infoFiltered": "(Lọc dữ liệu từ _MAX_ bản ghi)",
+                "paginate": {
+                    "first": "<<",
+                    "last": ">>",
+                    "next": ">",
+                    "previous": "<"
+                },
+                "loadingRecords": "Đang tải...",
+                "processing": "",
+                "search": "Tìm kiếm:",
+            },
+            displayLength: 5,
+            dom: "<'toolbar'><'row'<'col-sm-5'l><'col-sm-7 t_filter'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-4'i><'col-sm-6'p>>",
+            fnInitComplete: function () {
+                /*$('div.toolbar').html('Custom tool bar!')   */
+            }
+        });
+    });
+</script>
+
+
+

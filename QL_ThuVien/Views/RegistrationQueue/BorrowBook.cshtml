@@ -1,0 +1,108 @@
+﻿@model IEnumerable<QL_ThuVien.Models.PhieuMuon>
+@{
+    ViewBag.Title = "BorrowBook";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+
+<style>
+    .dataTables_filter > label, .dataTables_length > label {
+        font-size: 1rem;
+    }
+
+    table.dataTable {
+        /*table-layout: fixed;*/
+    }
+
+    .short-tent {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 5;
+        -webkit-box-orient: vertical;
+        word-break: break-word;
+        min-height: 3em;
+    }
+
+    table.dataTable thead > tr > th {
+        text-align: center;
+        background-color: #333333;
+        color: #ffffff;
+    }
+</style>
+<div class="container">
+    <div class="table">
+        <table class="table table-striped" id="table_id" width="100%" cellspacing="0">
+            <colgroup>
+                <col style="width: 3%;">
+                <col style="width: auto;">
+                <col style="width: auto;">
+                <col style="width: 20%;">
+            </colgroup>
+            <thead>
+                <tr class="text-center">
+                    <th>Mã phiếu mượn</th>
+                    <th>Tên người sử dụng</th>
+                    <th>Thời gian mượn</th>
+                    <th>Thời gian trả</th>
+                    <th class="text-center">Công Cụ</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="text-center">@item.MaPhieuMuon</td>
+                        <td class="text-center">@Html.Action("GetUserName", new { id = item.MaNSD })</td>
+                        <td class="text-center">@item.NgayMuon</td>
+                        <td class="text-center">@item.NgayTra</td>
+                        <td class="text-center">
+                            <a href="/RegistrationQueue/BorrowBookDetails?id=@item.MaPhieuMuon" class="btn btn-primary px-075" style="background-color: #84bcff; color: #fff;"><i class="bi bi-card-list" style="color:#000; padding-right: 5px; font-size: 20px;"></i><span style="font-size: 12px; vertical-align: super;">CHI TIẾT</span></a>
+                            <a class="btn btn-success px-075 text-dark"
+                               onclick="DVNConfirm('Duyệt', 'phiếu mượn', '/RegistrationQueue/ApproveBorrowBook', @item.MaPhieuMuon)">
+                                <span><img src="https://img.icons8.com/ios/24/null/pass.png" /></span> DUYỆT
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#table_id').DataTable().destroy();
+        $('#table_id').DataTable({
+            pageResize: false,
+            scrollY: 500,
+            scrollX: true,
+            lengthMenu: [
+                [5, 10, 25, 50, -1],
+                [5, 10, 25, 50, 'Tất cả'],
+            ],
+            language: {
+                "lengthMenu": "Hiện _MENU_ trường",
+                "zeroRecords": "Không tìm thấy dữ liệu!",
+                "info": "_PAGE_ / _PAGES_",
+                "infoEmpty": "Không có dữ liệu!",
+                "infoFiltered": "(Lọc dữ liệu từ _MAX_ bản ghi)",
+                "paginate": {
+                    "first": "<<",
+                    "last": ">>",
+                    "next": ">",
+                    "previous": "<"
+                },
+                "loadingRecords": "Đang tải...",
+                "processing": "",
+                "search": "Tìm kiếm:",
+            },
+            displayLength: 5,
+            dom: "<'toolbar'><'row'<'col-sm-5'l><'col-sm-7 t_filter'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-4'i><'col-sm-6'p>>",
+            /*dom: "<'toolbar'>ftrip",*/
+            fnInitComplete: function () {
+                /*$('div.toolbar').html('Custom tool bar!');*/
+            }
+        });
+    });
+</script>
+

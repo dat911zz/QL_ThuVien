@@ -1,0 +1,56 @@
+﻿
+@{
+    Layout = null;
+}
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>@ViewBag.Title</title>
+    <link href="~/Assets/CSS/ErrorPage.css" rel="stylesheet" />
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <!-- Preload -->
+    <link href="~/Assets/CSS/PreLoad.css" rel="stylesheet" />
+    <script type="module" src="~/Assets/Scripts/Preload.js"></script>
+</head>
+<body class="bg-purple">
+    <div class="precontainer">
+        <div class="prelogo">
+            <img src="~/Assets/Img/Logo.png" alt="Logo" />
+        </div>
+        <div class="preloader">
+            <hr /><hr /><hr /><hr />
+        </div>
+    </div>
+    <div class="stars">
+        <div class="central-body">
+            @*<img class="image-404" src="~/Assets/Img/40" width="300px">*@
+            <div style="margin-bottom: 40px">
+                <span style="font-size: 10rem; color: #fff; font-weight: bold; letter-spacing: 12px;">@ViewBag.ErrorCode</span>
+                <br />
+                <span style="font-size: 2em; color: #fff; letter-spacing: 9px ">@ViewBag.ErrorContent</span>
+            </div>
+            <a href="/" class="btn-go-home" style="font-size: .9em; letter-spacing: 2px">TRANG CHỦ</a>
+        </div>
+        <div class="objects">
+            <img class="object_rocket" src="~/Assets/Img/rocket.svg" width="40px">
+            <div class="earth-moon">
+                <img class="object_earth" src="~/Assets/Img/earth.svg" width="100px">
+                <img class="object_moon" src="~/Assets/Img/moon.svg" width="80px">
+            </div>
+            <div class="box_astronaut">
+                <img class="object_astronaut" src="~/Assets/Img/astronaut.svg" width="140px">
+            </div>
+        </div>
+        <div class="glowing_stars">
+            <div class="star"></div>
+            <div class="star"></div>
+            <div class="star"></div>
+            <div class="star"></div>
+            <div class="star"></div>
+
+        </div>
+
+    </div>
+</body>
+</html>
+

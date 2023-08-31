@@ -1,0 +1,79 @@
+﻿@using PagedList.Mvc;
+@model PagedList.IPagedList<QL_ThuVien.Models.TaiKhoanV2>
+@{
+    ViewBag.Title = "Trang Quản Trị Hệ Thống";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    var NVList = ViewBag.NVList as List<QL_ThuVien.Models.NhanVien>;
+}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+<style>
+    .table td {
+        vertical-align: middle;
+    }
+</style>
+<h2 style="text-align: center">Danh sách người dùng</h2>
+<div class="container" style="min-height: 500px">
+    @if (Model.Count <= 0)
+    {
+        <h5 style="color: orangered; text-align: center">Không có thông tin</h5>
+    }
+    else
+    {
+        <table class="table">
+            <tr style="text-align: center">
+                <th>
+                    Mã
+                </th>
+                <th>
+                    Tên đăng nhập
+                </th>
+                <th>
+                    Tên người dùng
+                </th>
+                <th>
+                    Các quyền
+                </th>
+                <th>
+                    Hành động
+                </th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr style="text-align: center;">
+                    <td>
+                        @item.MaTaiKhoan
+                    </td>
+                    <td>
+                        @item.TenDN
+                    </td>
+                    <td>
+                        @(NVList.SingleOrDefault(x => x.MaNhanVien == item.MaNhanVien)?.HoTen)
+                    </td>
+                    <td style="text-align: left">
+                        <div style="text-align: center">
+                            @item.ChucVu
+                        </div>
+                    </td>
+                    <td>
+                        <a href="/Admin/CP/Details?id=@item.MaTaiKhoan" class="btn text-dark" style="background-color: #84bcff; color: #fff; font-size: 1rem; "><i class="bi bi-card-list"></i></a>
+                        <a href="/Admin/CP/Edit?id=@item.MaTaiKhoan" class="btn text-dark" style="background-color: #36ff00; color: #fff; font-size: 1rem; "><i class="bi bi-pencil"></i></a>
+                        <a onclick="DVNConfirm('Xóa','Tài khoản', '/Admin/CP/Delete', @item.MaTaiKhoan)" class="btn text-dark" style="background-color: #ff4646; color: #fff; font-size: 1rem; "><i class="bi bi-trash"></i></a>
+                    </td>
+                </tr>
+
+            }
+
+
+        </table>
+        <div id="container center" style="margin-left: 20px">
+            <p></p>
+            <p></p>
+            <div class="pagination" style="display:inline-block !important; vertical-align:middle; margin-left: 320px;">
+                @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+            </div>
+        </div>
+    }
+</div>
+
+

@@ -1,0 +1,119 @@
+﻿@model IEnumerable<QL_ThuVien.Models.Sach>
+@{
+    ViewBag.Title = "BoostrapTableTest";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+    bool isValidUser = QL_ThuVien.Intergrate.Services.Helper.SecurityHelper.HasPermission(HttpContext.Current);
+    var NXBList = Session["NXBList"] as List<QL_ThuVien.Models.NhaXuatBan>;
+    var CDList = Session["CDList"] as List<QL_ThuVien.Models.ChuDe>;
+}
+<style>
+    .dataTables_filter > label, .dataTables_length > label {
+        font-size: 1rem;
+    }
+    table.dataTable{
+        /*table-layout: fixed;*/
+    }
+    .short-tent {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 5;
+        -webkit-box-orient: vertical;
+        word-break: break-word;
+        min-height: 3em;
+    }
+</style>
+<div class="container">
+    <div class="table">
+        <table class="table table-striped-columns" id="table_id" width="100%" cellspacing="0">
+            <colgroup>
+                <col style="width: 15%;">
+                <col style="width: 10%;">
+                <col style="width: 15%;">
+                <col style="width: 8%;">
+                <col style="width: 8%;">
+                <col style="width: 5%;">
+                <col style="width: 5%;">
+                <col style="width: 20%;">
+                <col style="width: 25%;">
+            </colgroup>
+            <thead>
+                <tr class="text-center">
+                    <th>Ảnh Bìa</th>
+                    <th>Mã Sách</th>
+                    <th>Tên Sách</th>
+                    <th>NXB</th>
+                    <th>Chủ Đề</th>
+                    <th>Năm Xuất Bản</th>
+                    <th>Giá Sách</th>
+                    <th>Mô Tả</th>
+                    <th class="text-center">Công Cụ</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td><img src="~/Assets/HinhAnhSP/@item.AnhBia" style="height: 10rem; width: 10rem" alt="ANHBIA_@item.AnhBia" /></td>
+                        <td class="text-center">@item.MaSach</td>
+                        <td>
+                            @item.TenSach
+                        </td>
+                        <td>@NXBList.SingleOrDefault(x => x.MaNXB == item.MaNXB).TenNXB</td>
+                        <td>@CDList.SingleOrDefault(x => x.MaChuDe == item.MaChuDe).TenChuDe</td>
+                        <td class="text-center">@(item.NamXuatBan.ToShortDateString())</td>
+                        <td class="text-center">@(item.GiaSach.ToString("#,###.##đ", new System.Globalization.CultureInfo("en-US", false).NumberFormat))</td>
+                        <td><div class="short-tent">@item.MoTa</div></td>
+                        @if (isValidUser)
+                        {
+                            <td class="text-center">
+                                <a class="btn btn-secondary btn-edit m-l-0 px-075" href="/Book/Edit/@item.MaSach">
+                                    <span><img src="https://img.icons8.com/windows/23/null/pencil.png" /></span>
+                                    Sửa
+                                </a>
+                                <a class="btn btn-danger px-075" onclick="DVNConfirm('Xóa', 'Sách', '/Book/Delete', @item.MaSach)"><span><img src="https://img.icons8.com/carbon-copy/26/null/delete-forever--v1.png" /></span> Xóa</a>
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#table_id').DataTable().destroy();
+        $('#table_id').DataTable({
+            pageResize: false,
+            scrollY: 500,
+            scrollX: true,
+            lengthMenu: [
+                [5, 10, 25, 50, -1],
+                [5, 10, 25, 50, 'Tất cả'],
+            ],
+            language: {
+                "lengthMenu": "Hiện _MENU_ trường",
+                "zeroRecords": "Không tìm thấy dữ liệu!",
+                "info": "_PAGE_ / _PAGES_",
+                "infoEmpty": "Không có dữ liệu!",
+                "infoFiltered": "(Lọc dữ liệu từ _MAX_ bản ghi)",
+                "paginate": {
+                    "first": "<<",
+                    "last": ">>",
+                    "next": ">",
+                    "previous": "<"
+                },
+                "loadingRecords": "Đang tải...",
+                "processing": "",
+                "search": "Tìm kiếm:",
+            },
+            displayLength: 5,
+            dom: "<'toolbar'><'row'<'col-sm-2'l><'col-sm-4 t_filter'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-4'i><'col-sm-6'p>>",
+            /*dom: "<'toolbar'>ftrip",*/
+            fnInitComplete: function () {
+                /*$('div.toolbar').html('Custom tool bar!');*/
+            }
+        });
+    });
+</script>

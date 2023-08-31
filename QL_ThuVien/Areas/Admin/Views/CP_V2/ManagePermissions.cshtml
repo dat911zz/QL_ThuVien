@@ -1,0 +1,316 @@
+﻿@model QL_ThuVien.Models.Perms
+@{
+    ViewBag.Title = "Phân Quyền";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="container">
+    @using (Html.BeginForm("ManagePermissions", "CP_V2", FormMethod.Post, htmlAttributes: new { @id = "Form" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="row">
+            <div class="container-border">
+                <div class="align-text-initial">
+                    <div class="align-text-center text-floor">PHÂN QUYỀN</div>
+                    <div class="container-inside">
+                        <div class="container-combobox">
+                            <div class="row mt-5 me-2">
+                                <div class="col-25">
+                                    <label for="fname">Đối tượng được cấp quyền<span style="color: red">(*)</span>:</label>
+                                </div>
+                                <div class="col-75">
+                                    @Html.DropDownList("Target", Session["listTarg"] as SelectList, "-Đối tượng được cấp quyền-", new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="row me-2">
+                                <div class="col-25">
+                                    <label for="fname">Cấp quyền ở bảng/hàm/thủ tục<span style="color: red">(*)</span>:</label>
+                                </div>
+                                <div class="col-75">
+                                    @Html.DropDownList("DbObject", Session["listObj"] as SelectList, "-Cấp quyền ở bảng/hàm/thủ tục-", new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container-checkbox">
+                            <div id="Select" class="cbo-perm container-checkbox-1">
+                                <h4>Select</h4>
+                                <input class="perm" type="checkbox" name="SELECT" value="true" />
+                            </div>
+                            <div id="Insert" class="cbo-perm container-checkbox-2">
+                                <h4>Insert</h4>
+                                <input class="perm" type="checkbox" name="INSERT" value="true" />
+                            </div>
+                            <div id="Execute" class="cbo-perm container-checkbox-2">
+                                <h4>Execute</h4>
+                                <input class="perm" type="checkbox" name="EXECUTE" value="true" />
+                            </div>
+                            <div id="Update" class="cbo-perm container-checkbox-3">
+                                <h4>Update</h4>
+                                <input class="perm" type="checkbox" name="UPDATE" value="true" />
+                            </div>
+                            <div id="Delete" class="cbo-perm container-checkbox-3">
+                                <h4>Delete</h4>
+                                <input class="perm" type="checkbox" name="DELETE" value="true" />
+                            </div>
+                        </div>
+                        <div class="container-submit">
+                            <input class="btn-submit btn btn-dark" onclick="SubmitConfrim()" value="Submit">
+                        </div>
+                    </div>
+                </div>
+                <div class="align-text-center text-floor">SAO LƯU / PHỤC HỒI</div>
+                <div style="text-align: center;">
+                    <button class="btn-room btn btn-outline-dark" id="5"><h4>@Html.ActionLink("Sao lưu đầy đủ", "FullBackUp", "CP_V2")</h4></button>
+                    <button class="btn-room btn btn-outline-dark" id="5"><h4>@Html.ActionLink("Sao lưu phần thay dổi", "DiffBackUp", "CP_V2")</h4></button>
+                    <button class="btn-room btn btn-outline-dark" id="5"><h4>@Html.ActionLink("Sao lưu file Log", "LogBackUp", "CP_V2")</h4></button>
+                    <button class="btn-room btn btn-outline-dark" id="5"><h4>@Html.ActionLink("Phục hồi", "RestoreDataBase", "CP_V2")</h4></button>
+                </div>
+
+            </div>
+        </div>
+    }
+</div>
+<style>
+    .container-border {
+        border: 4px solid #000000;
+        height: 700px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    .container-inside {
+        border: 4px solid #000000;
+        height: 430px;
+        width: 900px;
+        margin: auto;
+    }
+
+    .container-combobox {
+        text-align: center;
+    }
+
+    .container-submit {
+        text-align: center;
+    }
+
+    .container-radio {
+        display: inline-flex;
+        margin-top: 30px;
+    }
+
+    .container-checkbox {
+        display: flex;
+        /* margin-top: 30px; */
+        /* margin-left: 230px; */
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .container-checkbox-1 {
+        margin: 20px;
+    }
+
+    .container-checkbox-2 {
+        margin: 20px;
+    }
+
+    .container-checkbox-3 {
+        margin: 20px;
+    }
+
+    .container-radio-1 {
+        text-align: center;
+        border: 3px solid #000000;
+        height: 160px;
+        width: 100px;
+        margin-left: 20px;
+    }
+
+    .container-radio-2 {
+        text-align: center;
+        border: 3px solid #000000;
+        height: 160px;
+        width: 100px;
+        margin-left: 5px;
+    }
+
+    .align-text-center {
+        text-align: center !important;
+    }
+
+    h2, h4 {
+        color: #000000;
+    }
+
+    .align-text-initial {
+        text-align: initial !important;
+    }
+
+    .justify-content-between {
+        justify-content: space-between !important;
+    }
+
+    .text-floor {
+        font-size: 40px;
+        color: #440CCB;
+    }
+
+    .btn-room {
+        width: 230px !important;
+        height: 100px !important;
+        margin-top: 15px;
+        margin-right: 10px;
+    }
+
+    .btn-combobox {
+        width: 420px !important;
+        height: 50px !important;
+        margin-top: 30px;
+        border: 3px solid #000000;
+    }
+
+    .btn-hall {
+        width: 850px !important;
+        height: 100px !important;
+        margin-top: 30px;
+        margin-right: 150px;
+        margin-left: 175px;
+    }
+
+    .test {
+        max-width: max-content;
+        padding: 20px;
+        display: block;
+    }
+
+    .header {
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    input[type=text], select, textarea {
+        width: 100%;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        resize: vertical;
+    }
+
+    label {
+        padding: 12px 12px 12px 0;
+        display: inline-block;
+    }
+
+    input[type=submit] {
+        background-color: #440CCB;
+        color: white;
+        margin: auto;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        /*float: right;*/
+        max-width: 250px;
+    }
+
+    .container {
+        border-radius: 5px;
+        background-color: #f2f2f2;
+        padding: 20px;
+    }
+
+    .col-5 {
+        float: left;
+        width: 5%;
+        margin-top: 6px;
+    }
+
+    .col-10 {
+        float: left;
+        width: 10%;
+        margin-top: 6px;
+    }
+
+    .col-12 {
+        float: left;
+        width: 12%;
+        margin-top: 6px;
+    }
+
+    .col-15 {
+        float: left;
+        width: 15%;
+        margin-top: 6px;
+    }
+
+    .col-20 {
+        float: left;
+        width: 20%;
+        margin-top: 6px;
+        margin-right: 10px;
+    }
+
+    .col-25 {
+        float: left;
+        width: 25%;
+        margin-top: 6px;
+    }
+
+    .col-75 {
+        float: left;
+        width: 75%;
+        margin-top: 6px;
+    }
+
+    .row:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    .primary {
+        background-color: #4cff00 !important;
+        color: white !important;
+    }
+
+    @@media screen and (max-width: 768px) {
+        .align-text-initial {
+            margin: auto;
+        }
+
+        .btn-room {
+            width: auto !important;
+            height: auto !important;
+            margin: 0 0 10px 0;
+        }
+
+        .btn-hall {
+            margin: auto;
+        }
+
+        .col-15 {
+            float: left;
+            width: 50%;
+        }
+
+        .col-12 {
+            float: left;
+            width: 50%;
+        }
+
+        .col-10 {
+            float: left;
+            width: auto !important;
+        }
+
+        .col-25 {
+            float: left;
+            width: 50%;
+        }
+    }
+</style>
+<script src="~/Assets/Scripts/ManagePerms.js"></script>

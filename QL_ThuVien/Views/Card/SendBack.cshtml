@@ -1,0 +1,201 @@
+﻿@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+<div class="test">
+    <div class="header ml-0">
+        <h2 class="position-relative" style="color: #440CCB ">PHIẾU ĐĂNG KÝ MƯỢN PHÒNG</h2>
+        <hr class="bg-dark"></hr>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <label for="fname">Ngày Mượn: <span style="color: red">(*)</span>:</label>
+        </div>
+        <div class="col-15">
+            <input class="form-control" type="date" id="fname" name="firstname" placeholder="Ngày mượn..">
+        </div>
+        <div class="col-15">
+            <label for="fname">Giờ Bắt Đầu Mượn <span style="color: red">(*)</span>:</label>
+        </div>
+        <div class="col-15">
+            <input class="form-control" type="time" id="fname" name="firstname" placeholder="Ngày trả thẻ..">
+        </div>
+        <div class="col-12">
+            <label for="fname">Thời Gian Mượn <span style="color: red">(*)</span>:</label>
+        </div>
+        <div class="col-15">
+            <input class="form-control" type="time" id="fname" name="firstname" placeholder="Ngày trả thẻ..">
+        </div>
+    </div>
+    <div class="row">
+        <div class="container-border">
+            <div class="align-text-center text-floor">TẦNG 3</div>
+            <div class="align-text-initial">
+                <button class="btn-room btn btn-outline-dark" id="btn"><h4>Phòng 301</h4></button>
+                <button class="btn-room btn btn-outline-dark" id="btn"><h4>Phòng 302</h4></button>
+                <button class="btn-room btn btn-outline-dark" id="btn"><h4>Phòng 303</h4></button>
+            </div>
+            <button class="align-text-center btn-hall btn btn-outline-dark"><h2>Sảnh Chính 304</h2></button>
+            <div class="align-text-center text-floor">TẦNG 4</div>
+            <button class="btn-room btn btn-outline-dark"><h4>Phòng 401</h4></button>
+        </div>
+    </div>
+    <div class="row">
+        <input class="col-10" type="submit" value="Submit">
+    </div>
+</div>
+    <style>
+        .container-border {
+            border: 3px solid #000000;
+            height: 600px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        .align-text-center {
+            text-align: center !important;
+        }
+        h2, h4 {
+            color: #000000;
+        }
+        .align-text-initial {
+            text-align: initial !important;
+        }
+        .justify-content-between {
+            justify-content: space-between !important;
+        }
+        .text-floor {
+            font-size: 40px;
+            color: #440CCB;
+        }
+        .btn-room {
+            width: 230px !important;
+            height: 100px !important;
+            margin-top: 30px;
+            margin-right: 77px;
+            margin-left: 77px;
+        }
+        .btn-hall {
+            width: 850px !important;
+            height: 100px !important;
+            margin-top: 30px;
+            margin-right: 150px;
+            margin-left:175px;
+        }
+        .test {
+            max-width: max-content;
+            padding: 20px;
+            display: block;
+        }
+
+        .header {
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        input[type=text], select, textarea {
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+        }
+
+        label {
+            padding: 12px 12px 12px 0;
+            display: inline-block;
+        }
+
+        input[type=submit] {
+            background-color: #440CCB;
+            color: white;
+            margin: auto;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            float: right;
+            max-width: 250px;
+        }
+
+        .container {
+            border-radius: 5px;
+            background-color: #f2f2f2;
+            padding: 20px;
+        }
+        .col-5 {
+            float: left;
+            width: 5%;
+            margin-top: 6px;
+        }
+        .col-10 {
+            float: left;
+            width: 10%;
+            margin-top: 6px;
+        }
+        .col-12 {
+            float: left;
+            width: 12%;
+            margin-top: 6px;
+        }
+        .col-15 {
+            float: left;
+            width: 15%;
+            margin-top: 6px;
+        }
+        .col-20 {
+            float: left;
+            width: 20%;
+            margin-top: 6px;
+            margin-right: 10px;
+        }
+        .col-25 {
+            float: left;
+            width: 25%;
+            margin-top: 6px;
+        }
+
+        .col-75 {
+            float: left;
+            width: 75%;
+            margin-top: 6px;
+        }
+
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+        .primary {
+            background-color: #4cff00 !important;
+            color: white !important;
+        }
+    </style>
+    <script>
+        var win = navigator.platform.indexOf('Win') > -1;
+        if (win && document.querySelector('#sidenav-scrollbar')) {
+            var options = {
+                damping: '0.5'
+            }
+            Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+        }
+        const btn = document.getElementById('btn');
+
+        btn.addEventListener('click', function onClick(event) {
+        //    if (Phòng trống thì class này)
+        //{
+        //    event.target.className = 'btn-room btn btn-outline-dark primary';
+        //}
+        //if (Phòng đã mượn thì class này)
+        //{
+        //    event.target.className = 'btn-room btn btn-outline-dark red';
+        //}
+            console.log(event)
+            event.target.style.backgroundColor = 'red';
+        });
+    </script>

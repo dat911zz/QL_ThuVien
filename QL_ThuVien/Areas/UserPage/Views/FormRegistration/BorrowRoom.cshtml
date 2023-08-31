@@ -1,0 +1,385 @@
+﻿@model QL_ThuVien.Models.ChiTietMuonPhong
+@{
+    ViewBag.Title = "Phiếu đăng ký mượn phòng";
+    Layout = "~/Areas/UserPage/Views/Shared/_MainLayout.cshtml";
+    DateTime current = DateTime.Now;
+}
+<div class="test">
+    <div class="header ml-0">
+        <h2 class="position-relative" style="color: #440CCB ">PHIẾU ĐĂNG KÝ MƯỢN PHÒNG</h2>
+        <hr class="bg-dark"></hr>
+    </div>
+</div>
+<div class="container">
+    @using (Html.BeginForm("BorrowRoom", "FormRegistration", FormMethod.Post, htmlAttributes: new { @id = "Form" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="row">
+            <div class="container-border">
+                <div class="align-text-center text-floor">TẦNG 3</div>
+                <div class="align-text-initial">
+                    <button class="btn-room btn btn-outline-dark" id="1"><h4>Phòng 301</h4></button>
+                    <button class="btn-room btn btn-outline-dark" id="2"><h4>Phòng 302</h4></button>
+                    <button class="btn-room btn btn-outline-dark" id="3"><h4>Phòng 303</h4></button>
+                </div>
+                <button class="align-text-center btn-hall btn-room btn btn-outline-dark" id="4"><h2>Sảnh Chính 304</h2></button>
+                <div class="align-text-center text-floor">TẦNG 4</div>
+                <button class="btn-room btn btn-outline-dark" id="5"><h4>Phòng 401</h4></button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <label for="fname">Ngày Mượn: <span style="color: red">(*)</span>:</label>
+            </div>
+            <div class="col-15">
+                @Html.EditorFor(model => model.ThoiGianMuon, new { htmlAttributes = new { type = "date", min = DateTime.Now.ToString("yyyy-MM-dd"), @class = "form-control", placeholder = "Ngày mượn.." } })
+                @Html.ValidationMessageFor(model => model.ThoiGianMuon, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-15">
+                <label for="fname">Giờ Bắt Đầu Mượn <span style="color: red">(*)</span>:</label>
+            </div>
+            <div class="col-15">
+                @*@Html.EditorFor(model => model.ThoiGianMuon.TimeOfDay, new
+                    {
+                        htmlAttributes = new
+                        {
+                            type = "time",
+                            @class = "form-control",
+                            id = "fname",
+                            name = "firstname",
+                            placeholder = "Giờ bắt đầu mượn.."
+                        }
+                    })*@
+                <input class="form-control" step="any" type="time" id="gioBD" name="gioBD">
+            </div>
+            <div class="col-12">
+                <label for="fname">Thời Gian Mượn <span style="color: red">(*)</span>:</label>
+            </div>
+            <div class="col-15">
+                <select name="thoiLuong" class="form-control" id="gioSD">
+                    <option value="0.5">30 Phút</option>
+                    <option value="1">1 Giờ</option>
+                    <option value="1.5">1 Giờ 30 Phút</option>
+                    <option value="2" selected>2 Giờ</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-15">
+                <label for="fname">Mã Thẻ Thư Viện <span style="color: red">(*)</span>:</label>
+            </div>
+            <div class="col-25">
+                <input class="form-control" type="text" id="MaNSD" name="MaNSD" placeholder="Mã thẻ thư viện..">
+                @Html.ValidationMessageFor(model => model.MaNSD, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-15">
+                <label for="fname">Mã Phòng Đang Chọn:</label>
+            </div>
+            <div class="col-25">
+                <input class="form-control" type="text" id="MaPhong" name="MaPhong" readonly="readonly" placeholder="Mã phòng..">
+                @Html.ValidationMessageFor(model => model.MaPhong, "", new { @class = "text-danger" })
+
+            </div>
+        </div>
+        <div class="row">
+            <input class="btn btn-primary m-auto col-10" type="button" value="Submit" onclick="SubmitConfrim()">
+        </div>
+    }
+</div>
+<style>
+    .container-border {
+        border: 3px solid #000000;
+        height: 600px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    .align-text-center {
+        text-align: center !important;
+    }
+
+    h2, h4 {
+        color: #000000;
+    }
+
+    .align-text-initial {
+        text-align: initial !important;
+    }
+
+    .justify-content-between {
+        justify-content: space-between !important;
+    }
+
+    .text-floor {
+        font-size: 40px;
+        color: #440CCB;
+    }
+
+    .btn-room {
+        width: 230px !important;
+        height: 100px !important;
+        margin-top: 30px;
+        margin-right: 77px;
+        margin-left: 77px;
+    }
+
+    .btn-hall {
+        width: 850px !important;
+        height: 100px !important;
+        margin-top: 30px;
+        margin-right: 150px;
+        margin-left: 175px;
+    }
+
+    .test {
+        max-width: max-content;
+        padding: 20px;
+        display: block;
+    }
+
+    .header {
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    input[type=text], select, textarea {
+        width: 100%;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        resize: vertical;
+    }
+
+    label {
+        padding: 12px 12px 12px 0;
+        display: inline-block;
+    }
+
+    input[type=submit] {
+        background-color: #440CCB;
+        color: white;
+        margin: auto;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        float: right;
+        max-width: 250px;
+    }
+
+    .container {
+        border-radius: 5px;
+        background-color: #f2f2f2;
+        padding: 20px;
+    }
+
+    .col-5 {
+        float: left;
+        width: 5%;
+        margin-top: 6px;
+    }
+
+    .col-10 {
+        float: left;
+        width: 10%;
+        margin-top: 6px;
+    }
+
+    .col-12 {
+        float: left;
+        width: 12%;
+        margin-top: 6px;
+    }
+
+    .col-15 {
+        float: left;
+        width: 15%;
+        margin-top: 6px;
+    }
+
+    .col-20 {
+        float: left;
+        width: 20%;
+        margin-top: 6px;
+        margin-right: 10px;
+    }
+
+    .col-25 {
+        float: left;
+        width: 25%;
+        margin-top: 6px;
+    }
+
+    .col-75 {
+        float: left;
+        width: 75%;
+        margin-top: 6px;
+    }
+
+    .row:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    .primary {
+        background-color: #4cff00 !important;
+        color: white !important;
+    }
+@@media screen and (max-width: 768px) {
+    .align-text-initial {
+        margin: auto;
+    }
+    .btn-room {
+        width: auto !important;
+        height: auto !important;
+        margin: 0 0 10px 0;
+    }
+  .btn-hall {
+      margin: auto;
+      
+  }
+  .col-15 {
+      float: left;
+      width: 50%;
+  }
+    .col-12 {
+        float: left;
+        width: 50%;
+    }
+  .col-10 {
+      float: left;
+      width: auto !important;
+  }
+    .col-25 {
+        float: left;
+        width: 50%;
+    }
+}
+</style>
+<script>
+    var daySend = $('#ThoiGianMuon').val('@current.ToString("yyyy-MM-dd")');
+    var hourSend = $('#gioBD').val('@current.ToString("HH:mm:ss")');
+    var hourUse = $('#gioSD').val();
+    var dateTimeSend = daySend.val() + ' ' + hourSend.val();
+    console.log(dateTimeSend)
+    var listRoom = $('button.btn-room');
+    var temp = $('#ThoiGianMuon').val();
+    var list = "";
+    console.log(dateTimeSend + '] [' + hourUse);
+    //Check 1 lần sau khi load xong để tô màu luôn
+    checkLendRoom();
+    setColor();
+
+    $('#ThoiGianMuon,#gioBD,#gioSD').on('mouseleave', () => {
+        hourUse = $('#gioSD').val();
+        dateTimeSend = daySend.val() + ' ' + hourSend.val();
+        listRoom = $('button.btn-room');
+        temp = $('#ThoiGianMuon').val();
+        list = "";
+        console.log('Run load');
+        console.log(dateTimeSend + '] [' + hourUse);
+        $.ajax({
+            url: "/FormRegistration/GetEmptyRooms/",
+            async: false,
+            type: "GET",
+            data: { dateTimeSend: dateTimeSend, hourUse: hourUse },
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                //do your thing on success
+                list = data;
+                console.log(data);
+            }
+        });
+        checkLendRoom();
+    })
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+        var options = {
+            damping: '0.5'
+        }
+        Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+    var SubmitConfrim = () => {
+        if ($('#MaPhong').val() == '' || $('#MaNSD').val() == '') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: 'Vui lòng nhập đầy đủ thông tin!',
+                showConfirmButton: true,
+                timer: 2000
+            })
+        }
+        else {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Cảnh Báo!',
+                html: '<div>Bạn có muốn thực hiện hành động này?</div>',
+                showCancelButton: true,
+                confirmButtonText: 'Gửi',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thành Công',
+                        text: 'Đã gửi phiếu đăng ký!',
+                        showConfirmButton: true,
+                        timer: 2000
+                    }).then((result) => {
+                        $('#Form').submit();
+                    });
+                }
+            })
+        }
+        
+    };
+    var txtRoomId = $('input:text#MaPhong');
+    $('button.btn-room').on("click", function (event) {
+        event.preventDefault();
+        txtRoomId.val(this.id);
+        /*$('button.btn-room').css("background-color", "transparent");*/
+        setColor();
+        this.style.backgroundColor = "#61a27a";
+        console.log('add: ' + this.id);
+    });
+    function setColor() {
+        for (let i = 0; i < listRoom.length; i++) {
+            listRoom[i].className = listRoom[i].className.replace(" disabled", "");
+            if (list.includes(listRoom[i].id)) {
+                listRoom[i].style.backgroundColor = 'transparent'
+                listRoom[i].className = listRoom[i].className.replace(" disabled", "");
+                console.log(listRoom[i].className)
+            }
+            else {
+                listRoom[i].style.backgroundColor = 'red'
+                listRoom[i].className += " disabled"
+            }
+        }
+    }
+    function checkLendRoom() {
+        listRoom.css("background-color", "transparent")
+        $.ajax({
+            url: "/FormRegistration/GetEmptyRooms/",
+            async: false,
+            type: "GET",
+            data: { dateTimeSend: dateTimeSend, hourUse: hourUse },
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                //do your thing on success
+                list = data;
+                console.log(data);
+            }
+        });
+        if (list) {
+            /*console.log('Lend' + list);*/
+            setColor();
+        } else listRoom.css("background-color", "red")
+    }
+</script>

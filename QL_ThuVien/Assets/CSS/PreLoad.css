@@ -1,0 +1,82 @@
+﻿.precontainer {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5f5f5;
+    /*background-image: radial-gradient(circle farthest-corner at center, #ffffff 0%,#fedddd 40%, #ffb6f2 60%, #f19bff 80%, #e8a1f9 100%);*/
+}
+.prelogo {
+    /*background-image: url("../Img/Logo.png");*/
+    z-index: 9999;
+    width: 8rem;
+    position: absolute;
+    top: 13rem;
+}
+.prelogo img{
+    width: 100%;
+    height: 100%;
+}
+.preloader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /*change these sizes to fit into your project*/
+    width: 4rem;
+    height: 2rem;
+    z-index: 99999;
+}
+
+    .preloader hr {
+        border: 0;
+        margin: 0;
+        width: 1.5rem;
+        height: 1.5rem;
+        position: absolute;
+        border-radius: 50%;
+        animation: spin 2s ease infinite
+    }
+
+    .preloader :first-child {
+        background: #19A68C;
+        animation-delay: -1.5s
+    }
+
+    .preloader :nth-child(2) {
+        background: #F63D3A;
+        animation-delay: -1s
+    }
+
+    .preloader :nth-child(3) {
+        background: #FDA543;
+        animation-delay: -0.5s
+    }
+
+    .preloader :last-child {
+        background: #9a32a6
+    }
+    .preloader>hr{
+        opacity: 1;
+    }
+
+@keyframes spin {
+    0%,100% {
+        transform: translate(0)
+    }
+
+    25% {
+        transform: translate(160%)
+    }
+
+    50% {
+        transform: translate(160%, 160%)
+    }
+
+    75% {
+        transform: translate(0, 160%)
+    }
+}

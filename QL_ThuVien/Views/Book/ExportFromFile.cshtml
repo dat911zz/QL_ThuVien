@@ -1,0 +1,137 @@
+﻿@model IEnumerable<QL_ThuVien.Models.Sach>
+@{
+    ViewBag.Title = "Xuất sách từ file excel";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+    bool isValidUser = QL_ThuVien.Intergrate.Services.Helper.SecurityHelper.HasPermission(HttpContext.Current);
+    var NXBList = Session["NXBList"] as List<QL_ThuVien.Models.NhaXuatBan>;
+    var CDList = Session["CDList"] as List<QL_ThuVien.Models.ChuDe>;
+}
+
+<div class="test">
+    <div class="header ml-0">
+        <h2 class="position-relative" style="color: #440ccb ">PHIẾU XUẤT</h2>
+        <hr class="bg-dark"></hr>
+    </div>
+</div>
+<p style="text-align: center;">
+    <a href="ResultExportToExcel" class="btn btn-success m-1"><span><img src="https://img.icons8.com/arcade/22/null/print.png" /></span> Xuất File</a>
+</p>
+<div class="container">
+    <div class="table">
+        <table class="table" id="table_id" width="100%" cellspacing="0">
+            <colgroup>
+                <col style="width: 15%;">
+                <col style="width: 8%;">
+                <col style="width: 15%;">
+                <col style="width: 8%;">
+                <col style="width: 8%;">
+                <col style="width: auto;">
+                <col style="width: auto;">
+                <col style="width: 10%;">
+
+
+            </colgroup>
+            <thead>
+                <tr class="text-center">
+                    <th>Ảnh Bìa</th>
+                    <th>Mã Sách</th>
+                    <th>Tên Sách</th>
+                    <th>NXB</th>
+                    <th>Chủ Đề</th>
+                    <th>Năm Xuất Bản</th>
+                    <th>Giá Sách</th>
+                    <th>Mô Tả</th>
+                    <th class="text-center">Công Cụ</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td><img src="~/Assets/HinhAnhSP/@item.AnhBia" style="height: 10rem; width: 100%" alt="ANHBIA_@item.AnhBia" /></td>
+                        <td class="text-center">@item.MaSach</td>
+                        <td>
+                            @item.TenSach
+                        </td>
+                        <td>@NXBList.SingleOrDefault(x => x.MaNXB == item.MaNXB).TenNXB</td>
+                        <td>@CDList.SingleOrDefault(x => x.MaChuDe == item.MaChuDe).TenChuDe</td>
+                        <td class="text-center">@(item.NamXuatBan.ToShortDateString())</td>
+                        <td class="text-center">@(item.GiaSach.ToString("#,###.##đ", new System.Globalization.CultureInfo("en-US", false).NumberFormat))</td>
+                        <td><div class="short-tent">@item.MoTa</div></td>
+                        @if (isValidUser)
+                        {
+                            <td class="text-center">
+                                <a class="btn btn-success btn-edit m-l-0 px-075" href="/Book/Edit/@item.MaSach">
+                                    <span><img src="https://img.icons8.com/office/23/null/edit.png" /> Sửa</span>
+                                </a>
+                                <a class="btn btn-danger btn-edit m-l-0 px-075" onclick="DVNConfirm('Xóa', 'Sách', '/Book/Delete', @item.MaSach)">
+                                    <span><img src="https://img.icons8.com/plasticine/30/null/waste.png" />Xóa</span>
+                                </a>
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+    <div>
+        @Html.ActionLink("Trở về trang trước", "Index")
+    </div>
+</div>
+<style>
+    .dataTables_filter > label, .dataTables_length > label {
+        font-size: 1rem;
+    }
+
+    table {
+        border-collapse: collapse;
+        table-layout: fixed;
+        width: 310px;
+    }
+
+    .table th {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .table td, .table th {
+        white-space: normal !important;
+    }
+
+    .short-tent {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 5;
+        -webkit-box-orient: vertical;
+        word-break: break-word;
+        min-height: 3em;
+    }
+
+    a.btn.btn-secondary.btn-edit.m-l-0.px-075, a.btn.btn-danger.px-075 {
+        padding-left: 0.75rem !important;
+    }
+
+    table.dataTable thead > tr > th {
+        text-align: center;
+        background-color: #333333;
+        color: #ffffff;
+    }
+</style>
+<script type="text/javascript">
+    var SubmitConfrim = () => {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Cảnh Báo!',
+            html: '<div>Bạn có muốn thực hiện hành động này?</div>',
+            showCancelButton: true,
+            confirmButtonText: 'Xuất',
+            cancelButtonText: 'Hủy'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('#frmBookAction').submit()
+            }
+        })
+    };
+</script>

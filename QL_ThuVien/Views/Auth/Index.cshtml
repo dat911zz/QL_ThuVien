@@ -1,0 +1,86 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Hệ Thống Quản Trị Thư Viện</title>
+    <link rel="stylesheet" href="~/Assets/CSS/Reset.css">
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css'>
+    <link rel="stylesheet" href="~/Assets/CSS/Login.css">
+    <link rel="shortcut icon" href="~/Assets/Img/Logo.png">
+    <script src="//cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <!-- SweetAlert 2-->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <!-- Preload -->
+    <link href="~/Assets/CSS/PreLoad.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div class="precontainer">
+        <div class="prelogo">
+            <img src="~/Assets/Img/Logo.png" alt="Logo" />
+        </div>
+        <div class="preloader">
+            <hr /><hr /><hr /><hr />
+        </div>
+    </div>
+    <div id="particles-js"></div>
+    <!-- partial:index.partial.html -->
+    <div class="mainBody">
+        <div class="container" id="container">
+            <div class="form-container sign-up-container">
+                <form class="RegisterForm" name="Register" action="@Url.Action("SignInForUser", "Auth")">
+                    <h1>Tra cứu</h1>
+                    <div class="social-container">
+                        <a href="#" class="social" style="border: none"><img src="~/Assets/Img/Logo.png" style="width: 100%" alt="logo" /></a>
+                    </div>
+                    <span>Vui lòng nhập mã Captcha</span>
+                    <br />
+                    @Html.Action("CaptchaPartial")
+                    <br />
+                    <input type="text" name="name" id="txtCaptchaCode" placeholder="Nhập captcha.." value="" />
+                    <br />
+                    <input type="submit" class="button" id="r-b" value="Gửi">
+                </form>
+            </div>
+            <div class="form-container sign-in-container">
+                <form class="LoginForm" name="Login" action="@Url.Action("SignIn", "Auth")">
+                    <h1>Đăng nhập</h1>
+                    <div class="social-container">
+                        <a href="#" class="social" style="border: none"><img src="~/Assets/Img/Logo.png" style="width: 100%" alt="logo" /></a>
+                    </div>
+                    <span>Sử dụng tài khoản để đăng nhập vào hệ thống</span>
+                    <input id="l-i-name" name="username" type="text" placeholder="Tên đăng nhập" />
+                    <input id="l-i-pass" name="pass" type="password" placeholder="Mật khẩu" />
+                    <a href="#">Quên mật khẩu?</a>
+                    <input type="submit" class="button" id="l-b" value="Đăng Nhập">
+                </form>
+            </div>
+            <div class="overlay-container">
+                <div class="overlay">
+                    <div class="overlay-panel overlay-left">
+                        <h1>Chào mừng trở lại!</h1>
+                        <p>Để truy cập vào hệ thống, hãy đăng nhập vào tài khoản của bạn </p>
+                        <button class="ghost button" id="signIn">Đăng Nhập</button>
+                    </div>
+                    <div class="overlay-panel overlay-right">
+                        <h1>Bạn muốn tra cứu thông tin?</h1>
+                        <p>Hãy nhập thông tin để nhận tài khoản tra cứu</p>
+                        <button class="ghost button" id="signUp">Tra cứu</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- partial -->
+    <script src="~/Assets/Scripts/Login.js"></script>
+    <script src="~/Assets/Scripts/Preload.js"></script>
+</body>
+
+</html>

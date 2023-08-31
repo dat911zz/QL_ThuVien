@@ -1,0 +1,98 @@
+﻿@{
+    ViewBag.Title = "EmptyRoom";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+
+<body>
+    <div class="test">
+        <div class="header ml-0">
+            <h2 class="position-relative" style="color: #440ccb ">PHÒNG CÒN TRỐNG</h2>
+            <hr class="bg-dark"></hr>
+        </div>
+    </div>
+    <button class="add-room">+ Thêm Phòng</button>
+    <table class="styled-table">
+        <thead>
+            <tr>
+                <th>Mã Phòng</th>
+                <th>Tên Phòng</th>
+                <th>Vị Trí</th>
+                <th>Người Sử Dụng</th>
+                <th>Tình Trạng</th>
+                <th>Công Cụ</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1001</td>
+                <td>Phòng Học Tập</td>
+                <td>A101</td>
+                <td>Only Han</td>
+                <td>Còn Trống</td>
+                <td>Only Han</td>
+            </tr>
+            <tr class="active-row">
+                <td>1002</td>
+                <td>Phòng VIP</td>
+                <td>A102</td>
+                <td>Only Hằng</td>
+                <td>Còn Trống</td>
+                <td>Only Han</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+<style>
+    .test {
+        max-width: max-content;
+        padding: 20px;
+        display: block;
+    }
+
+    .add-room {
+        background-color: #440ccb;
+        color: white;
+        margin-bottom: 20px;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        float: left;
+        max-width: 250px;
+    }
+
+    .styled-table {
+        border-collapse: collapse;
+        margin: auto;
+        font-size: 0.9em;
+        font-family: sans-serif;
+        width: inherit;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    }
+
+        .styled-table thead tr {
+            background-color: #333333;
+            color: #ffffff;
+            text-align: left;
+        }
+
+        .styled-table th,
+        .styled-table td {
+            padding: 12px 15px;
+        }
+
+        .styled-table tbody tr {
+            border-bottom: 1px solid #dddddd;
+        }
+
+            .styled-table tbody tr:nth-of-type(even) {
+                background-color: #f3f3f3;
+            }
+
+            .styled-table tbody tr:last-of-type {
+                border-bottom: 2px solid #333333;
+            }
+</style>
+
+
+

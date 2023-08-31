@@ -1,0 +1,100 @@
+﻿.c_badge {
+    --bs-badge-padding-x: 0.2em;
+    --bs-badge-padding-y: 0.6em;
+    --bs-badge-font-size: 0.75em;
+    --bs-badge-font-weight: 700;
+    --bs-badge-color: #fff;
+    --bs-badge-border-radius: 0.45rem;
+    display: inline-block;
+    padding: var(--bs-badge-padding-y) var(--bs-badge-padding-x);
+    font-size: var(--bs-badge-font-size);
+    font-weight: var(--bs-badge-font-weight);
+    line-height: 1;
+    color: var(--bs-badge-color);
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: var(--bs-badge-border-radius, 0);
+    padding: 0 !important;
+    width: 15px !important;
+    height: 15px !important;
+    border-radius: 100%;
+    position: absolute;
+    right: -12px !important;
+    top: -5px !important;
+    font-size: 9px !important;
+    line-height: 15px !important;
+}
+.b_red {
+    background: #eb2e51 !important;
+}
+.bold{
+    font-weight: bold;
+}
+/*
+    Animation
+*/
+.bounce {
+    animation: bounce 2s ease infinite;
+}
+
+@keyframes bounce {
+    70% {
+        transform: translateY(0%);
+    }
+
+    80% {
+        transform: translateY(-15%);
+    }
+
+    90% {
+        transform: translateY(0%);
+    }
+
+    95% {
+        transform: translateY(-7%);
+    }
+
+    97% {
+        transform: translateY(0%);
+    }
+
+    99% {
+        transform: translateY(-3%);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+/* MVC PagedList */
+.ul.pagination {
+    display: flex;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+ul.pagination li {
+    display: inline;
+}
+
+    ul.pagination li a {
+        color: black;
+        float: left;
+        padding: 8px 16px;
+        text-decoration: none;
+        transition: background-color .3s;
+    }
+
+        ul.pagination li a.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        ul.pagination li a:hover:not(.active) {
+            background-color: #ddd;
+        }
+
+text-dark {
+    color: #000 !important;
+}

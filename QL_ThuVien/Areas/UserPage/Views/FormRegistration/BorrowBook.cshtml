@@ -1,0 +1,191 @@
+﻿@model IEnumerable<QL_ThuVien.Models.Sach>
+@{
+    ViewBag.Title = "Sách";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+    bool isValidUser = QL_ThuVien.Intergrate.Services.Helper.SecurityHelper.HasPermission(HttpContext.Current);
+    var NXBList = Session["NXBList"] as List<QL_ThuVien.Models.NhaXuatBan>;
+    var CDList = Session["CDList"] as List<QL_ThuVien.Models.ChuDe>;
+}
+<body>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400" rel="stylesheet">
+    <div class="test">
+        <div class="header ml-0">
+            <h2 class="position-relative" style="color: #440ccb ">Mượn Sách/Báo/Tài Liệu</h2>
+            <hr class="bg-dark"></hr>
+        </div>
+    </div>
+    <div class="partial-view position-sticky">
+        <a href="@Url.Action("Index", "GioSach")">
+        </a>
+    </div>
+    <div style="text-align: center;">
+        @foreach (var item in Model)
+        {
+            <div class="forum">
+                <div class="card color-card-2">
+                    <img src="~/Assets/HinhAnhSP/@item.AnhBia" alt="ANHBIA_@item.AnhBia" class="profile" />
+                    <h6 class="title-2 short-tent">@item.TenSach</h6>
+                    <p class="job-title">@(item.GiaSach.ToString("#,###.##đ", new System.Globalization.CultureInfo("en-US", false).NumberFormat))</p>
+                    <a class="btn btn-primary" href="@Url.Action("ThemGioSach", "GioSach", new { idSach = @item.MaSach, strURL = Request.Url.ToString() })">Thêm Vào Giỏ Sách</a>
+                </div>
+            </div>
+        }
+    </div>
+</body>
+<style>
+    .test {
+        max-width: max-content;
+        padding: 20px;
+        display: block;
+    }
+    .short-tent {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 5;
+        -webkit-box-orient: vertical;
+        word-break: break-word;
+        min-height: 3em;
+    }
+    .partial-view {
+        margin-left: 1000px;
+    }
+    ul {
+        list-style: none;
+    }
+
+    .list {
+        width: 100%;
+        background-color: #ffffff;
+        border-radius: 0 0 5px 5px;
+        position: absolute;
+    }
+
+    .list-items {
+        padding: 10px 5px;
+    }
+
+        .list-items:hover {
+            background-color: #dddddd;
+        }
+</style>
+<style>
+body{
+  background-color:#31394D;
+}
+.color-card{
+  background:#31394D;
+}
+
+.color-card-2{
+  background:#FDFEFF;
+}
+.title{
+  color:#ffffff;
+  font-family: roboto;
+  weight:300;
+}
+.title-2{
+  color:#2D354A;
+  font-family: roboto;
+  weight:300;
+}
+.followers{
+  color:#666B7D;
+  font-family:10px;
+  margin-top:10px;
+  font-family: roboto;
+  weight:100;
+}
+
+.job-title{
+  color:#7C8097;
+  font-size:12px;
+  weight:100;
+  font-family:roboto;
+}
+
+.desc{
+  font-size:12px;
+  margin-left: 65px;
+  margin-right: 65px;
+  color:#B7B8C0;
+  text-align:center;
+}
+.w{
+   color:#ffffff;
+}
+.b{
+   color:#2F3B4B;
+}
+.content{
+  display:center;
+}
+
+/**{
+  font-family:Roboto;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}*/
+.top{
+  margin-top:16px;
+}
+.color-a{
+  background: linear-gradient(to top right, #8162CE, #F54BA5);
+}
+.img{
+  width: 100px;
+  max-height: 100px;
+  margin-bottom: 10px;
+}
+    .forum {
+        width: 300px;
+        height: 360px;
+        margin: 0 20px 20px 0;
+        flex-wrap: wrap;
+        border: 0.1px solid #B7B8C0;
+        border-radius: 20px;
+        -webkit-transition: all 100ms cubic-bezier(0.19, 1, 0.22, 1);
+        transition: all 100ms cubic-bezier(0.19, 1, 0.22, 1);
+        display: inline-block;
+        position: relative;
+        transform: scale(0.9);
+        background-color: #fff;
+    }
+body {
+  background: #e2e1e0;
+}
+
+    .card {
+        width: 230px;
+        height: 260px;
+        margin-left: 35px;
+        margin-top: 20px;
+    }
+
+.card-1 {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+.card-2 {
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+.profile{
+  max-width:150px;
+  max-height:150px;
+  margin-bottom: 20px;
+  margin-left: 45px;
+}
+</style>
+
+<script>
+    const addCart = document.querySelectorAll('.add-cart');
+    console.log(addCart);
+
+    for (var i = 0; i < length; i++) {
+
+    }
+</script>

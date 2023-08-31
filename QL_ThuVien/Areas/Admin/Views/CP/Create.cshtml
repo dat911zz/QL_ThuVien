@@ -1,0 +1,79 @@
+﻿@model QL_ThuVien.Models.TAIKHOAN
+
+@{
+    ViewBag.Title = "Tạo tài khoản";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+<div class="form-horizontal">
+    <h4>Tạo tài khoản</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="form-group nv_pick">
+        <label class="control-label col-md-2">
+            Nhân viên <span style="color: red">(*)</span>:
+        </label>
+        <div class="col-md-10">
+            @Html.DropDownList("MANHANVIEN", Session["NVList"] as SelectList, "-Vui lòng chọn Nhân viên-", new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.MANHANVIEN, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-2">
+            Tên đăng nhập <span style="color: red">(*)</span>:
+        </label>
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.TENDN, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.TENDN, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-2">
+            Mật khẩu <span style="color: red">(*)</span>:
+        </label>
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.MATKHAU, new { htmlAttributes = new { @class = "form-control", @type = "password" } })
+            @Html.ValidationMessageFor(model => model.MATKHAU, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-2">
+            Chức vụ <span style="color: red">(*)</span>:
+        </label>
+        <div class="col-md-10">
+            @Html.DropDownList("CHUCVU", Session["CVList"] as SelectList, "-Vui lòng chọn Chức vụ-", new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.CHUCVU, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Tạo" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+}
+
+<div>
+    @Html.ActionLink("Trở về", "Index")
+</div>
+<script>
+    $('.nv_pick').show();
+    $('.nd_pick').hide();
+    $("input[name='pick']").change(function () {
+        var picked = $("input[name='pick']:checked").val();
+        $('.nv_pick').show();
+        $('.nd_pick').hide();
+        if (picked == 2) {
+            $('.nd_pick').show();
+            $('.nv_pick').hide();
+        }      
+    });
+</script>

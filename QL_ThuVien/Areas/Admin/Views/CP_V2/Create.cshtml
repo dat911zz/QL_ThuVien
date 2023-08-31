@@ -1,0 +1,418 @@
+﻿@model QL_ThuVien.Models.TaiKhoanV2
+
+@{
+    ViewBag.Title = "Tạo tài khoản";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<style>
+    .test {
+        max-width: max-content;
+        padding: 20px;
+        display: block;
+    }
+
+    .header {
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    input[type=text], select, textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        resize: vertical;
+    }
+
+    label {
+        padding: 12px 12px 12px 0;
+        display: inline-block;
+    }
+
+    /*input[type=submit] {
+        background-color: #440ccb;
+        color: white;
+        margin: auto;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        float: right;
+        max-width: 250px;
+    }*/
+
+    .container {
+        border-radius: 5px;
+        background-color: #f2f2f2;
+        padding: 20px;
+    }
+
+    .col-25 {
+        float: left;
+        width: 20%;
+        margin-top: 6px;
+    }
+
+    .col-75 {
+        float: left;
+        width: 75%;
+        margin-top: 6px;
+    }
+
+    .row:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    ul {
+        list-style: none;
+    }
+
+    .list {
+        width: 100%;
+        background-color: #ffffff;
+        border-radius: 0 0 5px 5px;
+        position: absolute;
+    }
+
+    .list-items {
+        padding: 10px 5px;
+    }
+
+        .list-items:hover {
+            background-color: #dddddd;
+        }
+
+    .form-control-province {
+        margin-left: 2rem;
+        margin-right: 1rem;
+        width: 210px !important;
+    }
+
+    .form-control-ward {
+        margin-left: 10px;
+        margin-right: 10px;
+        width: 210px !important;
+    }
+
+    .form-control-district {
+        margin-left: 10px;
+        margin-right: 3px;
+        width: 205px !important;
+    }
+</style>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Tạo tài khoản</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @*<input type="radio" name="pick" value="1" checked> Nhân viên
+            <input type="radio" name="pick" value="2" style="margin-left: 10px"> Người dùng*@
+        @*<div class="form-group nv_pick">
+                <label class="control-label col-md-2">
+                    Nhân viên <span style="color: red">(*)</span>:
+                </label>
+                <div class="col-md-10">
+                    @Html.DropDownList("MANHANVIEN", Session["NVList"] as SelectList, "-Vui lòng chọn Nhân viên-", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group nd_pick">
+                <label class="control-label col-md-2">
+                    Người dùng <span style="color: red">(*)</span>:
+                </label>
+                <div class="col-md-10">
+                    @Html.DropDownList("MANGUOISUDUNG", Session["NDList"] as SelectList, "-Vui lòng chọn Người dùng-", new { @class = "form-control" })
+                </div>
+            </div>*@
+        <h4>Thông tin nhân viên</h4>
+        <hr />
+
+        <div class="form-group">
+            <div class="control-label col-md-2">
+                <label>Họ tên <span style="color: red">(*)</span>:</label>
+            </div>
+            <div class="col-md-10">
+                @Html.Editor("hoten", new { htmlAttributes = new { @class = "form-control", @required = "required" } })
+                @Html.ValidationMessage("hoten", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="control-label col-md-2">
+                <label>Ngày sinh <span style="color: red">(*)</span>:</label>
+            </div>
+            <div class="col-md-10">
+                @Html.Editor("ns", new { htmlAttributes = new { @id = "#date", @class = "form-control", @required = "required", @type = "date", @value = DateTime.Now.ToString("yyyy-MM-dd") } })
+                @Html.ValidationMessage("ns", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="control-label col-md-2">
+                <label>Số điện thoại <span style="color: red">(*)</span>:</label>
+            </div>
+            <div class="col-md-10">
+                @Html.Editor("sdt", new { htmlAttributes = new { @class = "form-control", @required = "required" } })
+                @Html.ValidationMessage("sdt", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row  d-inline-flex  align-items-baseline">
+                <div class="col-2">
+                    <label for="fname">Tỉnh/Thành <span style="color: red">(*)</span>:</label>
+                </div>
+                <div class="col-4">
+                    <input class="form-control form-control-province" required type="text" id="province" name="province" placeholder="Tỉnh/Thành..">
+                </div>
+            </div>
+            <ul class="list" id="scroll"></ul>
+            <div class="row d-inline-flex  align-items-baseline">
+                <div class="col-2">
+                    <label for="fname">Quận/Huyện <span style="color: red">(*)</span>:</label>
+                </div>
+                <div class="col-4">
+                    <input class="form-control form-control-district" required type="text" id="district" name="district" placeholder="Quận/Huyện..">
+                </div>
+            </div>
+            <ul class="list " id="scroll"></ul>
+            <div class="row d-inline-flex  align-items-baseline">
+                <div class="col-2">
+                    <label for="fname">Phường/Xã <span style="color: red">(*)</span>:</label>
+                </div>
+                <div class="col-4">
+                    <input class="form-control form-control-ward" required type="text" id="ward" name="ward" placeholder="Phường/Xã..">
+                </div>
+            </div>
+            <ul class="list" id="scroll"></ul>
+        </div>
+        <div class="form-group">
+            <div class="control-label col-md-2">
+                <label for="fname">Địa chỉ cụ thể <span style="color: red">(*)</span>:</label>
+            </div>
+            <div class="col-md-10">
+                <input class="form-control" required type="text" name="address" placeholder="Địa chỉ cụ thể..">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="control-label col-md-2">
+                <label>Email <span style="color: red">(*)</span>:</label>
+            </div>
+            <div class="col-md-10">
+                @Html.Editor("email", new { htmlAttributes = new { @class = "form-control",  @required = "required" } })
+                @Html.ValidationMessage("email", new { @class = "text-danger" })
+            </div>
+        </div>
+        <hr />
+        <h4>Thông tin tài khoản</h4>
+        <hr />
+        <div class="form-group">
+            <label class="control-label col-md-2">
+                Tên đăng nhập <span style="color: red">(*)</span>:
+            </label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TenDN, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
+                @Html.ValidationMessageFor(model => model.TenDN, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+                Mật khẩu <span style="color: red">(*)</span>:
+            </label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.MatKhau, new { htmlAttributes = new { @class = "form-control", @type = "password", @required = "required" } })
+                @Html.ValidationMessageFor(model => model.MatKhau, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">
+                Chức vụ <span style="color: red">(*)</span>:
+            </label>
+            <div class="col-md-10">
+                @Html.DropDownList("CHUCVU", Session["CVList"] as SelectList, "-Vui lòng chọn Chức vụ-", new { @class = "form-control", @required = "required" })
+                @Html.ValidationMessageFor(model => model.ChucVu, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Tạo" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Trở về", "Index")
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var elements = document.getElementsByTagName("INPUT");
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].oninvalid = function (e) {
+                e.target.setCustomValidity("");
+                if (!e.target.validity.valid) {
+                    e.target.setCustomValidity("Trường này không được bỏ trống!");
+                }
+            };
+            elements[i].oninput = function (e) {
+                e.target.setCustomValidity("");
+            };
+        }
+    })
+    $('.nv_pick').show();
+    $('.nd_pick').hide();
+    $("input[name='pick']").change(function () {
+        var picked = $("input[name='pick']:checked").val();
+        $('.nv_pick').show();
+        $('.nd_pick').hide();
+        if (picked == 2) {
+            $('.nd_pick').show();
+            $('.nv_pick').hide();
+        }
+    });
+    let names = []
+    let namesDistricts = []
+    let namesWards = []
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "https://provinces.open-api.vn/api/?depth=3", true);
+    xhr.onload = function (e) {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                var response = JSON.parse(xhr.responseText);
+                response.forEach(item => names.push(item))
+            } else {
+                console.error(xhr.statusText);
+            }
+        }
+    };
+    xhr.onerror = function (e) {
+        console.error(xhr.statusText);
+    };
+    xhr.send(null);
+    //Sort names in ascending order
+    //reference
+    let input = document.getElementById("province");
+    let input1 = document.getElementById("district");
+    let input2 = document.getElementById("ward");
+    //Execute function on keyup
+    input.addEventListener("keyup", (e) => {
+        removeElements();
+        for (let i of names) {
+            if (
+                i.name.toLowerCase().startsWith(input.value.toLowerCase()) &&
+                input.value != ""
+            ) {
+                //create li element
+                let listItem = document.createElement("li");
+                //One common class name
+                listItem.classList.add("list-items");
+                listItem.style.cursor = "pointer";
+                listItem.setAttribute("onclick", "displayNames('" + i.name + "')");
+                //Display matched part in bold
+                let word = "<b>" + i.name.substr(0, input.value.length) + "</b>";
+                word += i.name.substr(input.value.length);
+                //display the value in array
+                listItem.innerHTML = word;
+                document.querySelector(".list").appendChild(listItem);
+                namesDistricts.push(i.districts)
+            }
+        }
+    });
+    input1.addEventListener("keyup", (e) => {
+        removeElements();
+        for (let item of namesDistricts) {
+            for (let i of item) {
+                console.log(i.name)
+                if (
+                    i.name.toLowerCase().startsWith(input1.value.toLowerCase()) &&
+                    input1.value != ""
+                ) {
+                    //create li element
+                    let listItem = document.createElement("li");
+                    //One common class name
+                    listItem.classList.add("list-items");
+                    listItem.style.cursor = "pointer";
+                    listItem.setAttribute("onclick", "displayNames1('" + i.name + "')");
+                    //Display matched part in bold
+                    let word = "<b>" + i.name.substr(0, input1.value.length) + "</b>";
+                    word += i.name.substr(input1.value.length);
+                    //display the value in array
+                    listItem.innerHTML = word;
+                    document.querySelector(".list").appendChild(listItem);
+                    namesWards.push(i.wards)
+                }
+            }
+
+        }
+    });
+    input2.addEventListener("keyup", (e) => {
+        removeElements();
+        for (let item of namesWards) {
+            for (let i of item) {
+                console.log(i.name)
+                if (
+                    i.name.toLowerCase().startsWith(input2.value.toLowerCase()) &&
+                    input2.value != ""
+                ) {
+                    //create li element
+                    let listItem = document.createElement("li");
+                    //One common class name
+                    listItem.classList.add("list-items");
+                    listItem.style.cursor = "pointer";
+                    listItem.setAttribute("onclick", "displayNames2('" + i.name + "')");
+                    //Display matched part in bold
+                    let word = "<b>" + i.name.substr(0, input2.value.length) + "</b>";
+                    word += i.name.substr(input2.value.length);
+                    //display the value in array
+                    listItem.innerHTML = word;
+                    document.querySelector(".list").appendChild(listItem);
+                }
+            }
+        }
+    });
+    function displayNames(value) {
+        input.value = value;
+        removeElements();
+    }
+    function displayNames1(value) {
+        input1.value = value;
+        removeElements();
+    }
+    function displayNames2(value) {
+        input2.value = value;
+        removeElements();
+        const element = document.getElementsByClassName("list");
+        element.scrollTop;
+    }
+    function removeElements() {
+        let items = document.querySelectorAll(".list-items");
+        items.forEach((item) => {
+            item.remove();
+        });
+    }
+
+    //// Use datepicker on the date inputs
+    //$("input[type=date]").datepicker({
+    //    dateFormat: 'dd/mm/yyy',
+    //    onSelect: function (dateText, inst) {
+    //        $(inst).val(dateText); // Write the value in the input
+    //    }
+    //});
+
+    //// Code below to avoid the classic date-picker
+    //$("input[type=date]").on('click', function () {
+    //    return false;
+    //});
+</script>

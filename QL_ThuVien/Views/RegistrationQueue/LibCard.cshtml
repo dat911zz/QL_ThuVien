@@ -1,0 +1,134 @@
+﻿@model IEnumerable<QL_ThuVien.Models.TheThuVienV2>
+@{
+    ViewBag.Title = "LibCard";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+    int count = 1;
+}
+
+<div class="test">
+    <div class="header ml-0">
+        <h2 class="position-relative" style="color: #440ccb ">DANH SÁCH THẺ THƯ VIỆN</h2>
+        <hr class="bg-dark">
+    </div>
+</div>
+<div style="float: right; margin-bottom: 10px;">
+    <a href="#" class="btn btn-info m-1">+ Thêm thẻ thư viện</a>
+</div>
+<style>
+    .dataTables_filter > label, .dataTables_length > label {
+        font-size: 1rem;
+    }
+
+    table.dataTable {
+        /*table-layout: fixed;*/
+    }
+
+    .short-tent {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 5;
+        -webkit-box-orient: vertical;
+        word-break: break-word;
+        min-height: 3em;
+    }
+
+    table.dataTable thead > tr > th {
+        text-align: center;
+        background-color: #333333;
+        color: #ffffff;
+    }
+</style>
+<div class="container">
+    <div class="table">
+        <table class="table table-striped" id="table_id" width="100%" cellspacing="0">
+            <colgroup>
+                <col style="width: 3%;">
+                <col style="width: 15%;">
+                <col style="width: 15%;">
+                <col style="width: 15%;">
+            </colgroup>
+            <thead>
+                <tr class="text-center">
+                    <th>STT</th>
+                    <th>Họ tên</th>
+                    <th>Ngày sinh</th>
+                    <th>Số điện thoại</th>
+                    <th>Ngày cấp </th>
+                    <th>Ngày hết hạn</th>
+                    <th class="text-center">Công Cụ</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                <tr>
+                    <td>@(count++)</td>
+                    <td class="text-center">@item.HoTen</td>
+                    <td class="text-center">@item.NgaySinh</td>
+                    <td class="text-center">@item.SoDienThoai</td>
+                    <td class="text-center">@item.NgayCap</td>
+                    <td class="text-center">@item.NgayHetHan</td>
+                         <td class="text-center">
+                        <a class="btn btn-secondary btn-edit m-l-0 px-075" href"#"><span><img src="https://img.icons8.com/windows/23/null/pencil.png" /></span>Sửa</a>
+                        <a class="btn btn-danger px-075" onclick="DVNConfirm('Xóa', 'Sách', '/Book/Delete', @item.MaTTV)"><span><img src="https://img.icons8.com/carbon-copy/26/null/delete-forever--v1.png" /></span> Xóa</a>
+                    </td>
+
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    var confirmApproval = (functionName, objectName, url, stt, maNSD, maPhong, thoiGianMuon, thoiGianTra) => {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Cảnh Báo!',
+            html: '<div>Bạn có chắc muốn thực hiện hành động này?</div>'
+                + '<div>Chi tiết: <span style="font-weight: bold">' + functionName.toLowerCase() + ' ' + objectName.toLowerCase() + ' có số thứ tự là <span style="color: red">' + stt + '</span></span></div>',
+            showCancelButton: true,
+            confirmButtonText: functionName,
+            cancelButtonText: 'Hủy'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: { maNSD, maPhong, thoiGianMuon, thoiGianTra },
+                    success: function (r) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành Công',
+                            text: 'Đã ' + functionName.toLowerCase() + ' ' + objectName.toLowerCase() + ' có stt là ' + stt + ' !',
+                            showConfirmButton: true,
+                            timer: 2000
+                        }).then((result) => {
+                            location.reload();
+                        });
+                    }
+                });
+            }
+        })
+    };
+    $(document).ready(function () {
+        $('#table_id').DataTable().destroy();
+        $('#table_id').DataTable({
+            pageResize: false,
+            scrollY: 500,
+            scrollX: true,
+            lengthMenu: [
+                [5, 10, 25, 50, -1],
+                [5, 10, 25, 50, 'All'],
+            ],
+            displayLength: 5,
+            dom: "<'toolbar'><'row'<'col-sm-5'l><'col-sm-7 t_filter'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-4'i><'col-sm-6'p>>",
+            /*dom: "<'toolbar'>ftrip",*/
+            fnInitComplete: function () {
+                $('div.toolbar').html('Custom tool bar!');
+            }
+        });
+    });
+</script>
+

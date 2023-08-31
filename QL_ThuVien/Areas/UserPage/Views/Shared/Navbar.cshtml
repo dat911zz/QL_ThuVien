@@ -1,0 +1,50 @@
+﻿<nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" navbar-scroll="true">
+    <div class="container-fluid py-1 px-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Trang</a></li>
+                <li class="breadcrumb-spe breadcrumb-item text-sm text-dark" aria-current="page">Dashboard</li>
+            </ol>
+        </nav>
+        <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+            <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+                @using (Html.BeginForm("BookLookUp", "V1", FormMethod.Get))
+                {
+                    <div class="input-group">
+                        <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
+                        <input name="txtSearch" type="text" class="form-control" placeholder="Tìm kiếm...">
+                    </div>
+                }
+            </div>
+            <div class="nav-item pe-2 d-flex align-items-center">
+                <a href="@Url.Action("Index", "GioSach")" class="nav-link text-body p-0" style="position: absolute;">
+                    <img src="https://img.icons8.com/pastel-glyph/30/null/shopping-bag--v3.png" />
+                    <span style="left: 20.5px;top: -4.5px !important;min-width: 14.5px;width: fit-content !important;max-width: 20px;" class="badge-danger c_badge bounce b_red">
+                        @Html.Action("GioSachPartial", "GioSach")
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+<script>
+    var btnContainer = document.getElementById("sidenav-collapse-main");
+    var btns = btnContainer.getElementsByClassName("nav-link");
+
+    var idText = document.getElementById("navbarBlur");
+    var text = idText.getElementsByClassName("breadcrumb-spe");
+
+
+    // Loop through the buttons and add the active class to the current/clicked button
+    for (var i = 0; i < btns.length; i++) {
+        if (btns[i].href == window.location.href) {
+            text[0].innerHTML = window.location.pathname.split('/').pop().split('#')[0].split('?')[0];
+        }
+        if (window.location.pathname == "/") {
+            text[0].innerHTML = "DashBoard";
+        }
+        btns[i].addEventListener("click", function () {
+            text[0].innerHTML = window.location.pathname.split('/').pop().split('#')[0].split('?')[0];
+        });
+    }
+</script>

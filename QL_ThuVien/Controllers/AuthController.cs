@@ -124,58 +124,53 @@ namespace QL_ThuVien.Controllers
         //}
         public string SignIn(string name, string pass)
         {
-            FormsAuthentication.SetAuthCookie(name, false);
-            var authTicket = new FormsAuthenticationTicket(1, name, DateTime.Now, DateTime.Now.AddHours(3), false, "Quản trị viên");
-            string encryptedTicket = FormsAuthentication.Encrypt(authTicket);
-            var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
-            HttpContext.Response.Cookies.Add(authCookie);
-            HttpContext.Session.Add("username", "System Administrator");
-            return "";
+            //FormsAuthentication.SetAuthCookie(name, false);
+            //var authTicket = new FormsAuthenticationTicket(1, name, DateTime.Now, DateTime.Now.AddHours(3), false, "Quản trị viên");
+            //string encryptedTicket = FormsAuthentication.Encrypt(authTicket);
+            //var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
+            //HttpContext.Response.Cookies.Add(authCookie);
+            //HttpContext.Session.Add("username", "System Administrator");
+            //return "";
             ////gk9yyKQ@P39gfsW
-            //string connectionString = string.Format("Data Source={0};Initial Catalog={1};User ID={2};Password={3};",
-            //            "DESKTOP-GUE0JS7",
-            //            "QLTHUVIEN",
-            //            name,
-            //            pass
-            //        );
-            //try
-            //{
-            //    using (var conn = new SqlConnection(connectionString))
-            //    {
-            //        conn.Open();
-            //        HttpContext.Session.Add("cn", SecurityHelper.Encrypt(connectionString, "QLTHUVIEN"));
-            //        _services = ServicesContainer.Container;
-            //        logger.Info($"IP {HttpContext.Request.UserHostAddress} has been connected.");
-            //        if (name.Equals("sa"))
-            //        {
-            //            FormsAuthentication.SetAuthCookie(name, false);
-            //            var authTicket = new FormsAuthenticationTicket(1, name, DateTime.Now, DateTime.Now.AddHours(3), false, "Quản trị viên");
-            //            string encryptedTicket = FormsAuthentication.Encrypt(authTicket);
-            //            var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
-            //            HttpContext.Response.Cookies.Add(authCookie);
-            //            HttpContext.Session.Add("username", "System Administrator");
-            //        }
-            //        else
-            //        {
-            //            Dapper appDBContext = new Dapper(ConfigurationManager.ConnectionStrings["DoAnLienMonConnectionString"].ConnectionString);
+            string connectionString = ConfigurationManager.ConnectionStrings["DoAnLienMonConnectionString"].ConnectionString;
+            try
+            {
+                using (var conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    HttpContext.Session.Add("cn", SecurityHelper.Encrypt(connectionString, "QLTHUVIEN"));
+                    _services = ServicesContainer.Container;
+                    logger.Info($"IP {HttpContext.Request.UserHostAddress} has been connected.");
+                    if (name.Equals("sa"))
+                    {
+                        FormsAuthentication.SetAuthCookie(name, false);
+                        var authTicket = new FormsAuthenticationTicket(1, name, DateTime.Now, DateTime.Now.AddHours(3), false, "Quản trị viên");
+                        string encryptedTicket = FormsAuthentication.Encrypt(authTicket);
+                        var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
+                        HttpContext.Response.Cookies.Add(authCookie);
+                        HttpContext.Session.Add("username", "System Administrator");
+                    }
+                    else
+                    {
+                        Dapper appDBContext = new Dapper(ConfigurationManager.ConnectionStrings["DoAnLienMonConnectionString"].ConnectionString);
 
-            //            var user = appDBContext.QueryTable<TaiKhoanV2>("TaiKhoan").SingleOrDefault(x => x.TenDN.Equals(name));
-            //            FormsAuthentication.SetAuthCookie(user.TenDN, false);
-            //            var authTicket = new FormsAuthenticationTicket(1, user.TenDN, DateTime.Now, DateTime.Now.AddHours(3), false, user.ChucVu);
-            //            string encryptedTicket = FormsAuthentication.Encrypt(authTicket);
-            //            var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
-            //            HttpContext.Response.Cookies.Add(authCookie);
-            //            string userName = appDBContext.QueryTable<NhanVien>("NhanVien").SingleOrDefault(x => x.MaNhanVien == user.MaNhanVien).HoTen;
-            //            HttpContext.Session.Add("username", userName);
-            //        }
-            //        return "";
-            //    }
+                        var user = appDBContext.QueryTable<TaiKhoanV2>("TaiKhoan").SingleOrDefault(x => x.TenDN.Equals(name));
+                        FormsAuthentication.SetAuthCookie(user.TenDN, false);
+                        var authTicket = new FormsAuthenticationTicket(1, user.TenDN, DateTime.Now, DateTime.Now.AddHours(3), false, user.ChucVu);
+                        string encryptedTicket = FormsAuthentication.Encrypt(authTicket);
+                        var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
+                        HttpContext.Response.Cookies.Add(authCookie);
+                        string userName = appDBContext.QueryTable<NhanVien>("NhanVien").SingleOrDefault(x => x.MaNhanVien == user.MaNhanVien).HoTen;
+                        HttpContext.Session.Add("username", userName);
+                    }
+                    return "";
+                }
 
-            //}
-            //catch (Exception ex)
-            //{
-            //    return "Tên tài khoản hoặc mật khẩu không đúng!";
-            //}
+            }
+            catch (Exception ex)
+            {
+                return "Tên tài khoản hoặc mật khẩu không đúng!";
+            }
         }
         [HttpPost]
         [AllowAnonymous]

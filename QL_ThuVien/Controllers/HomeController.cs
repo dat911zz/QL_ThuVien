@@ -48,16 +48,16 @@ namespace QL_ThuVien.Controllers
                     }
                     var ticket = FormsAuthentication.Decrypt(cookie.Value);
                     var role = ticket.UserData;
-                    //ViewBag.TotalReaders = _services.Db.THETHUVIENs.Count();
-                    //ViewBag.TotalBooks = _services.Db.SACHes.Count();
-                    //ViewBag.TotalViolations = _services.Db.BIVIPHAMs.Count();
-                    //ViewBag.TotalBorrowBooks = _services.Db.PHIEUMUONs.Count();
-                    //ViewBag.TotalBookBacks = _services.Db.PHIEUTRAs.Count();
-                    ViewBag.TotalReaders = 100;
-                    ViewBag.TotalBooks = 203;
-                    ViewBag.TotalViolations = 12;
-                    ViewBag.TotalBorrowBooks = 1000;
-                    ViewBag.TotalBookBacks = 510;
+                    ViewBag.TotalReaders = _services.Db.THETHUVIENs.Count();
+                    ViewBag.TotalBooks = _services.Db.SACHes.Count();
+                    ViewBag.TotalViolations = _services.Db.BIVIPHAMs.Count();
+                    ViewBag.TotalBorrowBooks = _services.Db.PHIEUMUONs.Count();
+                    ViewBag.TotalBookBacks = _services.Db.PHIEUTRAs.Count();
+                    //ViewBag.TotalReaders = 100;
+                    //ViewBag.TotalBooks = 203;
+                    //ViewBag.TotalViolations = 12;
+                    //ViewBag.TotalBorrowBooks = 1000;
+                    //ViewBag.TotalBookBacks = 510;
                     return View();
                 }
             }

@@ -20,9 +20,9 @@ namespace QL_ThuVien.Models
 	using System.Linq.Expressions;
 	using System.ComponentModel;
 	using System;
-    using System.ComponentModel.DataAnnotations;
-
-    [global::System.Data.Linq.Mapping.DatabaseAttribute(Name="db_a90554_luaga123")]
+	
+	
+	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="db_a90554_luaga123")]
 	public partial class QLTVDataContext : System.Data.Linq.DataContext
 	{
 		
@@ -1405,6 +1405,7 @@ namespace QL_ThuVien.Models
 				}
 			}
 		}
+		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_MANHANVIEN", DbType="Int")]
 		public System.Nullable<int> MANHANVIEN
 		{
@@ -1428,7 +1429,7 @@ namespace QL_ThuVien.Models
 				}
 			}
 		}
-		[Required(ErrorMessage = "Vui lòng nhập tên đăng nhập!")]
+		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TENDN", DbType="VarChar(120)")]
 		public string TENDN
 		{
@@ -1448,7 +1449,7 @@ namespace QL_ThuVien.Models
 				}
 			}
 		}
-		[Required(ErrorMessage = "Vui lòng nhập mật khẩu!")]
+		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_MATKHAU", DbType="VarChar(20) NOT NULL", CanBeNull=false)]
 		public string MATKHAU
 		{
@@ -1468,7 +1469,7 @@ namespace QL_ThuVien.Models
 				}
 			}
 		}
-		[Required(ErrorMessage = "Vui lòng chọn chức vụ!")]
+		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CHUCVU", DbType="NVarChar(20) NOT NULL", CanBeNull=false)]
 		public string CHUCVU
 		{
@@ -2893,7 +2894,7 @@ namespace QL_ThuVien.Models
 				}
 			}
 		}
-		[Required(ErrorMessage = "Vui lòng nhập họ tên!")]
+		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_HOTEN", DbType="NVarChar(120) NOT NULL", CanBeNull=false)]
 		public string HOTEN
 		{
@@ -2913,7 +2914,7 @@ namespace QL_ThuVien.Models
 				}
 			}
 		}
-		[Required(ErrorMessage = "Vui lòng nhập ngày sinh!")]
+		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NGAYSINH", DbType="DateTime NOT NULL")]
 		public System.DateTime NGAYSINH
 		{
@@ -2933,7 +2934,7 @@ namespace QL_ThuVien.Models
 				}
 			}
 		}
-		[Required(ErrorMessage = "Vui lòng nhập SĐT!")]
+		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SODIENTHOAI", DbType="Char(10) NOT NULL", CanBeNull=false)]
 		public string SODIENTHOAI
 		{
@@ -2953,7 +2954,7 @@ namespace QL_ThuVien.Models
 				}
 			}
 		}
-		[Required(ErrorMessage = "Vui lòng nhập địa chỉ!")]
+		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DIACHI", DbType="NVarChar(200) NOT NULL", CanBeNull=false)]
 		public string DIACHI
 		{
@@ -2973,8 +2974,7 @@ namespace QL_ThuVien.Models
 				}
 			}
 		}
-		[Required(ErrorMessage = "Vui lòng nhập email!")]
-		[RegularExpression(@"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}", ErrorMessage = "Hãy nhập địa chỉ email hợp lệ.\nExample@gmail.com")]
+		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EMAIL", DbType="VarChar(120) NOT NULL", CanBeNull=false)]
 		public string EMAIL
 		{

@@ -141,28 +141,20 @@ namespace QL_ThuVien.Controllers
                     HttpContext.Session.Add("cn", SecurityHelper.Encrypt(connectionString, "QLTHUVIEN"));
                     _services = ServicesContainer.Container;
                     logger.Info($"IP {HttpContext.Request.UserHostAddress} has been connected.");
-                    if (name.Equals("sa"))
-                    {
-                        FormsAuthentication.SetAuthCookie(name, false);
-                        var authTicket = new FormsAuthenticationTicket(1, name, DateTime.Now, DateTime.Now.AddHours(3), false, "Quản trị viên");
-                        string encryptedTicket = FormsAuthentication.Encrypt(authTicket);
-                        var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
-                        HttpContext.Response.Cookies.Add(authCookie);
-                        HttpContext.Session.Add("username", "System Administrator");
-                    }
-                    else
-                    {
-                        Dapper appDBContext = new Dapper(ConfigurationManager.ConnectionStrings["DoAnLienMonConnectionString"].ConnectionString);
+                    Dapper appDBContext = new Dapper(ConfigurationManager.ConnectionStrings["DoAnLienMonConnectionString"].ConnectionString);
 
-                        var user = appDBContext.QueryTable<TaiKhoanV2>("TaiKhoan").SingleOrDefault(x => x.TenDN.Equals(name));
-                        FormsAuthentication.SetAuthCookie(user.TenDN, false);
-                        var authTicket = new FormsAuthenticationTicket(1, user.TenDN, DateTime.Now, DateTime.Now.AddHours(3), false, user.ChucVu);
-                        string encryptedTicket = FormsAuthentication.Encrypt(authTicket);
-                        var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
-                        HttpContext.Response.Cookies.Add(authCookie);
-                        string userName = appDBContext.QueryTable<NhanVien>("NhanVien").SingleOrDefault(x => x.MaNhanVien == user.MaNhanVien).HoTen;
-                        HttpContext.Session.Add("username", userName);
+                    var user = appDBContext.QueryTable<TaiKhoanV2>("TaiKhoan").SingleOrDefault(x => x.TenDN.Equals(name));
+                    if (user == null)
+                    {
+                        return "Tên tài khoản hoặc mật khẩu không đúng!";
                     }
+                    FormsAuthentication.SetAuthCookie(user.TenDN, false);
+                    var authTicket = new FormsAuthenticationTicket(1, user.TenDN, DateTime.Now, DateTime.Now.AddHours(3), false, user.ChucVu);
+                    string encryptedTicket = FormsAuthentication.Encrypt(authTicket);
+                    var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
+                    HttpContext.Response.Cookies.Add(authCookie);
+                    string userName = appDBContext.QueryTable<NhanVien>("NhanVien").SingleOrDefault(x => x.MaNhanVien == user.MaNhanVien).HoTen;
+                    HttpContext.Session.Add("username", userName);
                     return "";
                 }
 

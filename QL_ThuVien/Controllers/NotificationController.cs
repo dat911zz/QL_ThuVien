@@ -110,8 +110,8 @@ namespace QL_ThuVien.Controllers
         }
         public ActionResult Counter()
         {
-            //Session["NCount"] = _services.Db.THONGBAOs.Count();
-            Session["NCount"] = 150;
+            Session["NCount"] = _services.Db.THONGBAOs.Count();
+            //Session["NCount"] = 150;
             return PartialView();
         }
     }

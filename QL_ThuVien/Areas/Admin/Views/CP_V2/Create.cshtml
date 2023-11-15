@@ -21,9 +21,8 @@
         box-sizing: border-box;
     }
 
-    input[type=text], select, textarea {
+    input[type=text], select, textarea, select2-selection {
         width: 100%;
-        padding: 12px;
         border: 1px solid #ccc;
         border-radius: 4px;
         resize: vertical;
@@ -33,7 +32,9 @@
         padding: 12px 12px 12px 0;
         display: inline-block;
     }
-
+    .form-select{
+        width: 200px;
+    }
     /*input[type=submit] {
         background-color: #440ccb;
         color: white;
@@ -45,7 +46,6 @@
         float: right;
         max-width: 250px;
     }*/
-
     .container {
         border-radius: 5px;
         background-color: #f2f2f2;
@@ -168,29 +168,39 @@
         </div>
         <div class="form-group">
             <div class="row  d-inline-flex  align-items-baseline">
-                <div class="col-2">
+                <div>
                     <label for="fname">Tỉnh/Thành <span style="color: red">(*)</span>:</label>
                 </div>
-                <div class="col-4">
-                    <input class="form-control form-control-province" required type="text" id="province" name="province" placeholder="Tỉnh/Thành..">
+                <div>
+                    <select class="form-select" id="city" name="province" required>
+                        <option value="" disabled selected>Chọn Tỉnh/thành phố...</option>
+                    </select>
                 </div>
+                
             </div>
             <ul class="list" id="scroll"></ul>
             <div class="row d-inline-flex  align-items-baseline">
-                <div class="col-2">
+                <div>
                     <label for="fname">Quận/Huyện <span style="color: red">(*)</span>:</label>
                 </div>
-                <div class="col-4">
-                    <input class="form-control form-control-district" required type="text" id="district" name="district" placeholder="Quận/Huyện..">
+                <div>
+                    <select class="form-select" id="district" name="district">
+                        <option value="" selected>Chọn quận/huyện</option>
+                    </select>
+                    <div class="invalid-feedback">
+                        Vui lòng chọn quận/huyện.
+                    </div>
                 </div>
             </div>
             <ul class="list " id="scroll"></ul>
             <div class="row d-inline-flex  align-items-baseline">
-                <div class="col-2">
+                <div>
                     <label for="fname">Phường/Xã <span style="color: red">(*)</span>:</label>
                 </div>
-                <div class="col-4">
-                    <input class="form-control form-control-ward" required type="text" id="ward" name="ward" placeholder="Phường/Xã..">
+                <div>
+                    <select class="form-select" id="ward" name="ward">
+                        <option value="" selected>Chọn phường/xã</option>
+                    </select>
                 </div>
             </div>
             <ul class="list" id="scroll"></ul>
@@ -256,6 +266,7 @@
 <div>
     @Html.ActionLink("Trở về", "Index")
 </div>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         var elements = document.getElementsByTagName("INPUT");
@@ -282,137 +293,40 @@
             $('.nv_pick').hide();
         }
     });
-    let names = []
-    let namesDistricts = []
-    let namesWards = []
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", "https://provinces.open-api.vn/api/?depth=3", true);
-    xhr.onload = function (e) {
-        if (xhr.readyState === 4) {
-            if (xhr.status === 200) {
-                var response = JSON.parse(xhr.responseText);
-                response.forEach(item => names.push(item))
-            } else {
-                console.error(xhr.statusText);
-            }
+    $(document).ready(function () {
+        const host = "https://provinces.open-api.vn/api/";
+        var callAPI = (api) => {
+            return axios.get(api)
+                .then((response) => {
+                    renderData(response.data, "city");
+                });
         }
-    };
-    xhr.onerror = function (e) {
-        console.error(xhr.statusText);
-    };
-    xhr.send(null);
-    //Sort names in ascending order
-    //reference
-    let input = document.getElementById("province");
-    let input1 = document.getElementById("district");
-    let input2 = document.getElementById("ward");
-    //Execute function on keyup
-    input.addEventListener("keyup", (e) => {
-        removeElements();
-        for (let i of names) {
-            if (
-                i.name.toLowerCase().startsWith(input.value.toLowerCase()) &&
-                input.value != ""
-            ) {
-                //create li element
-                let listItem = document.createElement("li");
-                //One common class name
-                listItem.classList.add("list-items");
-                listItem.style.cursor = "pointer";
-                listItem.setAttribute("onclick", "displayNames('" + i.name + "')");
-                //Display matched part in bold
-                let word = "<b>" + i.name.substr(0, input.value.length) + "</b>";
-                word += i.name.substr(input.value.length);
-                //display the value in array
-                listItem.innerHTML = word;
-                document.querySelector(".list").appendChild(listItem);
-                namesDistricts.push(i.districts)
-            }
+        callAPI('https://provinces.open-api.vn/api/?depth=1');
+        var callApiDistrict = (api) => {
+            return axios.get(api)
+                .then((response) => {
+                    renderData(response.data.districts, "district");
+                });
         }
-    });
-    input1.addEventListener("keyup", (e) => {
-        removeElements();
-        for (let item of namesDistricts) {
-            for (let i of item) {
-                console.log(i.name)
-                if (
-                    i.name.toLowerCase().startsWith(input1.value.toLowerCase()) &&
-                    input1.value != ""
-                ) {
-                    //create li element
-                    let listItem = document.createElement("li");
-                    //One common class name
-                    listItem.classList.add("list-items");
-                    listItem.style.cursor = "pointer";
-                    listItem.setAttribute("onclick", "displayNames1('" + i.name + "')");
-                    //Display matched part in bold
-                    let word = "<b>" + i.name.substr(0, input1.value.length) + "</b>";
-                    word += i.name.substr(input1.value.length);
-                    //display the value in array
-                    listItem.innerHTML = word;
-                    document.querySelector(".list").appendChild(listItem);
-                    namesWards.push(i.wards)
-                }
-            }
-
+        var callApiWard = (api) => {
+            return axios.get(api)
+                .then((response) => {
+                    renderData(response.data.wards, "ward");
+                });
         }
-    });
-    input2.addEventListener("keyup", (e) => {
-        removeElements();
-        for (let item of namesWards) {
-            for (let i of item) {
-                console.log(i.name)
-                if (
-                    i.name.toLowerCase().startsWith(input2.value.toLowerCase()) &&
-                    input2.value != ""
-                ) {
-                    //create li element
-                    let listItem = document.createElement("li");
-                    //One common class name
-                    listItem.classList.add("list-items");
-                    listItem.style.cursor = "pointer";
-                    listItem.setAttribute("onclick", "displayNames2('" + i.name + "')");
-                    //Display matched part in bold
-                    let word = "<b>" + i.name.substr(0, input2.value.length) + "</b>";
-                    word += i.name.substr(input2.value.length);
-                    //display the value in array
-                    listItem.innerHTML = word;
-                    document.querySelector(".list").appendChild(listItem);
-                }
-            }
+        var renderData = (array, select) => {
+            let row = `<option disable value="">Chọn</option>`;
+            array.forEach(element => {
+                row += `<option data-id="${element.code}" value="${element.name}">${element.name}</option>`
+            });
+            document.querySelector("#" + select).innerHTML = row
         }
-    });
-    function displayNames(value) {
-        input.value = value;
-        removeElements();
-    }
-    function displayNames1(value) {
-        input1.value = value;
-        removeElements();
-    }
-    function displayNames2(value) {
-        input2.value = value;
-        removeElements();
-        const element = document.getElementsByClassName("list");
-        element.scrollTop;
-    }
-    function removeElements() {
-        let items = document.querySelectorAll(".list-items");
-        items.forEach((item) => {
-            item.remove();
+        $("#city").change(() => {
+            callApiDistrict(host + "p/" + $("#city").find(':selected').data('id') + "?depth=2");
         });
-    }
-
-    //// Use datepicker on the date inputs
-    //$("input[type=date]").datepicker({
-    //    dateFormat: 'dd/mm/yyy',
-    //    onSelect: function (dateText, inst) {
-    //        $(inst).val(dateText); // Write the value in the input
-    //    }
-    //});
-
-    //// Code below to avoid the classic date-picker
-    //$("input[type=date]").on('click', function () {
-    //    return false;
-    //});
+        $("#district").change(() => {
+            callApiWard(host + "d/" + $("#district").find(':selected').data('id') + "?depth=2");
+        });
+        $("#city, #district, #ward").select2();
+    });
 </script>

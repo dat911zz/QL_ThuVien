@@ -14,6 +14,7 @@ using System.Data.SqlClient;
 using System.Configuration;
 using System.Data.OleDb;
 using Excel = Microsoft.Office.Interop.Excel;
+using System.Threading.Tasks;
 
 namespace QL_ThuVien.Controllers
 {
@@ -37,6 +38,7 @@ namespace QL_ThuVien.Controllers
             Session["CDList"] = _services.DbContext.QueryTable<ChuDe>("ChuDe");
             Session["NXBSelectList"] = new SelectList(Session["NXBList"] as List<NhaXuatBan>, "MaNXB", "TenNXB");
             Session["CDSelectList"] = new SelectList(Session["CDList"] as List<ChuDe>, "MaChuDe", "TenChuDe");
+            Session["SachList"] = _services.Db.SACHes.ToList();
             return View(books);
         }
         public ActionResult BoostrapTableTest()
@@ -324,6 +326,16 @@ namespace QL_ThuVien.Controllers
                 }
             }
             return View(model);
+        }
+        [HttpGet]
+        public string CountSLBS(int id)
+        {
+            var book = _services.Db.SACHes.FirstOrDefault(s => s.MASACH == id);
+            int total = book.BANSAOSACHes.Count;
+            int totalInUse = book.BANSAOSACHes.Where(s => s.TINHTRANG == true).Count();
+            string rs = total == 0 ? "0" : totalInUse.ToString() + " / " + total.ToString();
+            return rs;
+
         }
         public ActionResult BorrowBook()
         {

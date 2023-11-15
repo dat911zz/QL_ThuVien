@@ -54,36 +54,29 @@ namespace QL_ThuVien.Areas.Admin.Controllers
                     }
                     else
                     {
-                        if (!model.TenDN.Equals("sa"))
-                        {
-                            //_services.Db.TAIKHOANs.InsertOnSubmit(model);
-                            //_services.Db.SubmitChanges();
-                            string address = "";
-                            address += collection["address"].ToString() + " ,";
-                            address += collection["ward"].ToString() + " ,";
-                            address += collection["district"].ToString() + " ,";
-                            address += collection["province"].ToString() + ".";
+                        //_services.Db.TAIKHOANs.InsertOnSubmit(model);
+                        //_services.Db.SubmitChanges();
+                        string address = "";
+                        address += collection["address"].ToString() + " ,";
+                        address += collection["ward"].ToString() + " ,";
+                        address += collection["district"].ToString() + " ,";
+                        address += collection["province"].ToString() + ".";
 
-                            var result = _services.DbContext.Exceute(string.Format("exec TaoTaiKhoanNhanVien N'{0}', '{1}', '{2}', N'{3}', '{4}', '{5}', '{6}', N'{7}'",
-                                    collection["hoten"].ToString(),
-                                    collection["ns"].ToString(),
-                                    collection["sdt"].ToString(),
-                                    address,
-                                    collection["email"].ToString(),
-                                    model.TenDN,
-                                    model.MatKhau,
-                                    model.ChucVu
-                                ));
-                            if (result == 0)
-                            {
-                                throw new Exception("Thao tác thất bại!");
-                            }
-                            return RedirectToAction("Index");
-                        }
-                        else
+                        var result = _services.DbContext.Exceute(string.Format("exec TaoTaiKhoanNhanVien N'{0}', '{1}', '{2}', N'{3}', '{4}', '{5}', '{6}', N'{7}'",
+                                collection["hoten"].ToString(),
+                                collection["ns"].ToString(),
+                                collection["sdt"].ToString(),
+                                address,
+                                collection["email"].ToString(),
+                                model.TenDN,
+                                model.MatKhau,
+                                model.ChucVu
+                            ));
+                        if (result == 0)
                         {
-                            ModelState.AddModelError("TenDN", "Tên đăng nhập không hợp lệ!");
+                            throw new Exception("Thao tác thất bại!");
                         }
+                        return RedirectToAction("Index");
                     }
                 }
                 catch (Exception ex)

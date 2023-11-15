@@ -18,14 +18,14 @@
                     <div class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         @{
                             var ticket = FormsAuthentication.Decrypt(Request.Cookies[".ASPXAUTH"].Value) ?? null;
-                            if (ticket == null)
+                            if (ticket == null || Session["username"] == null)
                             {
                                 <script>
                                     window.location = '/Auth/SignOut'
                                 </script>
                             }
+                            @Session["username"].ToString()
                         }
-                        @Session["username"].ToString()
                     </div>
                     <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4" aria-labelledby="dropdown">
                         @*<li><a class="dropdown-item" href="#">Thông tin người dùng</a></li>*@

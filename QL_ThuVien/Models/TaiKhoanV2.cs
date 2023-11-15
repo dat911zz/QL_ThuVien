@@ -22,7 +22,7 @@ namespace QL_ThuVien.Models
         public int MaTaiKhoan { get => maTaiKhoan; set => maTaiKhoan = value; }
         public int? MaNhanVien { get => maNhanVien; set => maNhanVien = value; }
         [Required(ErrorMessage = "Vui lòng nhập tên DN!")]
-        [RegularExpression(@"^([^\d].*)$", ErrorMessage = "Tên tài khoản không đúng định dạng!")]
+        //[RegularExpression(@"^([^\d].*)$", ErrorMessage = "Tên tài khoản không đúng định dạng!")]
         public string TenDN { get => tenDN; set => tenDN = value; }
         [Required(ErrorMessage = "Vui lòng nhập mật khẩu")]
         public string MatKhau { get => matKhau; set => matKhau = value; }

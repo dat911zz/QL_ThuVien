@@ -5,6 +5,7 @@
     bool isValidUser = QL_ThuVien.Intergrate.Services.Helper.SecurityHelper.HasPermission(HttpContext.Current);
     var NXBList = Session["NXBList"] as List<QL_ThuVien.Models.NhaXuatBan>;
     var CDList = Session["CDList"] as List<QL_ThuVien.Models.ChuDe>;
+    var SachList = Session["SachList"] as List<QL_ThuVien.Models.SACH>;
 }
 <style>
     .dataTables_filter > label, .dataTables_length > label {
@@ -67,8 +68,8 @@
                     <col style="width: 8%;">
                     <col style="width: 8%;">
                     <col style="width: auto;">
-                    <col style="width: auto;">
-                    <col style="width: 10%;">
+                    <col style="width: 12%">
+                    @*<col style="width: 10%;">*@
                 </colgroup>
                 <thead>
                     <tr class="text-center">
@@ -78,8 +79,8 @@
                         <th>NXB</th>
                         <th>Chủ Đề</th>
                         <th>Năm Xuất Bản</th>
-                        <th>Giá Sách</th>
-                        <th>Mô Tả</th>
+                        <th>Số lượng tồn</th>
+                        @*<th>Mô Tả</th>*@
                         <th class="text-center">Công Cụ</th>
                     </tr>
                 </thead>
@@ -95,8 +96,11 @@
                             <td>@NXBList.SingleOrDefault(x => x.MaNXB == item.MaNXB).TenNXB</td>
                             <td>@CDList.SingleOrDefault(x => x.MaChuDe == item.MaChuDe).TenChuDe</td>
                             <td class="text-center">@(item.NamXuatBan.ToShortDateString())</td>
-                            <td class="text-center">@(item.GiaSach.ToString("#,###.##đ", new System.Globalization.CultureInfo("en-US", false).NumberFormat))</td>
-                            <td><div class="short-tent">@item.MoTa</div></td>
+                            @*<td class="text-center">@(item.GiaSach.ToString("#,###.##đ", new System.Globalization.CultureInfo("en-US", false).NumberFormat))</td>*@
+                            <td class="slbs" sid="@item.MaSach">   
+                                <span>Đang thống kê...</span>
+                            </td>
+                            @*<td><div class="short-tent">@item.MoTa</div></td>*@
                             @if (isValidUser)
                             {
                                 <td class="text-center">
@@ -119,7 +123,7 @@
 </body>
 <script>
     $(document).ready(function () {
-        $('#table_id').DataTable().destroy();
+        //$('#table_id').DataTable().destroy();
         $('#table_id').DataTable({
             pageResize: false,
             scrollY: 500,
@@ -151,5 +155,25 @@
             }
         });        
     });
+    $(".slbs").each(function (e, val) {
+        var id = $(this).attr("sid");
+        loadSLBS(this, id);
+    })
+    function loadSLBS(that, _id) {
+        $.ajax({
+            url: "/Book/CountSLBS",
+            data: {
+                id: _id,
+            },
+            success: function (data) {
+                // $('#img_song').html(data);
+                if (data != "0") {
+                    data = data.split('/')[0].trim() == "0" ? '<span style="color:red">Đã hết</span>' : data;
+                }
+                var content = data == "0" ? '<span style="color:red">Chưa nhập hàng</span>' : '<span style="color:green">' + data + '<span/>';
+                $(that).html(content);
+            }
+        });
+    }
 </script>
 

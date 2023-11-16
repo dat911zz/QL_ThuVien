@@ -432,16 +432,18 @@ let referenceButtons = document.querySelector('[data-class]');
 window.addEventListener("resize", navbarColorOnResize);
 
 function navbarColorOnResize() {
-  if (window.innerWidth > 1200) {
-    if (referenceButtons.classList.contains('active') && referenceButtons.getAttribute('data-class') === 'bg-transparent') {
-      sidenav.classList.remove('bg-white');
-    } else {
-      sidenav.classList.add('bg-white');
+    if (sidenav.classList != null && referenceButtons.classList != null) {
+        if (window.innerWidth > 1200) {
+            if (referenceButtons.classList.contains('active') && referenceButtons.getAttribute('data-class') === 'bg-transparent') {
+                sidenav.classList.remove('bg-white');
+            } else {
+                sidenav.classList.add('bg-white');
+            }
+        } else {
+            sidenav.classList.add('bg-white');
+            sidenav.classList.remove('bg-transparent');
+        }
     }
-  } else {
-    sidenav.classList.add('bg-white');
-    sidenav.classList.remove('bg-transparent');
-  }
 }
 
 // Deactivate sidenav type buttons on resize and small screens

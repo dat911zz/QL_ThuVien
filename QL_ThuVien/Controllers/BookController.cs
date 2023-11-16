@@ -15,6 +15,8 @@ using System.Configuration;
 using System.Data.OleDb;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Threading.Tasks;
+using NPOI.OpenXmlFormats;
+using NPOI.XWPF.UserModel;
 
 namespace QL_ThuVien.Controllers
 {
@@ -51,10 +53,15 @@ namespace QL_ThuVien.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult Create(Sach model, HttpPostedFileBase uploadImg)
+        public ActionResult Create(Sach model, int? slbansao, HttpPostedFileBase uploadImg)
         {
             if (ModelState.IsValid)
             {
+                if(slbansao == null || slbansao <= 0 || slbansao > 1000000000)
+                {
+                    ModelState.AddModelError("", "Số lượng bản sao tối đa là 1000000000 và lớn hơn 0!");
+                    return View();
+                }
                 if (model.NamXuatBan.CompareTo(DateTime.Now) > 0 || model.NamXuatBan.CompareTo(DateTime.Parse("01-01-1780")) < 0)
                 {
                     ModelState.AddModelError("NamXuatBan", "Năm đã nhập không hợp lệ!");
@@ -62,38 +69,61 @@ namespace QL_ThuVien.Controllers
                 }
                 else
                 {
-                    if (uploadImg != null && uploadImg.ContentLength > 0)
+                    try
                     {
-                        if (uploadImg.ContentType.ToLower().Contains("gif")
-                            || uploadImg.ContentType.ToLower().Contains("jpg")
-                            || uploadImg.ContentType.ToLower().Contains("jpeg")
-                            || uploadImg.ContentType.ToLower().Contains("png"))
+                        if (uploadImg != null && uploadImg.ContentLength > 0)
                         {
-                            var filename = Path.GetFileName(uploadImg.FileName);
-                            var path = Path.Combine(Server.MapPath("~/Assets/HinhAnhSP"), filename);
-                            uploadImg.SaveAs(path);
-                            model.AnhBia = filename;
-                            int result = 0;
-                            result = _services.DbContext.Add(model);
-                            if (result == 0)
+                            if (uploadImg.ContentType.ToLower().Contains("gif")
+                                || uploadImg.ContentType.ToLower().Contains("jpg")
+                                || uploadImg.ContentType.ToLower().Contains("jpeg")
+                                || uploadImg.ContentType.ToLower().Contains("png"))
                             {
-                                ModelState.AddModelError("", "Cập nhật thất bại, vui lòng kiểm tra thông tin!");
-                                return View();
+                                var filename = Path.GetFileName(uploadImg.FileName);
+                                var path = Path.Combine(Server.MapPath("~/Assets/HinhAnhSP"), filename);
+                                uploadImg.SaveAs(path);
+                                model.AnhBia = filename;
+                                SACH sInsert = new SACH
+                                {
+                                    TENSACH = model.TenSach,
+                                    MOTA = model.MoTa,
+                                    ANHBIA = model.AnhBia,
+                                    MANXB = model.MaNXB,
+                                    MACHUDE = model.MaChuDe,
+                                    GIASACH = model.GiaSach,
+                                    NAMXUATBAN = model.NamXuatBan
+                                };
+                                _services.Db.SACHes.InsertOnSubmit(sInsert);
+                                _services.Db.SubmitChanges();
+                                SACH s = _services.Db.SACHes.Where(t => t.MACHUDE == model.MaChuDe && t.MANXB == model.MaNXB &&
+                                            t.TENSACH == model.TenSach && t.MOTA == model.MoTa && t.NAMXUATBAN == model.NamXuatBan &&
+                                            t.GIASACH == model.GiaSach && t.ANHBIA == model.AnhBia).OrderByDescending(t => t.MASACH).FirstOrDefault();
+                                if (s != null)
+                                {
+                                    for (int i = 0; i < slbansao; i++)
+                                    {
+                                        BANSAOSACH bss = new BANSAOSACH();
+                                        bss.MASACH = s.MASACH;
+                                        _services.Db.BANSAOSACHes.InsertOnSubmit(bss);
+                                        _services.Db.SubmitChanges();
+                                    }
+                                }
+                                return RedirectToAction("Index");
                             }
                             else
                             {
-                                return RedirectToAction("Index");
+                                ModelState.AddModelError("", "File tải lên không hợp lệ, vui lòng thử lại!");
+                                return View();
                             }
                         }
                         else
                         {
-                            ModelState.AddModelError("", "File tải lên không hợp lệ, vui lòng thử lại!");
+                            ModelState.AddModelError("", "Vui lòng nhập file ảnh bìa!");
                             return View();
                         }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        ModelState.AddModelError("", "Vui lòng nhập file ảnh bìa!");
+                        ModelState.AddModelError("", "Thêm thất bại!");
                         return View();
                     }
                 }
@@ -327,13 +357,26 @@ namespace QL_ThuVien.Controllers
             }
             return View(model);
         }
+
+        public ActionResult Detail(int id)
+        {
+            var book = _services.Db.SACHes.SingleOrDefault(x => x.MASACH == id);
+            return View(book);
+        }
+
+        public ActionResult BanSao(int id)
+        {
+            var listBS = _services.Db.BANSAOSACHes.Where(bs => bs.MASACH == id).ToList();
+            return View(listBS);
+        }
+
         [HttpGet]
         public string CountSLBS(int id)
         {
             var book = _services.Db.SACHes.FirstOrDefault(s => s.MASACH == id);
             int total = book.BANSAOSACHes.Count;
             int totalInUse = book.BANSAOSACHes.Where(s => s.TINHTRANG == true).Count();
-            string rs = total == 0 ? "0" : totalInUse.ToString() + " / " + total.ToString();
+            string rs = total == 0 ? "0" : (total - totalInUse).ToString() + " / " + total.ToString();
             return rs;
 
         }
@@ -348,6 +391,31 @@ namespace QL_ThuVien.Controllers
         public ActionResult SearchBooks()
         {
             return View();
+        }
+
+        public PartialViewResult CartBooks()
+        {
+            List<BANSAOSACH> carts = Session["cartBooks"] as List<BANSAOSACH>;
+            if (carts == null)
+            {
+                carts = new List<BANSAOSACH>();
+            }
+            Session["cartBooks"] = carts;
+            return PartialView("CartBooks", carts);
+        }
+
+        [HttpPost]
+        public bool AddCartBooks(string mabs, string mas) {
+            List<BANSAOSACH> carts = Session["cartBooks"] as List<BANSAOSACH>;
+            if(carts == null)
+            {
+                carts = new List<BANSAOSACH>();
+            }
+            if(carts.FirstOrDefault(x => x.MABANSAO == int.Parse(mabs)) != null)
+                return false;
+            carts.Add(new BANSAOSACH { MABANSAO = int.Parse(mabs), MASACH = int.Parse(mas) });
+            Session["cartBooks"] = carts;
+            return true;
         }
     }
 }

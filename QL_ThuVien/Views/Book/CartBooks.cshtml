@@ -1,0 +1,43 @@
+﻿@model IEnumerable<QL_ThuVien.Models.BANSAOSACH>
+<a id="cart-books" class="@(Model.Count() > 0 ? "show" : "")" title="Lập phiếu mượn sách">
+    <div><i class="fa fa-files-o" aria-hidden="true"></i></div>
+    <span>@Model.Count()</span>
+</a>
+<style>
+    #cart-books.show {
+        display: block;
+    }
+
+    #cart-books {
+        position: absolute;
+        top: 25%;
+        right: 10px;
+        z-index: 100000000000000000000000000;
+        cursor: pointer;
+        display: none;
+    }
+
+        #cart-books:hover i {
+            background-color: rgba(128, 128, 128, 1);
+        }
+
+        #cart-books:hover span {
+            color: rgba(255, 255, 255, 1);
+        }
+
+        #cart-books > div > i {
+            padding: 20px;
+            border-radius: 50%;
+            background-color: rgba(128, 128, 128, 0.5);
+            color: white;
+        }
+
+        #cart-books > span {
+            position: absolute;
+            top: 5%;
+            right: 24%;
+            color: red;
+            font-size: 16px;
+            font-weight: bold;
+        }
+</style>

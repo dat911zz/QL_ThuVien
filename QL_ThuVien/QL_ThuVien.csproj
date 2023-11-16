@@ -146,6 +146,7 @@
   <ItemGroup>
     <Content Include="Assets\CSS\CustomLayout.css" />
     <Content Include="Assets\CSS\ErrorPage.css" />
+    <Content Include="Assets\CSS\font-awesome.min.css" />
     <Content Include="Assets\CSS\Login.css" />
     <Content Include="Assets\CSS\main.css" />
     <Content Include="Assets\CSS\nucleo-icons.css" />
@@ -154,6 +155,7 @@
     <Content Include="Assets\CSS\Reset.css" />
     <Content Include="Assets\CSS\soft-ui-dashboard.css" />
     <Content Include="Assets\CSS\soft-ui-dashboard.min.css" />
+    <Content Include="Assets\Fonts\fontawesome-webfont.svg" />
     <Content Include="Assets\Fonts\nucleo-icons.svg" />
     <Content Include="Assets\HinhAnhSP\000001.jpg" />
     <Content Include="Assets\HinhAnhSP\000002.jpg" />
@@ -623,6 +625,11 @@
     <Content Include="Logs\2023-01-09-api.log" />
     <Content Include="Logs\2023-01-10-api.log" />
     <Content Include="Logs\2023-01-11-api.log" />
+    <Content Include="Assets\Fonts\fontawesome-webfont.eot" />
+    <Content Include="Assets\Fonts\fontawesome-webfont.ttf" />
+    <Content Include="Assets\Fonts\fontawesome-webfont.woff" />
+    <Content Include="Assets\Fonts\fontawesome-webfont.woff2" />
+    <Content Include="Assets\Fonts\FontAwesome.otf" />
     <None Include="Models\QLTV.dbml.layout">
       <DependentUpon>QLTV.dbml</DependentUpon>
     </None>
@@ -664,6 +671,9 @@
     <Content Include="Views\Auth\CaptchaPartial.cshtml" />
     <Content Include="Views\Book\CreateFromFile.cshtml" />
     <Content Include="Views\Book\ExportFromFile.cshtml" />
+    <Content Include="Views\Book\Detail.cshtml" />
+    <Content Include="Views\Book\BanSao.cshtml" />
+    <Content Include="Views\Book\CartBooks.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

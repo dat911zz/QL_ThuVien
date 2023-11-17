@@ -17,6 +17,7 @@ using Excel = Microsoft.Office.Interop.Excel;
 using System.Threading.Tasks;
 using NPOI.OpenXmlFormats;
 using NPOI.XWPF.UserModel;
+using QL_ThuVien.DTO;
 
 namespace QL_ThuVien.Controllers
 {
@@ -381,8 +382,51 @@ namespace QL_ThuVien.Controllers
         }
         public ActionResult BorrowBook()
         {
+            List<THETHUVIEN> thes = _services.Db.THETHUVIENs.ToList();
+            ViewData["TheThuViens"] = thes;
             return View();
         }
+
+        [HttpPost]
+        public ActionResult BorrowBook(string mathe)
+        {
+            List<THETHUVIEN> thes = _services.Db.THETHUVIENs.ToList();
+            ViewData["TheThuViens"] = thes;
+            return View();
+        }
+
+        public ActionResult BorrowedBook()
+        {
+            var list = (from pm in _services.Db.PHIEUMUONs 
+                        join nv in _services.Db.NHANVIENs 
+                            on pm.MANHANVIEN equals nv.MANHANVIEN 
+                        join ttv in _services.Db.THETHUVIENs
+                            on pm.MANSD equals ttv.MATTV
+                        select new
+                        {
+                            pm,
+                            nv,
+                            ttv
+                        }).ToList();
+            List<DTO.PhieuMuon> res = new List<DTO.PhieuMuon>();
+            list.ForEach(i =>
+            {
+                res.Add(new DTO.PhieuMuon
+                {
+                    MAPHIEUMUON = i.pm.MAPHIEUMUON,
+                    MANHANVIEN = i.pm.MANHANVIEN,
+                    MANSD = i.pm.MANSD,
+                    NGAYMUON = i.pm.NGAYMUON,
+                    NGAYTRA = i.pm.NGAYTRA,
+                    HOTEN_NV = i.nv.HOTEN,
+                    SODIENTHOAI_NV = i.nv.SODIENTHOAI,
+                    HOTEN_ND = i.ttv.HOTEN,
+                    SODIENTHOAI_ND = i.ttv.SODIENTHOAI
+                });
+            });
+            return View(res);
+        }
+
         public ActionResult SendBackBook()
         {
             return View();
@@ -430,6 +474,11 @@ namespace QL_ThuVien.Controllers
             carts.Remove(iFind);
             Session["cartBooks"] = carts;
             return true;
+        }
+        
+        public void ClearCartBooks()
+        {
+            Session["cartBooks"] = new List<BANSAOSACH>();
         }
     }
 }

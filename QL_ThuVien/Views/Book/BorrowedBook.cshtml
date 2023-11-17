@@ -1,0 +1,72 @@
+﻿@model IEnumerable<QL_ThuVien.DTO.PhieuMuon>
+@{
+    ViewBag.Title = "Danh Sách Phiếu Mượn";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+    bool isValidUser = QL_ThuVien.Intergrate.Services.Helper.SecurityHelper.HasPermission(HttpContext.Current);
+}
+
+<body>
+    <div class="test">
+        <div class="header ml-0">
+            <h2 class="position-relative" style="color: #440ccb ">DANH SÁCH PHIẾU MƯỢN</h2>
+        </div>
+    </div>
+    <div class="container">
+        <div class="table">
+            <table class="table" id="table_id" width="100%" cellspacing="0">
+                <colgroup>
+                    <col style="width: 15%;">
+                    <col style="width: 15%;">
+                    <col style="width: 15%;">
+                    <col style="width: 15%;">
+                    <col style="width: 15%;">
+                    <col style="width: 15%;">
+                </colgroup>
+                <thead>
+                    <tr class="text-center">
+                        <th>Mã Phiếu Mượn</th>
+                        <th>Ngày Mượn</th>
+                        <th>Ngày Trả</th>
+                        <th>Tên Người Mượn</th>
+                        <th>SĐT Người Mượn</th>
+                        <th class="text-center">Công Cụ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.MAPHIEUMUON</td>
+                            <td>@item.NGAYMUON.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                            <td>@item.NGAYTRA.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                            <td>@item.HOTEN_ND</td>
+                            <td>@item.SODIENTHOAI_ND</td>
+                            @if (isValidUser)
+                            {
+                                <td class="text-center">
+                                    <a class="btn btn-primary btn-edit m-l-0 px-075" href="" title="Thông tin chi tiết">
+                                        <i class="fa fa-info" aria-hidden="true"></i>
+                                    </a>
+                                    <a class="btn btn-primary btn-edit m-l-0 px-075" href="" title="Bản sao sách">
+                                        <i class="fa fa-file-text" aria-hidden="true"></i>
+                                    </a>
+                                    <a class="btn btn-primary btn-edit m-l-0 px-075" href="" title="Chỉnh sửa thông tin">
+                                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                                    </a>
+                                    <a class="btn btn-danger btn-edit m-l-0 px-075" onclick="" title="Xóa">
+                                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                    </a>
+                                </td>
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+

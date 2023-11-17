@@ -2,6 +2,7 @@
     ViewBag.Title = "Lập Phiếu Mượn Sách";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
     var carts = Session["cartBooks"] as List<QL_ThuVien.Models.BANSAOSACH> ?? new List<QL_ThuVien.Models.BANSAOSACH>();
+    var thes = ViewData["TheThuViens"] as List<QL_ThuVien.Models.THETHUVIEN>;
 }
 
 <body>
@@ -11,6 +12,17 @@
         </div>
     </div>
     <div class="container">
+        <div class="row mb-2 align-items-center">
+            <div class="col-6">
+                <select class="form-control select2-qltv">
+                    @foreach (var item in thes)
+                    {
+                        <option value="@item.MATTV">@(item.SODIENTHOAI + " - " + item.HOTEN)</option>
+                    }
+                </select>
+            </div>
+            <div class="col-6" style="text-align: right;"><div class="btn btn-primary" style="text-transform:uppercase;">Lập phiếu mượn</div></div>
+        </div>
         <div class="table">
             <table class="table" id="table_id" width="100%" cellspacing="0">
                 <colgroup>
@@ -41,8 +53,10 @@
                 </tbody>
             </table>
         </div>
-        <div style="text-align: right;"><div class="btn btn-primary" style="text-transform:uppercase;">Lập phiếu mượn</div></div>
     </div>
+    <form method="post" action="/Book/BorrowBook" name="Borrow">
+        <input type="text" id="mathe" name="mathe" />
+    </form>
     <script>
         $('.btn-remove-cart-book').click(function () {
             var row = $(this).closest('tr');
@@ -53,56 +67,3 @@
         });
     </script>
 </body>
-<style>
-    .test {
-        max-width: max-content;
-        padding: 20px;
-        display: block;
-    }
-
-    .add-room {
-        background-color: #440ccb;
-        color: white;
-        margin-bottom: 20px;
-        padding: 12px 20px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        float: left;
-        max-width: 250px;
-    }
-
-    .styled-table {
-        border-collapse: collapse;
-        margin: auto;
-        font-size: 0.9em;
-        font-family: sans-serif;
-        width: inherit;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-    }
-
-        .styled-table thead tr {
-            background-color: #333333;
-            color: #ffffff;
-            text-align: left;
-        }
-
-        .styled-table th,
-        .styled-table td {
-            padding: 12px 15px;
-        }
-
-        .styled-table tbody tr {
-            border-bottom: 1px solid #dddddd;
-        }
-
-            .styled-table tbody tr:nth-of-type(even) {
-                background-color: #f3f3f3;
-            }
-
-            .styled-table tbody tr:last-of-type {
-                border-bottom: 2px solid #333333;
-            }
-</style>
-
-

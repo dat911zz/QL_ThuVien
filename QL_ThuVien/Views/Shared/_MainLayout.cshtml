@@ -39,6 +39,9 @@
             padding: 10px !important;
             min-width: 35px;
         }
+            .btn-edit.btn-secondary {
+                cursor: unset;
+            }
     </style>
     @RenderSection("scripts", required: false)
 </head>
@@ -72,7 +75,7 @@
         $(document).ready(function () {
             $('.btn-edit, #cart-books').tooltip({ show: { effect: "none", delay: 0 } });
         });
-        function addCartBooks(mabs, mas) {
+        function addCartBooks(mabs, mas, objTrigger) {
             $.ajax({
                 type: "POST",
                 url: "/Book/AddCartBooks",
@@ -83,6 +86,7 @@
                 success: function (data) {
                     if (data == 'True') {
                         $("#cover-cart-books").load("/Book/CartBooks");
+                        $(objTrigger).removeClass("btn-add-cart-book btn-primary").addClass("btn-secondary");
                         Swal.fire({
                             icon: 'success',
                             title: 'Thành Công',
@@ -103,6 +107,31 @@
                 }
             })
         }
+        function removeCartBooks(mabs, mas, callback) {
+            $.ajax({
+                type: "POST",
+                url: "/Book/RemoveCartBooks",
+                data: {
+                    mabs: mabs,
+                    mas: mas
+                },
+                success: function (data) {
+                    if (data == 'True') {
+                        $("#cover-cart-books").load("/Book/CartBooks");
+                        callback();
+                    }
+                    else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Thất Bại',
+                            text: 'Xóa khỏi phiếu mượn ' + 'thất bại',
+                            showConfirmButton: true,
+                            timer: 1500
+                        });
+                    }
+                }
+            })
+        }
     </script>
     <!--   Core JS Files   -->
     <script src="~/Assets/Scripts/core/popper.min.js"></script>
@@ -110,6 +139,43 @@
     <script src="~/Assets/Scripts/plugins/perfect-scrollbar.min.js"></script>
     <script src="~/Assets/Scripts/plugins/smooth-scrollbar.min.js"></script>
     <script src="~/Assets/Scripts/plugins/chartjs.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            if($('#table_id').length > 0) {
+                $('#table_id').DataTable().destroy();
+                $('#table_id').DataTable({
+                    pageResize: false,
+                    scrollY: 500,
+                    scrollX: true,
+                    lengthMenu: [
+                        [5, 10, 25, 50, -1],
+                        [5, 10, 25, 50, 'Tất cả'],
+                    ],
+                    language: {
+                        "lengthMenu": "Hiện _MENU_ trường",
+                        "zeroRecords": "Không tìm thấy dữ liệu!",
+                        "info": "_PAGE_ / _PAGES_",
+                        "infoEmpty": "Không có dữ liệu!",
+                        "infoFiltered": "(Lọc dữ liệu từ _MAX_ bản ghi)",
+                        "paginate": {
+                            "first": "<<",
+                            "last": ">>",
+                            "next": ">",
+                            "previous": "<"
+                        },
+                        "loadingRecords": "Đang tải...",
+                        "processing": "",
+                        "search": "Tìm kiếm:",
+                    },
+                    displayLength: 5,
+                    dom: "<'toolbar'><'row'<'col-sm-5'l><'col-sm-7 t_filter'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-4'i><'col-sm-6'p>>",
+                    fnInitComplete: function () {
+                        /*$('div.toolbar').html('Custom tool bar!')   */
+                    }
+                });
+            }
+        });
+    </script>
     <script>
         if ($("#chart-bars").length > 0) {
             var ctx = document.getElementById("chart-bars").getContext("2d");

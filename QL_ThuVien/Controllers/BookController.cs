@@ -373,9 +373,8 @@ namespace QL_ThuVien.Controllers
         [HttpGet]
         public string CountSLBS(int id)
         {
-            var book = _services.Db.SACHes.FirstOrDefault(s => s.MASACH == id);
-            int total = book.BANSAOSACHes.Count;
-            int totalInUse = book.BANSAOSACHes.Where(s => s.TINHTRANG == true).Count();
+            int total = _services.Db.BANSAOSACHes.Where(bs => bs.MASACH == id).Count();
+            int totalInUse = _services.Db.BANSAOSACHes.Where(bs => bs.MASACH == id && bs.TINHTRANG).Count();
             string rs = total == 0 ? "0" : (total - totalInUse).ToString() + " / " + total.ToString();
             return rs;
 
@@ -414,6 +413,21 @@ namespace QL_ThuVien.Controllers
             if(carts.FirstOrDefault(x => x.MABANSAO == int.Parse(mabs)) != null)
                 return false;
             carts.Add(new BANSAOSACH { MABANSAO = int.Parse(mabs), MASACH = int.Parse(mas) });
+            Session["cartBooks"] = carts;
+            return true;
+        }
+        [HttpPost]
+        public bool RemoveCartBooks(string mabs, string mas)
+        {
+            List<BANSAOSACH> carts = Session["cartBooks"] as List<BANSAOSACH>;
+            if (carts == null)
+            {
+                carts = new List<BANSAOSACH>();
+            }
+            var iFind = carts.FirstOrDefault(x => x.MABANSAO == int.Parse(mabs));
+            if (iFind == null)
+                return false;
+            carts.Remove(iFind);
             Session["cartBooks"] = carts;
             return true;
         }

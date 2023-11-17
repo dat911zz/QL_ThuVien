@@ -1,46 +1,57 @@
 ﻿@{
-    ViewBag.Title = "BorrowBook";
+    ViewBag.Title = "Lập Phiếu Mượn Sách";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
+    var carts = Session["cartBooks"] as List<QL_ThuVien.Models.BANSAOSACH> ?? new List<QL_ThuVien.Models.BANSAOSACH>();
 }
 
 <body>
     <div class="test">
         <div class="header ml-0">
             <h2 class="position-relative" style="color: #440ccb ">TÀI LIỆU CHO MƯỢN</h2>
-            <hr class="bg-dark"></hr>
         </div>
     </div>
-    <button class="add-room">+ Thêm Sách</button>
-    <table class="styled-table">
-        <thead>
-            <tr>
-                <th>Mã Phòng</th>
-                <th>Tên Phòng</th>
-                <th>Vị Trí</th>
-                <th>Người Sử Dụng</th>
-                <th>Tình Trạng</th>
-                <th>Công Cụ</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>1001</td>
-                <td>Phòng Học Tập</td>
-                <td>A101</td>
-                <td>Only Han</td>
-                <td>Còn Trống</td>
-                <td>Only Han</td>
-            </tr>
-            <tr class="active-row">
-                <td>1002</td>
-                <td>Phòng VIP</td>
-                <td>A102</td>
-                <td>Only Hằng</td>
-                <td>Còn Trống</td>
-                <td>Only Han</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="container">
+        <div class="table">
+            <table class="table" id="table_id" width="100%" cellspacing="0">
+                <colgroup>
+                    <col style="width: 15%;">
+                    <col style="width: 8%;">
+                    <col style="width: 15%;">
+                </colgroup>
+                <thead>
+                    <tr class="text-center">
+                        <th>Mã Bản Sao</th>
+                        <th>Mã Sách</th>
+                        <th class="text-center">Công Cụ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in carts)
+                    {
+                        <tr>
+                            <td>@item.MABANSAO</td>
+                            <td>@item.MASACH</td>
+                            <td class="text-center">
+                                <span class="@(!item.TINHTRANG ? "btn-remove-cart-book btn-danger" : "btn-secondary") btn btn-edit m-l-0 px-075" title="Xóa bản sao khỏi phiếu mượn">
+                                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div style="text-align: right;"><div class="btn btn-primary" style="text-transform:uppercase;">Lập phiếu mượn</div></div>
+    </div>
+    <script>
+        $('.btn-remove-cart-book').click(function () {
+            var row = $(this).closest('tr');
+            removeCartBooks($(row).find('td:eq(0)').html(), $(row).find('td:eq(1)').html(), function () {
+                $('#table_id').DataTable().row(row).remove().draw();
+                $('.tooltip').hide();
+            });
+        });
+    </script>
 </body>
 <style>
     .test {

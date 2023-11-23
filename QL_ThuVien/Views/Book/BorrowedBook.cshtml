@@ -3,6 +3,8 @@
     ViewBag.Title = "Danh Sách Phiếu Mượn";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
     bool isValidUser = QL_ThuVien.Intergrate.Services.Helper.SecurityHelper.HasPermission(HttpContext.Current);
+    bool? isEdit = (bool?)Session["EditBorrowedBook"];
+    Session["EditBorrowedBook"] = null;
     <style>
         .borrow td {
             color: #ac0c0c;
@@ -77,6 +79,15 @@
 
 <script>
     $(document).ready(function () {
+        if ('@Html.Raw(isEdit.ToString().ToLower())' == 'true') {
+            Swal.fire({
+                icon: 'success',
+                title: 'Thông Báo!',
+                text: 'Cập nhật thành công',
+                showConfirmButton: true,
+                timer: 1500
+            })
+        }
         setTimeout(function () {
             $('#table_id').DataTable().order([0, 'desc']).draw()
         }, 1000);

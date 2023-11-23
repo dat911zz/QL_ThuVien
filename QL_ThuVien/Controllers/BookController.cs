@@ -486,6 +486,38 @@ namespace QL_ThuVien.Controllers
                 SODIENTHOAI_ND = phieumuon.ttv.SODIENTHOAI
             });
         }
+        [HttpPost]
+        public ActionResult EditBorrowedBook(DTO.PhieuMuon model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (model.NGAYMUON == null)
+                {
+                    ModelState.AddModelError("", "Ngày mượn không được bỏ trống");
+                    return View();
+                }
+                else
+                {
+                    try
+                    {
+                        PHIEUMUON pm = _services.Db.PHIEUMUONs.Where(p => p.MAPHIEUMUON == model.MAPHIEUMUON).FirstOrDefault();
+                        pm.MANSD = model.MANSD;
+                        pm.NGAYMUON = model.NGAYMUON;
+                        pm.NGAYTRA = model.NGAYTRA;
+                        _services.Db.SubmitChanges();
+                        Session["EditBorrowedBook"] = true;
+                        return Redirect("BorrowedBook");
+                    }
+                    catch (Exception ex)
+                    {
+                        ModelState.AddModelError("", "Cập nhật thất bại!");
+                        return View();
+                    }
+                }
+            }
+            ModelState.AddModelError("", "Vui lòng điền đẩy đủ thông tin!");
+            return View();
+        }
 
         public ActionResult SendBackBook()
         {

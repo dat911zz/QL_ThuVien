@@ -1,0 +1,75 @@
+﻿@model QL_ThuVien.DTO.PhieuMuon
+
+@{
+    ViewBag.Title = "Sửa phiếu mượn";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+    List<QL_ThuVien.Models.NHANVIEN> nvs = ViewData["NhanViens"] as List<QL_ThuVien.Models.NHANVIEN>;
+    List<QL_ThuVien.Models.THETHUVIEN> nds = ViewData["NguoiDungs"] as List<QL_ThuVien.Models.THETHUVIEN>;
+}
+
+<h2>Sửa phiếu mượn</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+<div class="form-horizontal">
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(model => model.MAPHIEUMUON, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.MAPHIEUMUON, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2" for="MANHANVIEN">Nhân viên</label>
+        <div class="col-md-10">
+            <select id="MANHANVIEN" class="select2-qltv form-control" name="MANHANVIEN">
+                @foreach (var item in nvs)
+                {
+                    <option @(item.MANHANVIEN == Model.MANHANVIEN ? @"selected=""true""" : "") value="@item.MANHANVIEN">@(item.MANHANVIEN + " - " + item.HOTEN + " - " + item.SODIENTHOAI)</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2" for="MANSD">Người mượn</label>
+        <div class="col-md-10">
+            <select id="MANSD" class="select2-qltv form-control" name="MANSD">
+                @foreach (var item in nds)
+                {
+                    <option @(item.MATTV == Model.MANSD ? @"selected=""true""" : "") value="@item.MATTV">@(item.MATTV + " - " + item.HOTEN + " - " + item.SODIENTHOAI)</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.NGAYMUON, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.NGAYMUON, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.NGAYMUON, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.NGAYTRA, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.NGAYTRA, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.NGAYTRA, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

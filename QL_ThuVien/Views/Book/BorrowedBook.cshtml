@@ -3,6 +3,14 @@
     ViewBag.Title = "Danh Sách Phiếu Mượn";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
     bool isValidUser = QL_ThuVien.Intergrate.Services.Helper.SecurityHelper.HasPermission(HttpContext.Current);
+    <style>
+        .borrow td {
+            color: #ac0c0c;
+        }
+        .borrowed td {
+            color: #016601;
+        }
+    </style>
 }
 
 <body>
@@ -15,6 +23,7 @@
         <div class="table">
             <table class="table" id="table_id" width="100%" cellspacing="0">
                 <colgroup>
+                    <col style="width: 10%;">
                     <col style="width: 15%;">
                     <col style="width: 15%;">
                     <col style="width: 15%;">
@@ -25,6 +34,7 @@
                 <thead>
                     <tr class="text-center">
                         <th>Mã Phiếu Mượn</th>
+                        <th>Người Lập</th>
                         <th>Ngày Mượn</th>
                         <th>Ngày Trả</th>
                         <th>Tên Người Mượn</th>
@@ -35,26 +45,21 @@
                 <tbody>
                     @foreach (var item in Model)
                     {
-                        <tr>
+                        <tr class="@(item.NGAYTRA == null ? "borrow" : "borrowed")">
                             <td>@item.MAPHIEUMUON</td>
+                            <td>@item.HOTEN_NV</td>
                             <td>@item.NGAYMUON.ToString("dd/MM/yyyy HH:mm:ss")</td>
-                            <td>@item.NGAYTRA.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                            <td>@(item.NGAYTRA == null ? "Chưa trả" : item.NGAYTRA?.ToString("dd/MM/yyyy HH:mm:ss"))</td>
                             <td>@item.HOTEN_ND</td>
                             <td>@item.SODIENTHOAI_ND</td>
                             @if (isValidUser)
                             {
                                 <td class="text-center">
-                                    <a class="btn btn-primary btn-edit m-l-0 px-075" href="" title="Thông tin chi tiết">
+                                    <a class="btn btn-primary btn-edit m-l-0 px-075" href="/Book/DetailsBorrowedBook?maphieumuon=@(item.MAPHIEUMUON)" title="Thông tin chi tiết">
                                         <i class="fa fa-info" aria-hidden="true"></i>
                                     </a>
-                                    <a class="btn btn-primary btn-edit m-l-0 px-075" href="" title="Bản sao sách">
-                                        <i class="fa fa-file-text" aria-hidden="true"></i>
-                                    </a>
-                                    <a class="btn btn-primary btn-edit m-l-0 px-075" href="" title="Chỉnh sửa thông tin">
+                                    <a class="btn btn-primary btn-edit m-l-0 px-075" href="/Book/EditBorrowedBook?maphieumuon=@(item.MAPHIEUMUON)" title="Chỉnh sửa thông tin">
                                         <i class="fa fa-pencil" aria-hidden="true"></i>
-                                    </a>
-                                    <a class="btn btn-danger btn-edit m-l-0 px-075" onclick="" title="Xóa">
-                                        <i class="fa fa-trash-o" aria-hidden="true"></i>
                                     </a>
                                 </td>
                             }
@@ -70,3 +75,10 @@
     </div>
 </body>
 
+<script>
+    $(document).ready(function () {
+        setTimeout(function () {
+            $('#table_id').DataTable().order([0, 'desc']).draw()
+        }, 1000);
+    });
+</script>

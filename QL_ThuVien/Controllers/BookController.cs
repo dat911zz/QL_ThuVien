@@ -427,6 +427,66 @@ namespace QL_ThuVien.Controllers
             return View(res);
         }
 
+        public ActionResult DetailsBorrowedBook(int maphieumuon)
+        {
+            var phieumuon = (from pm in _services.Db.PHIEUMUONs where pm.MAPHIEUMUON == maphieumuon
+                        join nv in _services.Db.NHANVIENs
+                            on pm.MANHANVIEN equals nv.MANHANVIEN
+                        join ttv in _services.Db.THETHUVIENs
+                            on pm.MANSD equals ttv.MATTV
+                        select new
+                        {
+                            pm,
+                            nv,
+                            ttv
+                        }).FirstOrDefault();
+            if (phieumuon == null)
+                throw new Exception("Không tìm thấy phiếu mượn");
+            return View(new DTO.PhieuMuon
+            {
+                MAPHIEUMUON = phieumuon.pm.MAPHIEUMUON,
+                MANHANVIEN = phieumuon.pm.MANHANVIEN,
+                MANSD = phieumuon.pm.MANSD,
+                NGAYMUON = phieumuon.pm.NGAYMUON,
+                NGAYTRA = phieumuon.pm.NGAYTRA,
+                HOTEN_NV = phieumuon.nv.HOTEN,
+                SODIENTHOAI_NV = phieumuon.nv.SODIENTHOAI,
+                HOTEN_ND = phieumuon.ttv.HOTEN,
+                SODIENTHOAI_ND = phieumuon.ttv.SODIENTHOAI
+            });
+        }
+        public ActionResult EditBorrowedBook(int maphieumuon)
+        {
+            var phieumuon = (from pm in _services.Db.PHIEUMUONs
+                             where pm.MAPHIEUMUON == maphieumuon
+                             join nv in _services.Db.NHANVIENs
+                                 on pm.MANHANVIEN equals nv.MANHANVIEN
+                             join ttv in _services.Db.THETHUVIENs
+                                 on pm.MANSD equals ttv.MATTV
+                             select new
+                             {
+                                 pm,
+                                 nv,
+                                 ttv
+                             }).FirstOrDefault();
+            if (phieumuon == null)
+                throw new Exception("Không tìm thấy phiếu mượn");
+            ViewData["NhanViens"] = _services.Db.NHANVIENs.ToList();
+            ViewData["NguoiDungs"] = _services.Db.THETHUVIENs.ToList();
+            return View(new DTO.PhieuMuon
+            {
+                MAPHIEUMUON = phieumuon.pm.MAPHIEUMUON,
+                MANHANVIEN = phieumuon.pm.MANHANVIEN,
+                MANSD = phieumuon.pm.MANSD,
+                NGAYMUON = phieumuon.pm.NGAYMUON,
+                NGAYTRA = phieumuon.pm.NGAYTRA,
+                HOTEN_NV = phieumuon.nv.HOTEN,
+                SODIENTHOAI_NV = phieumuon.nv.SODIENTHOAI,
+                HOTEN_ND = phieumuon.ttv.HOTEN,
+                SODIENTHOAI_ND = phieumuon.ttv.SODIENTHOAI
+            });
+        }
+
         public ActionResult SendBackBook()
         {
             return View();

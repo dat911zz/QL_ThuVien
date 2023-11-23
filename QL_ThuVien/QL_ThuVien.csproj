@@ -678,6 +678,8 @@
     <Content Include="Views\Book\BanSao.cshtml" />
     <Content Include="Views\Book\CartBooks.cshtml" />
     <Content Include="Views\Book\BorrowedBook.cshtml" />
+    <Content Include="Views\Book\DetailsBorrowedBook.cshtml" />
+    <Content Include="Views\Book\EditBorrowedBook.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

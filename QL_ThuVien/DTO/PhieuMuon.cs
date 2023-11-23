@@ -15,6 +15,6 @@ namespace QL_ThuVien.DTO
         public string HOTEN_ND { get; set; }
         public string SODIENTHOAI_ND { get; set; }
         public DateTime NGAYMUON { get; set; }
-        public DateTime NGAYTRA {  get; set; }
+        public DateTime? NGAYTRA {  get; set; }
     }
 }

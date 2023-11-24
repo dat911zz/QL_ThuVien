@@ -1,4 +1,5 @@
 ﻿@using PagedList.Mvc;
+@using QL_ThuVien.Models; 
 @model PagedList.IPagedList<QL_ThuVien.Models.PHONG>
 @{
     ViewBag.Title = "Phòng";
@@ -15,82 +16,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr.js"></script>
 </head>
-<body>
-    <div class="test">
-        <div class="header ml-0">
-            <h2 class="position-relative" style="color: #440ccb ">DANH SÁCH PHÒNG</h2>
-            <hr class="bg-dark"></hr>
-        </div>
-    </div>
-    @*<div style="float: right; margin-bottom: 10px;">
-        <button class="btn btn-info m-1">+ Thêm Phòng</button>
-        <button class="btn btn-success m-1">+ Thêm Từ File</button>
-    </div>*@
-    <table class="styled-table">
-        <thead>
-            <tr>
-                <th>Mã Phòng</th>
-                <th>Tên Phòng</th>
-                <th>Vị Trí</th>
-                <th>Tình Trạng</th>
-                <th class="text-center">Tổng số lượt mượn</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@item.MAPHONG</td>
-                    <td>@item.TENPHONG</td>
-                    <td>@item.VITRI</td>
-                    <td>
-                        @if (emptyRooms.ToString().Contains(item.MAPHONG.ToString()))
-                        {
-                            <span style="color: green">Phòng trống</span>
-                        }
-                        else
-                        {
-                            <span style="color: red">Đang sử dụng</span>
-                        }
-                    </td>
-                    <td style="text-align: center">@item.CHITIETMUONPHONGs.Count</td>
-                    @*<td>
-                        @{
-                            var nsd = item.CHITIETMUONPHONGs.SingleOrDefault(x => x.THOIGIANMUON.Equals(DateTime.Now));
-                            if (nsd != null)
-                            {
-                                <span>@nsd.THETHUVIEN.NGUOISUDUNG.HOTEN</span>
-                            }
-                            else
-                            {
-                                <span>Trống!</span>
-                            }
-                        }
-                    </td>
-                    <td>
-                        @if (item.CHITIETMUONPHONGs.Any(x => x.THOIGIANMUON.Equals(DateTime.Now)))
-                        {
-                            <span style="color: red">Đang sử dụng</span>
-                        }
-                        else
-                        {
-                            <span style="color: forestgreen">Phòng trống</span>
-                        }
-                    </td>*@
-                    @*<td class="text-center">
-                        <button class="btn btn-secondary m-l-0">Chỉnh Sửa</button>
-                        <button class="btn btn-danger">Xóa</button>
-                    </td>*@
-                </tr>
-
-            }
-        </tbody>
-    </table>
-    @if (Model.Count == 0)
-    {
-        <div style="text-align: center; margin-top: 20px">Không tìm thầy kết quả</div>
-    }
-</body>
 <style>
     .test {
         max-width: max-content;
@@ -129,4 +54,409 @@
             .styled-table tbody tr:last-of-type {
                 border-bottom: 2px solid #333333;
             }
+
+    .rectangle {
+        height: 90px;
+        width: 80px;
+        border: 1px solid #555;
+    }
+
+    .floor {
+        border: 1px dashed #5f5f5f;
+        height: 400px;
+        padding: 3px;
+        position: relative;
+    }
+
+    .middle-room {
+        position: absolute;
+        width: 95.5%;
+        height: 360px;
+        border: 1px dashed #555;
+        top: 20px;
+        left: 21px;
+        right: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .door {
+        position: absolute;
+        top: 0;
+        width: 80px;
+        height: 20px;
+        background: #5f5f5f;
+        color: #fff;
+        font-size: 12px;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .door-1 {
+        left: 20px;
+    }
+
+    .door-2 {
+        left: 320px;
+    }
+
+    .room {
+        font-size: 12px;
+        right: 0;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        background: antiquewhite;
+    }
+
+        .room:hover, .building-floor:hover {
+            border: 5px dashed blue;
+            cursor: pointer;
+        }
+
+    .room-1 {
+        position: absolute;
+        top: 0;
+    }
+
+    .room-2 {
+        position: absolute;
+        top: 90px;
+    }
+
+    .room-3 {
+        position: absolute;
+        top: 180px;
+    }
+
+    .room-4 {
+        position: absolute;
+        top: 270px;
+    }
+
+    .room-1-f4 {
+        position: absolute;
+        top: 0;
+        width: 30%;
+    }
+
+    .reception {
+        position: absolute;
+        left: 80px;
+        top: 5px;
+        background: #d25e5e;
+        height: 40px !important;
+        color: #fff;
+        font-size: 12px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .stripes {
+        background: repeating-linear-gradient(-45deg, #afafaf, #afafaf 5px, white 5px, white 10px);
+    }
+    .choose{
+        background: #abd0fea9;
+    }
+    .middle-room-label {
+        color: #fff;
+        font-weight: bold;
+        padding: 10px;
+        background: #5a5a5adb;
+    }
+
+    .building-floor {
+        width: 100%;
+        height: 60px;
+        font-size: 12px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .inuse {
+        background: #d25e5e;
+        color: #fff;
+    }
+    .empty{
+
+    }
 </style>
+<body>
+    <div class="test">
+        <div class="header ml-0">
+            <h2 class="position-relative" style="color: #440ccb ">SƠ ĐỒ PHÒNG</h2>
+            <hr class="bg-dark"></hr>
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-md-2">
+            <label for="choose-time" class="text-2xl">Ngày</label>
+        </div>
+        <div class="col-md-3">
+            <input id="choose-time" class="choose-time form-control" type="date" name="choose-time" value="" placeholder="Chọn thời gian" />
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-md-2">
+            <label for="choose-time" class="text-2xl">Khung giờ</label>
+        </div>
+        <div class="col-md-3 row radio-container">
+            <div class="col-4"><input checked type="radio" name="hour" value="7h" />  <span>7h</span></div>
+            <div class="col-4"><input type="radio" name="hour" value="8h" />  <span>8h</span></div>
+            <div class="col-4"><input type="radio" name="hour" value="9h" />  <span>9h</span></div>
+            <div class="col-4"><input type="radio" name="hour" value="10h" /> <span>10h</span></div>
+            <div class="col-4"><input type="radio" name="hour" value="11h" /> <span>11h</span></div>
+            <div class="col-4"><input type="radio" name="hour" value="12h30" /> <span>12h30h</span></div>
+            <div class="col-4"><input type="radio" name="hour" value="13h" /> <span>13h</span></div>
+            <div class="col-4"><input type="radio" name="hour" value="14h" /> <span>14h</span></div>
+            <div class="col-4"><input type="radio" name="hour" value="15h" /> <span>15h</span></div>
+            <div class="col-4"><input type="radio" name="hour" value="16h" /> <span>16h</span></div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <a class="ml-2 btn btn-success" onclick="filterRoomByTime()">Lọc</a>
+    </div>
+    <div class="row">
+        <div id="floor-4" class="floor-container col-md-7 m-3">
+            <h3>Tầng 4</h3>
+            <div class="container floor">
+                <div class="middle-room m-f4 stripes">
+                    <div class="rectangle reception">Thủ Thư</div>
+                    <div class="middle-room-label">Khoảng Không Gian Thư Viện</div>
+                    <div r-id="4" class="room room-1-f4 rectangle">
+                        <div>Phòng Thuyết Trình</div>
+                    </div>
+                </div>
+                <div class="door door-2">Cầu thang</div>
+            </div>
+        </div>
+        <div id="floor-3" class="floor-container col-md-7 m-3">
+            <h3>Tầng 3</h3>
+            <div class="container floor">
+                <div class="middle-room stripes">
+                    <div class="rectangle reception">Thủ Thư</div>
+                    <div class="middle-room-label">Khoảng Không Gian Thư Viện</div>
+                    <div r-id="1" class="room room-1 rectangle" data-toggle="modal" data-target="#myModal">
+                        <div>Phòng 1</div>
+                    </div>
+                    <div r-id="2" class="room room-2 rectangle" data-toggle="modal" data-target="#myModal">
+                        <div>Phòng 2</div>
+                    </div>
+                    <div r-id="3" class="room room-3 rectangle" data-toggle="modal" data-target="#myModal">
+                        <div>Phòng 3</div>
+                    </div>
+                    <div r-id="5" class="room room-4 rectangle" data-toggle="modal" data-target="#myModal">
+                        <div>Phòng Hội Thảo</div>
+                    </div>
+                </div>
+                <div class="door door-1">Cửa ra nhà F</div>
+                <div class="door door-2">Cầu thang</div>
+            </div>
+        </div>
+        <div class="col-md-3 m-3">
+            <h3>Danh sách tầng</h3>
+            <div class="container floor f4">
+                <div id="cf-1" class="rectangle building-floor">Tầng 4</div>
+                <div id="cf-2" class="rectangle building-floor">Tầng 3</div>
+                <div id="cf-3" class="rectangle building-floor stripes">Tầng 2</div>
+                <div id="cf-4" class="rectangle building-floor stripes">Tầng 1</div>
+            </div>
+        </div>
+    </div>
+    <div class="test">
+        <div class="header ml-0">
+            <h2 class="position-relative" style="color: #440ccb ">DANH SÁCH PHÒNG</h2>
+            <hr class="bg-dark"></hr>
+        </div>
+    </div>
+    @*<div style="float: right; margin-bottom: 10px;">
+            <button class="btn btn-info m-1">+ Thêm Phòng</button>
+            <button class="btn btn-success m-1">+ Thêm Từ File</button>
+        </div>*@
+    <table class="styled-table">
+        <thead>
+            <tr>
+                <th>Mã Phòng</th>
+                <th>Tên Phòng</th>
+                <th>Vị Trí</th>
+                <th>Tình Trạng</th>
+                <th class="text-center">Tổng số lượt mượn</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.MAPHONG</td>
+                    <td>@item.TENPHONG</td>
+                    <td>@item.VITRI</td>
+                    <td>
+                        @if (emptyRooms.ToString().Contains(item.MAPHONG.ToString()))
+                        {
+                            <span style="color: green">Phòng trống</span>
+                        }
+                        else
+                        {
+                            <span style="color: red">Đang sử dụng</span>
+                        }
+                    </td>
+                    <td style="text-align: center">@item.CHITIETMUONPHONGs.Count</td>
+                    @*<td>
+                            @{
+                                var nsd = item.CHITIETMUONPHONGs.SingleOrDefault(x => x.THOIGIANMUON.Equals(DateTime.Now));
+                                if (nsd != null)
+                                {
+                                    <span>@nsd.THETHUVIEN.NGUOISUDUNG.HOTEN</span>
+                                }
+                                else
+                                {
+                                    <span>Trống!</span>
+                                }
+                            }
+                        </td>
+                        <td>
+                            @if (item.CHITIETMUONPHONGs.Any(x => x.THOIGIANMUON.Equals(DateTime.Now)))
+                            {
+                                <span style="color: red">Đang sử dụng</span>
+                            }
+                            else
+                            {
+                                <span style="color: forestgreen">Phòng trống</span>
+                            }
+                        </td>*@
+                    @*<td class="text-center">
+                            <button class="btn btn-secondary m-l-0">Chỉnh Sửa</button>
+                            <button class="btn btn-danger">Xóa</button>
+                        </td>*@
+                </tr>
+
+            }
+        </tbody>
+    </table>
+    @if (Model.Count == 0)
+    {
+        <div style="text-align: center; margin-top: 20px">Không tìm thầy kết quả</div>
+    }
+
+    <!-- Modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Đăng ký mượn phòng</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="row form-group">
+                        <div class="col-md-5">
+                            <h5>Người sử dụng</h5>
+                        </div>
+                        <div class="col-md">
+                            @Html.DropDownList("UserSelects", (ViewBag.userList as IList<THETHUVIEN>).Select(s => new SelectListItem
+                           {
+                               Text = s.HOTEN,
+                               Value = s.MATTV.ToString()
+                           }), new { id = "UserSelects", @class = "form-control", name = "UserSelects" })
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-md-5">
+                            <h5>Thời gian đặt</h5>
+                        </div>
+                        <div class="col-md">
+                            <input class="choose-time form-control" type="date" name="f-startTime" value="" placeholder="Chọn thời gian" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+<script>
+    var currentFloor = 3;
+    var totalFloor = 4;
+
+    loadConfig();
+    filterRoomByTime();
+
+    $('.building-floor:not(.stripes)').on('click', function () {
+        currentFloor = totalFloor - $(this).index();
+        chooseFloor(currentFloor);
+    });
+    $('.room').on('click', function (e) {
+        filterRoomByTime();
+        console.log($(this).attr('r-id'), $(this).hasClass('inuse'));
+    });
+    function loadConfig() {
+        chooseFloor(currentFloor);
+        configTimePicker();
+    }
+    function filterRoomByTime() {
+        setTimeout(() => {
+            var timepicker = convertDateTime($('.choose-time').val(), $('input[name="hour"]:checked').val());
+            console.log("You have chosen time: " + timepicker);
+            getRoomStates(timepicker);
+        }, 100);      
+    }
+    function configTimePicker() {
+        var selector = $('.choose-time');
+        let currentDate = new Date().toISOString().slice(0, -14); //yyyy-MM-ddThh:mm
+        selector[0].value = currentDate;
+        selector[0].min = currentDate;
+    }
+    function chooseFloor(pos) {
+        var floor = $('.building-floor:not(.stripes)');
+        var floorContainer = $('.floor-container');
+
+        floor.removeClass("choose");
+        $(floor[totalFloor - pos]).addClass("choose");
+        floorContainer.hide();
+        $(floorContainer[totalFloor - pos]).show();
+    }
+
+    function chooseRoom(pos) {
+
+    }
+    function convertDateTime(date, time) {
+        var timepart = time.split('h');
+        var timers = timepart[0] + ":" + (timepart[1] === "" ? "0" : timepart[1]) + ":00.000";
+        console.log(timepart);
+        return date + " " + timers;
+    }
+    var room_states = [];
+    function getRoomStates(time) {
+        $.ajax({
+            url: "/Room/AjaxGetEmptyRoom",
+            type: "POST",
+            data: { dateTimeSend: time, hourUse: 2 },
+            success: function (result) {
+                room_states = JSON.parse(result.Content);
+                console.log(room_states);
+                changeRoomStates();
+            }
+        });
+    }
+    function changeRoomStates() {
+        $('.room').each(function (idx, e) {
+            var id = $(this).attr('r-id');
+            if (room_states.includes(id)) {
+                $(this).removeClass("inuse");
+            } else {
+                $(this).addClass("inuse");
+            }
+        //    console.log(idx, e, room_states, $(this).attr('r-id'), room_states.includes($(this).attr('r-id')));
+        });
+    }
+</script>

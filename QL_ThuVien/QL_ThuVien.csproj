@@ -674,6 +674,10 @@
     <Content Include="Views\Book\Detail.cshtml" />
     <Content Include="Views\Book\BanSao.cshtml" />
     <Content Include="Views\Book\CartBooks.cshtml" />
+    <Content Include="Views\Room\Create.cshtml" />
+    <Content Include="Views\Room\Edit.cshtml" />
+    <Content Include="Views\Room\Delete.cshtml" />
+    <Content Include="Views\Room\Detail.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

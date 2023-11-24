@@ -16,75 +16,83 @@
     @using (Html.BeginForm("Create", "Book", FormMethod.Post, new { @id = "frmBookAction", enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
-        <div class="form-horizontal">
-            <hr />
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <div class="row">
-                <div class="col-25">
-                    <label for="fname">Mã nhà xuất bản <span style="color: red">(*)</span>:</label>
-                </div>
-                <div class="col-75">
-                    @Html.DropDownList("MaNXB", Session["NXBSelectList"] as SelectList, "-Vui lòng chọn Nhà xuất bản-", new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.MaNXB, "", new { @class = "text-danger" })
-                </div>
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="row">
+            <div class="col-25">
+                <label for="fname">Mã nhà xuất bản <span style="color: red">(*)</span>:</label>
             </div>
-            <div class="row">
-                <div class="col-25">
-                    <label for="fname">Mã chủ đề <span style="color: red">(*)</span>:</label>
-                </div>
-                <div class="col-75">
-                    @Html.DropDownList("MaChuDe", Session["CDSelectList"] as SelectList, "-Vui lòng chọn Chủ đề-", new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.MaChuDe, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-25">
-                    <label for="lname">Tên sách <span style="color: red">(*)</span>:</label>
-                </div>
-                <div class="col-75">
-                    @Html.EditorFor(model => model.TenSach, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.TenSach, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-25">
-                    <label for="lname">Mô tả <span style="color: red">(*)</span>:</label>
-                </div>
-                <div class="col-75">
-                    @Html.EditorFor(model => model.MoTa, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.MoTa, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-25">
-                    <label for="lname">Năm xuất bản <span style="color: red">(*)</span>:</label>
-                </div>
-                <div class="col-75">
-                    @Html.EditorFor(model => model.NamXuatBan, new { htmlAttributes = new { type = "date", @class = "form-control", max = DateTime.Now.ToString("yyyy-MM-dd"), min = "1760-01-01" } })
-                    @Html.ValidationMessageFor(model => model.NamXuatBan, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-25">
-                    <label for="lname">Giá sách <span style="color: red">(*)</span>:</label>
-                </div>
-                <div class="col-75">
-                    @Html.EditorFor(model => model.GiaSach, new { htmlAttributes = new { @class = "form-control", @min = 0, @max = 1000000000 } })
-                    @Html.ValidationMessageFor(model => model.GiaSach, "", new { @class = "text-danger"})
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-25">
-                    <label for="lname">Ảnh bìa <span style="color: red">(*)</span>:</label>
-                </div>
-                <div class="col-75">
-                    <input type="file" accept="image/*" name="uploadImg" class="form-control" value="" />
-                </div>
-            </div>
-            <div class="row" style="margin-top: 20px;">
-                <input value="Thêm" onclick="SubmitConfrim()" class="btn btn-primary" />
+            <div class="col-75">
+                @Html.DropDownList("MaNXB", Session["NXBSelectList"] as SelectList, "-Vui lòng chọn Nhà xuất bản-", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.MaNXB, "", new { @class = "text-danger" })
             </div>
         </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="fname">Mã chủ đề <span style="color: red">(*)</span>:</label>
+            </div>
+            <div class="col-75">
+                @Html.DropDownList("MaChuDe", Session["CDSelectList"] as SelectList, "-Vui lòng chọn Chủ đề-", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.MaChuDe, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="lname">Tên sách <span style="color: red">(*)</span>:</label>
+            </div>
+            <div class="col-75">
+                @Html.EditorFor(model => model.TenSach, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.TenSach, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="lname">Mô tả <span style="color: red">(*)</span>:</label>
+            </div>
+            <div class="col-75">
+                @Html.EditorFor(model => model.MoTa, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.MoTa, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="lname">Năm xuất bản <span style="color: red">(*)</span>:</label>
+            </div>
+            <div class="col-75">
+                @Html.EditorFor(model => model.NamXuatBan, new { htmlAttributes = new { type = "date", @class = "form-control", max = DateTime.Now.ToString("yyyy-MM-dd"), min = "1760-01-01" } })
+                @Html.ValidationMessageFor(model => model.NamXuatBan, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="lname">Giá sách <span style="color: red">(*)</span>:</label>
+            </div>
+            <div class="col-75">
+                @Html.EditorFor(model => model.GiaSach, new { htmlAttributes = new { @class = "form-control", @min = 0, @max = 1000000000 } })
+                @Html.ValidationMessageFor(model => model.GiaSach, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="lname">Ảnh bìa <span style="color: red">(*)</span>:</label>
+            </div>
+            <div class="col-75">
+                <input type="file" accept="image/*" name="uploadImg" class="form-control" value="" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="slbansao">Số lượng bản sao <span style="color: red">(*)</span>:</label>
+            </div>
+            <div class="col-75">
+                <input type="number" id="slbansao" name="slbansao" min="1" max="1000000000" required class="form-control" value="1" />
+            </div>
+        </div>
+        <div class="row" style="margin-top: 20px;">
+            <input value="Thêm" onclick="SubmitConfrim()" class="btn btn-primary" />
+        </div>
+    </div>
     }
     <div>
         @Html.ActionLink("Trở về trang trước", "Index")

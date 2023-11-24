@@ -104,13 +104,23 @@
                             @if (isValidUser)
                             {
                                 <td class="text-center">
-                                    <a class="btn btn-success btn-edit m-l-0 px-075" href="/Book/Edit/@item.MaSach">
-                                        <span><img src="https://img.icons8.com/office/23/null/edit.png"/> Sửa</span>
+                                    <a class="btn btn-primary btn-edit m-l-0 px-075" href="/Book/Detail/@item.MaSach" title="Thông tin chi tiết">
+                                        <i class="fa fa-info" aria-hidden="true"></i>
                                     </a>
-                                    <a class="btn btn-danger btn-edit m-l-0 px-075" onclick="DVNConfirm('Xóa', 'Sách', '/Book/Delete', @item.MaSach)">
-                                        <span><img src="https://img.icons8.com/plasticine/30/null/waste.png"/>Xóa</span>
+                                    <a class="btn btn-primary btn-edit m-l-0 px-075" href="/Book/BanSao/@item.MaSach" title="Bản sao sách">
+                                        <i class="fa fa-file-text" aria-hidden="true"></i>
+                                    </a>
+                                    <a class="btn btn-primary btn-edit m-l-0 px-075" href="/Book/Edit/@item.MaSach" title="Chỉnh sửa thông tin">
+                                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                                    </a>
+                                    <a class="btn btn-danger btn-edit m-l-0 px-075" onclick="DVNConfirm('Xóa', 'Sách', '/Book/Delete', @item.MaSach)" title="Xóa">
+                                        <i class="fa fa-trash-o" aria-hidden="true"></i>
                                     </a>
                                 </td>
+                            }
+                            else
+                            {
+                                <td></td>
                             }
                         </tr>
                     }
@@ -122,43 +132,14 @@
     </div>
 </body>
 <script>
+    var listSLBS = $(".slbs").get().reverse();
+    for (var i = 0; i < listSLBS.length; i++) {
+        var id = $(listSLBS[i]).attr("sid");
+        loadSLBS($(listSLBS[i]), id);
+    }
     $(document).ready(function () {
-        //$('#table_id').DataTable().destroy();
-        $('#table_id').DataTable({
-            pageResize: false,
-            scrollY: 500,
-            scrollX: true,
-            lengthMenu: [
-                [5, 10, 25, 50, -1],
-                [5, 10, 25, 50, 'Tất cả'],
-            ],
-            language: {
-                "lengthMenu": "Hiện _MENU_ trường",
-                "zeroRecords": "Không tìm thấy dữ liệu!",
-                "info": "_PAGE_ / _PAGES_",
-                "infoEmpty": "Không có dữ liệu!",
-                "infoFiltered": "(Lọc dữ liệu từ _MAX_ bản ghi)",
-                "paginate": {
-                    "first": "<<",
-                    "last": ">>",
-                    "next": ">",
-                    "previous": "<"
-                },
-                "loadingRecords": "Đang tải...",
-                "processing": "",
-                "search": "Tìm kiếm:",
-            },
-            displayLength: 5,
-            dom: "<'toolbar'><'row'<'col-sm-5'l><'col-sm-7 t_filter'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-4'i><'col-sm-6'p>>",
-            fnInitComplete: function () {
-                /*$('div.toolbar').html('Custom tool bar!')   */
-            }
-        });        
+        
     });
-    $(".slbs").each(function (e, val) {
-        var id = $(this).attr("sid");
-        loadSLBS(this, id);
-    })
     function loadSLBS(that, _id) {
         $.ajax({
             url: "/Book/CountSLBS",
@@ -166,10 +147,6 @@
                 id: _id,
             },
             success: function (data) {
-                // $('#img_song').html(data);
-                if (data != "0") {
-                    data = data.split('/')[0].trim() == "0" ? '<span style="color:red">Đã hết</span>' : data;
-                }
                 var content = data == "0" ? '<span style="color:red">Chưa nhập hàng</span>' : '<span style="color:green">' + data + '<span/>';
                 $(that).html(content);
             }

@@ -1,0 +1,62 @@
+﻿@model IEnumerable<QL_ThuVien.Models.BANSAOSACH>
+@{
+    ViewBag.Title = "Danh Sách Bản Sao";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+    var carts = Session["cartBooks"] as List<QL_ThuVien.Models.BANSAOSACH> ?? new List<QL_ThuVien.Models.BANSAOSACH>();
+}
+
+<body>
+    <div class="test">
+        <div class="header ml-0">
+            <h2 class="position-relative" style="color: #440ccb ">DANH SÁCH BẢN SAO</h2>
+            <hr class="bg-dark"></hr>
+        </div>
+    </div>
+    <div class="container">
+        <div class="table">
+            <table class="table" id="table_id" width="100%" cellspacing="0">
+                <colgroup>
+                    <col style="width: 15%;">
+                    <col style="width: 8%;">
+                    <col style="width: 15%;">
+                    <col style="width: 12%">
+                    @*<col style="width: 10%;">*@
+                </colgroup>
+                <thead>
+                    <tr class="text-center">
+                        <th>Mã Bản Sao</th>
+                        <th>Mã Sách</th>
+                        <th>Tình Trạng</th>
+                        <th class="text-center">Công Cụ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        var containsCart = carts.FindIndex(x => x.MABANSAO == item.MABANSAO) > -1;
+
+                        <tr>
+                            <td>@item.MABANSAO</td>
+                            <td>@item.MASACH</td>
+                            <td style="color: @(item.TINHTRANG ? "red" : "green")">@(item.TINHTRANG ? "Đã được mượn" : "Chưa được mượn")</td>
+                            <td class="text-center">
+                                <span class="@(!item.TINHTRANG && !containsCart ? "btn-add-cart-book btn-primary" : "btn-secondary") btn btn-edit m-l-0 px-075" title="Thêm bản sao vào phiếu mượn">
+                                    <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+</body>
+<script>
+    $(document).ready(function () {
+        $(".btn-add-cart-book").click(function () {
+            addCartBooks($(this).parents('tr').find('td:eq(0)').html(), $(this).parents('tr').find('td:eq(1)').html(), $(this));
+        });
+    });
+</script>

@@ -1,0 +1,43 @@
+﻿@model QL_ThuVien.Models.SACH
+
+@{
+    ViewBag.Title = "Thông Tin Chi Tiết Sách";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+
+<h2>Thông tin chi tiết</h2>
+
+<div>
+    <div class="row">
+        <div class="col-3">Mã NXB</div>
+        <div class="col-9">@Html.DisplayFor(model => model.MANXB)</div>
+    </div>
+    <div class="row">
+        <div class="col-3">Mã chủ đề</div>
+        <div class="col-9">@Html.DisplayFor(model => model.MACHUDE)</div>
+    </div>
+    <div class="row">
+        <div class="col-3">Tên sách</div>
+        <div class="col-9">@Html.DisplayFor(model => model.TENSACH)</div>
+    </div>
+    <div class="row">
+        <div class="col-3">Mô tả</div>
+        <div class="col-9">@Html.DisplayFor(model => model.MOTA)</div>
+    </div>
+    <div class="row">
+        <div class="col-3">Ngày xuất bản</div>
+        <div class="col-9">@(((DateTime)Model.NAMXUATBAN).ToString("dd/MM/yyyy"))</div>
+    </div>
+    <div class="row">
+        <div class="col-3">Giá sách</div>
+        <div class="col-9">@string.Format("{0:#,###}", Model.GIASACH)</div>
+    </div>
+    <div class="row">
+        <div class="col-3">Ảnh</div>
+        <div class="col-9"><img src="~/Assets/HinhAnhSP/@Model.ANHBIA" /></div>
+    </div>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.MASACH }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

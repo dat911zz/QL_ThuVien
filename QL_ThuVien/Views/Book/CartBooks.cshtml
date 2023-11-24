@@ -2,6 +2,7 @@
 <a id="cart-books" class="@(Model.Count() > 0 ? "show" : "")" title="Lập phiếu mượn sách">
     <div><i class="fa fa-files-o" aria-hidden="true"></i></div>
     <span>@Model.Count()</span>
+    <p>x</p>
 </a>
 <style>
     #cart-books.show {
@@ -11,7 +12,7 @@
     #cart-books {
         position: absolute;
         top: 25%;
-        right: 10px;
+        right: 20px;
         z-index: 100000000000000000000000000;
         cursor: pointer;
         display: none;
@@ -40,4 +41,25 @@
             font-size: 16px;
             font-weight: bold;
         }
+        #cart-books > p {
+            position: absolute;
+            top: -22%;
+            right: -15%;
+            padding: 6px;
+            line-height: 6px;
+            cursor: pointer;
+        }
+        #cart-books > p:hover {
+            color: red;
+        }
 </style>
+
+<script>
+    $('#cart-books').click(function () {
+        window.location = "/Book/BorrowBook";
+    });
+    $('#cart-books > p').click(function (e) {
+        e.stopPropagation();
+        clearCartBooks();
+    });
+</script>

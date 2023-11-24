@@ -1,0 +1,106 @@
+﻿@model IEnumerable<QL_ThuVien.DTO.PhieuMuon>
+@{
+    ViewBag.Title = "Danh Sách Phiếu Mượn";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+    bool isValidUser = QL_ThuVien.Intergrate.Services.Helper.SecurityHelper.HasPermission(HttpContext.Current);
+    bool? isEdit = (bool?)Session["EditBorrowedBook"];
+    string resBorrow = Session["borrowBooks"] == null ? "" : Session["borrowBooks"].ToString();
+    Session["EditBorrowedBook"] = null;
+    Session["borrowBooks"] = null;
+    <style>
+        .borrow td {
+            color: #ac0c0c;
+        }
+        .borrowed td {
+            color: #016601;
+        }
+    </style>
+}
+
+<body>
+    <div class="test">
+        <div class="header ml-0">
+            <h2 class="position-relative" style="color: #440ccb ">DANH SÁCH PHIẾU MƯỢN</h2>
+        </div>
+    </div>
+    <div class="container">
+        <div class="table">
+            <table class="table" id="table_id" width="100%" cellspacing="0">
+                <colgroup>
+                    <col style="width: 10%;">
+                    <col style="width: 15%;">
+                    <col style="width: 15%;">
+                    <col style="width: 15%;">
+                    <col style="width: 15%;">
+                    <col style="width: 15%;">
+                    <col style="width: 15%;">
+                </colgroup>
+                <thead>
+                    <tr class="text-center">
+                        <th>Mã Phiếu Mượn</th>
+                        <th>Người Lập</th>
+                        <th>Ngày Mượn</th>
+                        <th>Ngày Trả</th>
+                        <th>Tên Người Mượn</th>
+                        <th>SĐT Người Mượn</th>
+                        <th class="text-center">Công Cụ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr class="@(item.NGAYTRA == null ? "borrow" : "borrowed")">
+                            <td>@item.MAPHIEUMUON</td>
+                            <td>@item.HOTEN_NV</td>
+                            <td>@item.NGAYMUON.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                            <td>@(item.NGAYTRA == null ? "Chưa trả" : item.NGAYTRA?.ToString("dd/MM/yyyy HH:mm:ss"))</td>
+                            <td>@item.HOTEN_ND</td>
+                            <td>@item.SODIENTHOAI_ND</td>
+                            @if (isValidUser)
+                            {
+                                <td class="text-center">
+                                    <a class="btn btn-primary btn-edit m-l-0 px-075" href="/Book/DetailsBorrowedBook?maphieumuon=@(item.MAPHIEUMUON)" title="Thông tin chi tiết">
+                                        <i class="fa fa-info" aria-hidden="true"></i>
+                                    </a>
+                                    <a class="btn btn-primary btn-edit m-l-0 px-075" href="/Book/EditBorrowedBook?maphieumuon=@(item.MAPHIEUMUON)" title="Chỉnh sửa thông tin">
+                                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                                    </a>
+                                </td>
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+<script>
+    $(document).ready(function () {
+        if ('@Html.Raw(isEdit.ToString().ToLower())' == 'true') {
+            Swal.fire({
+                icon: 'success',
+                title: 'Thông Báo!',
+                text: 'Cập nhật thành công',
+                showConfirmButton: true,
+                timer: 1500
+            })
+        }
+        if ('@Html.Raw(resBorrow)' != '') {
+            Swal.fire({
+                icon: 'info',
+                title: 'Thông Báo!',
+                text: '@Html.Raw(resBorrow)',
+                showConfirmButton: true,
+                timer: 1500
+            })
+        }
+        setTimeout(function () {
+            $('#table_id').DataTable().order([0, 'desc']).draw()
+        }, 1000);
+    });
+</script>

@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "Danh Sách Bản Sao";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
+    var carts = Session["cartBooks"] as List<QL_ThuVien.Models.BANSAOSACH> ?? new List<QL_ThuVien.Models.BANSAOSACH>();
 }
 
 <body>
@@ -32,12 +33,14 @@
                 <tbody>
                     @foreach (var item in Model)
                     {
+                        var containsCart = carts.FindIndex(x => x.MABANSAO == item.MABANSAO) > -1;
+
                         <tr>
                             <td>@item.MABANSAO</td>
                             <td>@item.MASACH</td>
                             <td style="color: @(item.TINHTRANG ? "red" : "green")">@(item.TINHTRANG ? "Đã được mượn" : "Chưa được mượn")</td>
                             <td class="text-center">
-                                <span class="@(item.TINHTRANG ? "" : "btn-add-cart-book") btn btn-primary btn-edit m-l-0 px-075" title="Thêm bản sao vào phiếu mượn">
+                                <span class="@(!item.TINHTRANG && !containsCart ? "btn-add-cart-book btn-primary" : "btn-secondary") btn btn-edit m-l-0 px-075" title="Thêm bản sao vào phiếu mượn">
                                     <i class="fa fa-plus-circle" aria-hidden="true"></i>
                                 </span>
                             </td>
@@ -53,55 +56,7 @@
 <script>
     $(document).ready(function () {
         $(".btn-add-cart-book").click(function () {
-            addCartBooks($(this).parents('tr').find('td:eq(0)').html(), $(this).parents('tr').find('td:eq(1)').html());
-        });
-        //$('#table_id').DataTable().destroy();
-        $('#table_id').DataTable({
-            pageResize: false,
-            scrollY: 500,
-            scrollX: true,
-            lengthMenu: [
-                [5, 10, 25, 50, -1],
-                [5, 10, 25, 50, 'Tất cả'],
-            ],
-            language: {
-                "lengthMenu": "Hiện _MENU_ trường",
-                "zeroRecords": "Không tìm thấy dữ liệu!",
-                "info": "_PAGE_ / _PAGES_",
-                "infoEmpty": "Không có dữ liệu!",
-                "infoFiltered": "(Lọc dữ liệu từ _MAX_ bản ghi)",
-                "paginate": {
-                    "first": "<<",
-                    "last": ">>",
-                    "next": ">",
-                    "previous": "<"
-                },
-                "loadingRecords": "Đang tải...",
-                "processing": "",
-                "search": "Tìm kiếm:",
-            },
-            displayLength: 5,
-            dom: "<'toolbar'><'row'<'col-sm-5'l><'col-sm-7 t_filter'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-4'i><'col-sm-6'p>>",
-            fnInitComplete: function () {
-                /*$('div.toolbar').html('Custom tool bar!')   */
-            }
+            addCartBooks($(this).parents('tr').find('td:eq(0)').html(), $(this).parents('tr').find('td:eq(1)').html(), $(this));
         });
     });
-    $(".slbs").each(function (e, val) {
-        var id = $(this).attr("sid");
-        loadSLBS(this, id);
-    })
-    function loadSLBS(that, _id) {
-        $.ajax({
-            url: "/Book/CountSLBS",
-            data: {
-                id: _id,
-            },
-            success: function (data) {
-                // $('#img_song').html(data);
-                var content = data == "0" ? '<span style="color:red">Chưa nhập hàng</span>' : '<span style="color:green">' + data + '<span/>';
-                $(that).html(content);
-            }
-        });
-    }
 </script>

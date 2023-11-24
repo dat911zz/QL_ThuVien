@@ -153,6 +153,7 @@
     <Content Include="Assets\CSS\nucleo-svg.css" />
     <Content Include="Assets\CSS\PreLoad.css" />
     <Content Include="Assets\CSS\Reset.css" />
+    <Content Include="Assets\CSS\select2.min.css" />
     <Content Include="Assets\CSS\soft-ui-dashboard.css" />
     <Content Include="Assets\CSS\soft-ui-dashboard.min.css" />
     <Content Include="Assets\Fonts\fontawesome-webfont.svg" />
@@ -322,6 +323,7 @@
     <Content Include="Assets\Scripts\plugins\chartjs.min.js" />
     <Content Include="Assets\Scripts\plugins\perfect-scrollbar.min.js" />
     <Content Include="Assets\Scripts\plugins\smooth-scrollbar.min.js" />
+    <Content Include="Assets\Scripts\select2.min.js" />
     <Content Include="Assets\Scripts\soft-ui-dashboard.js" />
     <Content Include="Assets\Scripts\soft-ui-dashboard.min.js" />
     <Content Include="Content\PagedList.css" />
@@ -532,6 +534,7 @@
     <Compile Include="Controllers\RoomController.cs" />
     <Compile Include="Controllers\ProvinceAPIController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="DTO\PhieuMuon.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -674,6 +677,9 @@
     <Content Include="Views\Book\Detail.cshtml" />
     <Content Include="Views\Book\BanSao.cshtml" />
     <Content Include="Views\Book\CartBooks.cshtml" />
+    <Content Include="Views\Book\BorrowedBook.cshtml" />
+    <Content Include="Views\Book\DetailsBorrowedBook.cshtml" />
+    <Content Include="Views\Book\EditBorrowedBook.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

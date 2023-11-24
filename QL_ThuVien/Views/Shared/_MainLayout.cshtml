@@ -34,11 +34,17 @@
     <!--Datatable-->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.css">
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.js"></script>
+    <link href="~/Assets/CSS/select2.min.css" rel="stylesheet" />
+    <script src="~/Assets/Scripts/select2.min.js"></script>
     <style>
         .btn-edit {
             padding: 10px !important;
             min-width: 35px;
         }
+
+            .btn-edit.btn-secondary {
+                cursor: unset;
+            }
     </style>
     @RenderSection("scripts", required: false)
 </head>
@@ -62,17 +68,17 @@
         @*@Html.Partial("Footer")*@
     </main>
     @Html.Partial("Plugin")
-<div id="cover-cart-books">
-    @{
-        Html.RenderAction("CartBooks", "Book");
-    }
-</div>
+    <div id="cover-cart-books">
+        @{
+            Html.RenderAction("CartBooks", "Book");
+        }
+    </div>
 
     <script>
         $(document).ready(function () {
             $('.btn-edit, #cart-books').tooltip({ show: { effect: "none", delay: 0 } });
         });
-        function addCartBooks(mabs, mas) {
+        function addCartBooks(mabs, mas, objTrigger) {
             $.ajax({
                 type: "POST",
                 url: "/Book/AddCartBooks",
@@ -83,6 +89,7 @@
                 success: function (data) {
                     if (data == 'True') {
                         $("#cover-cart-books").load("/Book/CartBooks");
+                        $(objTrigger).removeClass("btn-add-cart-book btn-primary").addClass("btn-secondary");
                         Swal.fire({
                             icon: 'success',
                             title: 'Thành Công',
@@ -103,6 +110,39 @@
                 }
             })
         }
+        function removeCartBooks(mabs, mas, callback) {
+            $.ajax({
+                type: "POST",
+                url: "/Book/RemoveCartBooks",
+                data: {
+                    mabs: mabs,
+                    mas: mas
+                },
+                success: function (data) {
+                    if (data == 'True') {
+                        $("#cover-cart-books").load("/Book/CartBooks");
+                        callback();
+                    }
+                    else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Thất Bại',
+                            text: 'Xóa khỏi phiếu mượn ' + 'thất bại',
+                            showConfirmButton: true,
+                            timer: 1500
+                        });
+                    }
+                }
+            })
+        }
+        function clearCartBooks() {
+            $.ajax({
+                url: "/Book/ClearCartBooks",
+                success: function () {
+                    window.location.reload();
+                }
+            })
+        }
     </script>
     <!--   Core JS Files   -->
     <script src="~/Assets/Scripts/core/popper.min.js"></script>
@@ -110,6 +150,95 @@
     <script src="~/Assets/Scripts/plugins/perfect-scrollbar.min.js"></script>
     <script src="~/Assets/Scripts/plugins/smooth-scrollbar.min.js"></script>
     <script src="~/Assets/Scripts/plugins/chartjs.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            if ($('#table_id').length > 0) {
+                $('#table_id').DataTable().destroy();
+                $('#table_id').DataTable({
+                    pageResize: false,
+                    scrollY: 500,
+                    scrollX: true,
+                    lengthMenu: [
+                        [5, 10, 25, 50, -1],
+                        [5, 10, 25, 50, 'Tất cả'],
+                    ],
+                    language: {
+                        "lengthMenu": "Hiện _MENU_ trường",
+                        "zeroRecords": "Không tìm thấy dữ liệu!",
+                        "info": "_PAGE_ / _PAGES_",
+                        "infoEmpty": "Không có dữ liệu!",
+                        "infoFiltered": "(Lọc dữ liệu từ _MAX_ bản ghi)",
+                        "paginate": {
+                            "first": "<<",
+                            "last": ">>",
+                            "next": ">",
+                            "previous": "<"
+                        },
+                        "loadingRecords": "Đang tải...",
+                        "processing": "",
+                        "search": "Tìm kiếm:",
+                    },
+                    displayLength: 5,
+                    dom: "<'toolbar'><'row'<'col-sm-5'l><'col-sm-7 t_filter'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-4'i><'col-sm-6'p>>",
+                    fnInitComplete: function () {
+                        /*$('div.toolbar').html('Custom tool bar!')   */
+                    }
+                });
+            }
+        });
+    </script>
+
+    <style>
+        .test {
+            max-width: max-content;
+            padding: 20px;
+            display: block;
+        }
+
+        .add-room {
+            background-color: #440ccb;
+            color: white;
+            margin-bottom: 20px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            float: left;
+            max-width: 250px;
+        }
+
+        .styled-table {
+            border-collapse: collapse;
+            margin: auto;
+            font-size: 0.9em;
+            font-family: sans-serif;
+            width: inherit;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        }
+
+            .styled-table thead tr {
+                background-color: #333333;
+                color: #ffffff;
+                text-align: left;
+            }
+
+            .styled-table th,
+            .styled-table td {
+                padding: 12px 15px;
+            }
+
+            .styled-table tbody tr {
+                border-bottom: 1px solid #dddddd;
+            }
+
+                .styled-table tbody tr:nth-of-type(even) {
+                    background-color: #f3f3f3;
+                }
+
+                .styled-table tbody tr:last-of-type {
+                    border-bottom: 2px solid #333333;
+                }
+    </style>
     <script>
         if ($("#chart-bars").length > 0) {
             var ctx = document.getElementById("chart-bars").getContext("2d");
@@ -296,5 +425,10 @@
     <script src="~/Assets/Scripts/soft-ui-dashboard.min.js?v=1.0.6"></script>
     <script src="~/Assets/Scripts/Preload.js"></script>
     <script src="~/Assets/Scripts/ModalConf.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.select2-qltv').select2();
+        })
+    </script>
 </body>
 </html>

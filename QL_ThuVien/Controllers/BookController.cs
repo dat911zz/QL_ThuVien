@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using NPOI.OpenXmlFormats;
 using NPOI.XWPF.UserModel;
 using QL_ThuVien.DTO;
+using System.Web.Security;
 
 namespace QL_ThuVien.Controllers
 {
@@ -388,11 +389,63 @@ namespace QL_ThuVien.Controllers
         }
 
         [HttpPost]
-        public ActionResult BorrowBook(string mathe)
+        public ActionResult BorrowBook(int the_thu_vien)
         {
-            List<THETHUVIEN> thes = _services.Db.THETHUVIENs.ToList();
-            ViewData["TheThuViens"] = thes;
-            return View();
+            string res = "";
+            List<BANSAOSACH> carts = Session["cartBooks"] as List<BANSAOSACH>;
+            var cookie = HttpContext.Request.Cookies[".ASPXAUTH"];
+            if (cookie == null)
+            {
+                Session.Clear();
+                return RedirectToAction("Index", "Auth");
+            }
+            var ticket = FormsAuthentication.Decrypt(cookie.Value);
+            if (carts.Count > 0)
+            {
+                int manv = (int)_services.Db.TAIKHOANs.Where(x => x.TENDN == ticket.Name).First().MANHANVIEN;
+                DateTime ngaymuon = DateTime.Now;
+                _services.Db.PHIEUMUONs.InsertOnSubmit(new PHIEUMUON() { MANHANVIEN = manv, MANSD = the_thu_vien, NGAYMUON = ngaymuon, NGAYTRA = null });
+                _services.Db.SubmitChanges();
+                PHIEUMUON pm = _services.Db.PHIEUMUONs.Where(x => x.MANHANVIEN == manv && x.MANSD == the_thu_vien && x.NGAYMUON == ngaymuon && x.NGAYTRA == null).OrderByDescending(x => x.MAPHIEUMUON).First();
+                if(pm != null)
+                {
+                    int i = 0;
+                    foreach (var item in carts)
+                    {
+                        BANSAOSACH bs = _services.Db.BANSAOSACHes.Where(b => b.MABANSAO == item.MABANSAO).FirstOrDefault();
+                        if (bs != null && !bs.TINHTRANG)
+                        {
+                            try
+                            {
+                                bs.TINHTRANG = true;
+                                _services.Db.CHITIETMUONSACHes.InsertOnSubmit(new CHITIETMUONSACH() { MAPHIEUMUON = pm.MAPHIEUMUON, MABANSAO = bs.MABANSAO, MASACH = bs.MASACH });
+                                _services.Db.SubmitChanges();
+                                i++;
+                            }
+                            catch { }
+                        }
+                    }
+                    if(i == carts.Count)
+                    {
+                        res = "Lập phiếu mượn thành công";
+                    }
+                    else
+                    {
+                        res = "Lập phiếu mượn thành công, nhưng có sách lỗi";
+                    }
+                    Session["cartBooks"] = null;
+                }
+                else
+                {
+                    res = "Lập phiếu mượn thất bại";
+                }
+            }
+            else
+            {
+                res = "Không có sách để lập phiếu mượn";
+            }
+            Session["borrowBooks"] = res;
+            return Redirect("BorrowedBook");
         }
 
         public ActionResult BorrowedBook()

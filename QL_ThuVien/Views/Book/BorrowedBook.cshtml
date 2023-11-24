@@ -4,7 +4,9 @@
     Layout = "~/Views/Shared/_MainLayout.cshtml";
     bool isValidUser = QL_ThuVien.Intergrate.Services.Helper.SecurityHelper.HasPermission(HttpContext.Current);
     bool? isEdit = (bool?)Session["EditBorrowedBook"];
+    string resBorrow = Session["borrowBooks"] == null ? "" : Session["borrowBooks"].ToString();
     Session["EditBorrowedBook"] = null;
+    Session["borrowBooks"] = null;
     <style>
         .borrow td {
             color: #ac0c0c;
@@ -84,6 +86,15 @@
                 icon: 'success',
                 title: 'Thông Báo!',
                 text: 'Cập nhật thành công',
+                showConfirmButton: true,
+                timer: 1500
+            })
+        }
+        if ('@Html.Raw(resBorrow)' != '') {
+            Swal.fire({
+                icon: 'info',
+                title: 'Thông Báo!',
+                text: '@Html.Raw(resBorrow)',
                 showConfirmButton: true,
                 timer: 1500
             })

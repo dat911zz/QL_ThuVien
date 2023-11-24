@@ -12,17 +12,22 @@
         </div>
     </div>
     <div class="container">
-        <div class="row mb-2 align-items-center">
-            <div class="col-6">
-                <select class="form-control select2-qltv">
-                    @foreach (var item in thes)
-                    {
-                        <option value="@item.MATTV">@(item.SODIENTHOAI + " - " + item.HOTEN)</option>
-                    }
-                </select>
+        <form method="post" name="Borrow">
+            <div class="row mb-2 align-items-center">
+                <div class="col-6">
+                    <select class="form-control select2-qltv" name="the_thu_vien">
+                        @foreach (var item in thes)
+                        {
+                            <option value="@item.MATTV">@(item.SODIENTHOAI + " - " + item.HOTEN)</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-6 d-flex align-items-center">
+                    <button type="submit" id="btn-borrow" class="btn btn-primary" style="text-transform: uppercase; min-width: 120px; margin: 0;">Lập phiếu mượn</button>
+                    <div id="btn-clear" class="btn btn-danger" style="text-transform: uppercase; min-width: 120px; margin: 0 0 0 10px;">Xóa tất cả</div>
+                </div>
             </div>
-            <div class="col-6" style="text-align: right;"><div class="btn btn-primary" style="text-transform:uppercase;">Lập phiếu mượn</div></div>
-        </div>
+        </form>
         <div class="table">
             <table class="table" id="table_id" width="100%" cellspacing="0">
                 <colgroup>
@@ -64,6 +69,9 @@
                 $('#table_id').DataTable().row(row).remove().draw();
                 $('.tooltip').hide();
             });
+        });
+        $('#btn-clear').click(function () {
+            clearCartBooks();
         });
     </script>
 </body>

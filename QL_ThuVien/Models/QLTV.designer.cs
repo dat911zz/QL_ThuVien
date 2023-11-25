@@ -2512,7 +2512,7 @@ namespace QL_ThuVien.Models
 		
 		private System.DateTime _NGAYMUON;
 		
-		private System.DateTime _NGAYTRA;
+		private System.Nullable<DateTime> _NGAYTRA;
 		
 		private EntitySet<CHITIETMUONSACH> _CHITIETMUONSACHes;
 		
@@ -2534,7 +2534,7 @@ namespace QL_ThuVien.Models
     partial void OnMANSDChanged();
     partial void OnNGAYMUONChanging(System.DateTime value);
     partial void OnNGAYMUONChanged();
-    partial void OnNGAYTRAChanging(System.DateTime value);
+    partial void OnNGAYTRAChanging(System.Nullable<DateTime> value);
     partial void OnNGAYTRAChanged();
     #endregion
 		
@@ -2636,7 +2636,7 @@ namespace QL_ThuVien.Models
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NGAYTRA", DbType="DateTime NOT NULL")]
-		public System.DateTime NGAYTRA
+		public System.Nullable<DateTime> NGAYTRA
 		{
 			get
 			{

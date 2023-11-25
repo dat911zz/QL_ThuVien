@@ -71,38 +71,6 @@
 
 <script>
     $(document).ready(function () {
-        $('#table_id').DataTable().destroy();
-        $('#table_id').DataTable({
-            pageResize: false,
-            scrollY: 500,
-            scrollX: true,
-            lengthMenu: [
-                [5, 10, 25, 50, -1],
-                [5, 10, 25, 50, 'Tất cả'],
-            ],
-            language: {
-                "lengthMenu": "Hiện _MENU_ trường",
-                "zeroRecords": "Không tìm thấy dữ liệu!",
-                "info": "_PAGE_ / _PAGES_",
-                "infoEmpty": "Không có dữ liệu!",
-                "infoFiltered": "(Lọc dữ liệu từ _MAX_ bản ghi)",
-                "paginate": {
-                    "first": "<<",
-                    "last": ">>",
-                    "next": ">",
-                    "previous": "<"
-                },
-                "loadingRecords": "Đang tải...",
-                "processing": "",
-                "search": "Tìm kiếm:",
-            },
-            displayLength: 5,
-            dom: "<'toolbar'><'row'<'col-sm-5'l><'col-sm-7 t_filter'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-4'i><'col-sm-6'p>>",
-            /*dom: "<'toolbar'>ftrip",*/
-            fnInitComplete: function () {
-                /*$('div.toolbar').html('Custom tool bar!');*/
-            }
-        });
     });
 </script>
 

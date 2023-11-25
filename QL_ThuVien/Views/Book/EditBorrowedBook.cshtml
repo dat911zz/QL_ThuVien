@@ -1,0 +1,74 @@
+﻿@model QL_ThuVien.DTO.PhieuMuon
+
+@{
+    ViewBag.Title = "Sửa phiếu mượn";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+    List<QL_ThuVien.Models.NHANVIEN> nvs = ViewData["NhanViens"] as List<QL_ThuVien.Models.NHANVIEN>;
+    List<QL_ThuVien.Models.THETHUVIEN> nds = ViewData["NguoiDungs"] as List<QL_ThuVien.Models.THETHUVIEN>;
+}
+
+<h2>Sửa phiếu mượn</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        <label class="col-md-2 control-label">Mã phiếu mượn</label>
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.MAPHIEUMUON, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label" for="MANHANVIEN">Nhân viên</label>
+        <div class="col-md-10">
+            <select id="MANHANVIEN" class="select2-qltv form-control" name="MANHANVIEN" disabled="disabled">
+                @foreach (var item in nvs)
+                {
+                    <option @(item.MANHANVIEN == Model.MANHANVIEN ? @"selected=""true""" : "") value="@item.MANHANVIEN">@(item.MANHANVIEN + " - " + item.HOTEN + " - " + item.SODIENTHOAI)</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label" for="MANSD">Người mượn</label>
+        <div class="col-md-10">
+            <select id="MANSD" class="select2-qltv form-control" name="MANSD">
+                @foreach (var item in nds)
+                {
+                    <option @(item.MATTV == Model.MANSD ? @"selected=""true""" : "") value="@item.MATTV">@(item.MATTV + " - " + item.HOTEN + " - " + item.SODIENTHOAI)</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label" for="NGAYMUON">Ngày mượn</label>
+        <div class="col-md-10">
+            <input class="form-control" type="datetime-local" data-val="true" value="@Model.NGAYMUON.ToString("yyyy-MM-ddTHH:mm:ss")" id="NGAYMUON" name="NGAYMUON" />
+            @Html.ValidationMessageFor(model => model.NGAYMUON, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label" for="NGAYTRA">Ngày trả</label>
+        <div class="col-md-10">
+            <input class="form-control" type="datetime-local" value="@(Model.NGAYTRA == null ? "" : Model.NGAYTRA?.ToString("yyyy-MM-ddTHH:mm:ss"))" id="NGAYTRA" name="NGAYTRA" />
+            @Html.ValidationMessageFor(model => model.NGAYTRA, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

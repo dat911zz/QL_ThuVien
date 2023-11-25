@@ -24,6 +24,8 @@ namespace QL_ThuVien.Controllers
         // GET: Room
         public ActionResult Index(int? page)
         {
+            ViewBag.userList = _services.Db.THETHUVIENs.ToList();
+
             int pageSize = 5;
             int pageNumber = (page ?? 1);
             IEnumerable<PHONG> rooms = _services.Db.PHONGs.ToList();
@@ -135,9 +137,20 @@ namespace QL_ThuVien.Controllers
         {
             return View();
         }
-        public ActionResult LendRoom()
+        [HttpPost]
+        public string LendRoom(int maNSD, int maPhong, string tgMuon)
         {
-            return View();
+            DateTime tStart = DateTime.Parse(tgMuon, CultureInfo.InvariantCulture);
+            double tLenght = 2;
+            DateTime tEnd = tStart.AddHours(tLenght);
+
+            int result = _services.DbContext.Exceute(string.Format("exec ADD_ChiTietMuonPhong '{0}', '{1}', '{2}', '{3}'", maNSD, maPhong, tStart, tEnd));
+
+            if (result == 0)
+            {
+                return "Thao tác thất bại, vui lòng kiểm tra lại!";
+            }
+            return "ok";
         }
     }
 }

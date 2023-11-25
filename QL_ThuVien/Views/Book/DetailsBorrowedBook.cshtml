@@ -1,0 +1,47 @@
+﻿@model QL_ThuVien.DTO.PhieuMuon
+
+@{
+    ViewBag.Title = "Chi Tiết Phiếu Mượn";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+
+<h2>Thông tin chi tiết</h2>
+
+<div>
+    <div class="row">
+        <div class="col-3">Mã phiếu mượn</div>
+        <div class="col-9">@Html.DisplayFor(model => model.MAPHIEUMUON)</div>
+    </div>
+    <div class="row" style="color:red; font-weight:bold;">
+        <div class="col-3">Mã nhân viên</div>
+        <div class="col-9">@Html.DisplayFor(model => model.MANHANVIEN)</div>
+    </div>
+    <div class="row" style="color:red; font-weight:bold;">
+        <div class="col-3">Tên nhân viên</div>
+        <div class="col-9">@Html.DisplayFor(model => model.HOTEN_NV)</div>
+    </div>
+    <div class="row" style="color:red; font-weight:bold;">
+        <div class="col-3">SĐT nhân viên</div>
+        <div class="col-9">@Html.DisplayFor(model => model.SODIENTHOAI_NV)</div>
+    </div>
+    <div class="row">
+        <div class="col-3">Mã thẻ thư viện</div>
+        <div class="col-9">@Html.DisplayFor(model => model.MANSD)</div>
+    </div>
+    <div class="row">
+        <div class="col-3">Tên người mượn</div>
+        <div class="col-9">@Html.DisplayFor(model => model.HOTEN_ND)</div>
+    </div>
+    <div class="row">
+        <div class="col-3">SĐT người mượn</div>
+        <div class="col-9">@Html.DisplayFor(model => model.SODIENTHOAI_ND)</div>
+    </div>
+    <div class="row">
+        <div class="col-3">Ngày mượn</div>
+        <div class="col-9">@(Model.NGAYMUON.ToString("dd/MM/yyyy HH:mm:ss"))</div>
+    </div>
+    <div class="row" style="color:@(Model.NGAYTRA == null ? "red" : "green")">
+        <div class="col-3">Ngày trả</div>
+        <div class="col-9">@(Model.NGAYTRA == null ? "Chưa trả" : Model.NGAYTRA?.ToString("dd/MM/yyyy HH:mm:ss"))</div>
+    </div>
+</div>

@@ -17,6 +17,8 @@ using Excel = Microsoft.Office.Interop.Excel;
 using System.Threading.Tasks;
 using NPOI.OpenXmlFormats;
 using NPOI.XWPF.UserModel;
+using QL_ThuVien.DTO;
+using System.Web.Security;
 
 namespace QL_ThuVien.Controllers
 {
@@ -373,17 +375,203 @@ namespace QL_ThuVien.Controllers
         [HttpGet]
         public string CountSLBS(int id)
         {
-            var book = _services.Db.SACHes.FirstOrDefault(s => s.MASACH == id);
-            int total = book.BANSAOSACHes.Count;
-            int totalInUse = book.BANSAOSACHes.Where(s => s.TINHTRANG == true).Count();
+            int total = _services.Db.BANSAOSACHes.Where(bs => bs.MASACH == id).Count();
+            int totalInUse = _services.Db.BANSAOSACHes.Where(bs => bs.MASACH == id && bs.TINHTRANG).Count();
             string rs = total == 0 ? "0" : (total - totalInUse).ToString() + " / " + total.ToString();
             return rs;
 
         }
         public ActionResult BorrowBook()
         {
+            List<THETHUVIEN> thes = _services.Db.THETHUVIENs.ToList();
+            ViewData["TheThuViens"] = thes;
             return View();
         }
+
+        [HttpPost]
+        public ActionResult BorrowBook(int the_thu_vien)
+        {
+            string res = "";
+            List<BANSAOSACH> carts = Session["cartBooks"] as List<BANSAOSACH>;
+            var cookie = HttpContext.Request.Cookies[".ASPXAUTH"];
+            if (cookie == null)
+            {
+                Session.Clear();
+                return RedirectToAction("Index", "Auth");
+            }
+            var ticket = FormsAuthentication.Decrypt(cookie.Value);
+            if (carts.Count > 0)
+            {
+                int manv = (int)_services.Db.TAIKHOANs.Where(x => x.TENDN == ticket.Name).First().MANHANVIEN;
+                DateTime ngaymuon = DateTime.Now;
+                _services.Db.PHIEUMUONs.InsertOnSubmit(new PHIEUMUON() { MANHANVIEN = manv, MANSD = the_thu_vien, NGAYMUON = ngaymuon, NGAYTRA = null });
+                _services.Db.SubmitChanges();
+                PHIEUMUON pm = _services.Db.PHIEUMUONs.Where(x => x.MANHANVIEN == manv && x.MANSD == the_thu_vien && x.NGAYMUON == ngaymuon && x.NGAYTRA == null).OrderByDescending(x => x.MAPHIEUMUON).First();
+                if(pm != null)
+                {
+                    int i = 0;
+                    foreach (var item in carts)
+                    {
+                        BANSAOSACH bs = _services.Db.BANSAOSACHes.Where(b => b.MABANSAO == item.MABANSAO).FirstOrDefault();
+                        if (bs != null && !bs.TINHTRANG)
+                        {
+                            try
+                            {
+                                bs.TINHTRANG = true;
+                                _services.Db.CHITIETMUONSACHes.InsertOnSubmit(new CHITIETMUONSACH() { MAPHIEUMUON = pm.MAPHIEUMUON, MABANSAO = bs.MABANSAO, MASACH = bs.MASACH });
+                                _services.Db.SubmitChanges();
+                                i++;
+                            }
+                            catch { }
+                        }
+                    }
+                    if(i == carts.Count)
+                    {
+                        res = "Lập phiếu mượn thành công";
+                    }
+                    else
+                    {
+                        res = "Lập phiếu mượn thành công, nhưng có sách lỗi";
+                    }
+                    Session["cartBooks"] = null;
+                }
+                else
+                {
+                    res = "Lập phiếu mượn thất bại";
+                }
+            }
+            else
+            {
+                res = "Không có sách để lập phiếu mượn";
+            }
+            Session["borrowBooks"] = res;
+            return Redirect("BorrowedBook");
+        }
+
+        public ActionResult BorrowedBook()
+        {
+            var list = (from pm in _services.Db.PHIEUMUONs 
+                        join nv in _services.Db.NHANVIENs 
+                            on pm.MANHANVIEN equals nv.MANHANVIEN 
+                        join ttv in _services.Db.THETHUVIENs
+                            on pm.MANSD equals ttv.MATTV
+                        select new
+                        {
+                            pm,
+                            nv,
+                            ttv
+                        }).ToList();
+            List<DTO.PhieuMuon> res = new List<DTO.PhieuMuon>();
+            list.ForEach(i =>
+            {
+                res.Add(new DTO.PhieuMuon
+                {
+                    MAPHIEUMUON = i.pm.MAPHIEUMUON,
+                    MANHANVIEN = i.pm.MANHANVIEN,
+                    MANSD = i.pm.MANSD,
+                    NGAYMUON = i.pm.NGAYMUON,
+                    NGAYTRA = i.pm.NGAYTRA,
+                    HOTEN_NV = i.nv.HOTEN,
+                    SODIENTHOAI_NV = i.nv.SODIENTHOAI,
+                    HOTEN_ND = i.ttv.HOTEN,
+                    SODIENTHOAI_ND = i.ttv.SODIENTHOAI
+                });
+            });
+            return View(res);
+        }
+
+        public ActionResult DetailsBorrowedBook(int maphieumuon)
+        {
+            var phieumuon = (from pm in _services.Db.PHIEUMUONs where pm.MAPHIEUMUON == maphieumuon
+                        join nv in _services.Db.NHANVIENs
+                            on pm.MANHANVIEN equals nv.MANHANVIEN
+                        join ttv in _services.Db.THETHUVIENs
+                            on pm.MANSD equals ttv.MATTV
+                        select new
+                        {
+                            pm,
+                            nv,
+                            ttv
+                        }).FirstOrDefault();
+            if (phieumuon == null)
+                throw new Exception("Không tìm thấy phiếu mượn");
+            return View(new DTO.PhieuMuon
+            {
+                MAPHIEUMUON = phieumuon.pm.MAPHIEUMUON,
+                MANHANVIEN = phieumuon.pm.MANHANVIEN,
+                MANSD = phieumuon.pm.MANSD,
+                NGAYMUON = phieumuon.pm.NGAYMUON,
+                NGAYTRA = phieumuon.pm.NGAYTRA,
+                HOTEN_NV = phieumuon.nv.HOTEN,
+                SODIENTHOAI_NV = phieumuon.nv.SODIENTHOAI,
+                HOTEN_ND = phieumuon.ttv.HOTEN,
+                SODIENTHOAI_ND = phieumuon.ttv.SODIENTHOAI
+            });
+        }
+        public ActionResult EditBorrowedBook(int maphieumuon)
+        {
+            var phieumuon = (from pm in _services.Db.PHIEUMUONs
+                             where pm.MAPHIEUMUON == maphieumuon
+                             join nv in _services.Db.NHANVIENs
+                                 on pm.MANHANVIEN equals nv.MANHANVIEN
+                             join ttv in _services.Db.THETHUVIENs
+                                 on pm.MANSD equals ttv.MATTV
+                             select new
+                             {
+                                 pm,
+                                 nv,
+                                 ttv
+                             }).FirstOrDefault();
+            if (phieumuon == null)
+                throw new Exception("Không tìm thấy phiếu mượn");
+            ViewData["NhanViens"] = _services.Db.NHANVIENs.ToList();
+            ViewData["NguoiDungs"] = _services.Db.THETHUVIENs.ToList();
+            return View(new DTO.PhieuMuon
+            {
+                MAPHIEUMUON = phieumuon.pm.MAPHIEUMUON,
+                MANHANVIEN = phieumuon.pm.MANHANVIEN,
+                MANSD = phieumuon.pm.MANSD,
+                NGAYMUON = phieumuon.pm.NGAYMUON,
+                NGAYTRA = phieumuon.pm.NGAYTRA,
+                HOTEN_NV = phieumuon.nv.HOTEN,
+                SODIENTHOAI_NV = phieumuon.nv.SODIENTHOAI,
+                HOTEN_ND = phieumuon.ttv.HOTEN,
+                SODIENTHOAI_ND = phieumuon.ttv.SODIENTHOAI
+            });
+        }
+        [HttpPost]
+        public ActionResult EditBorrowedBook(DTO.PhieuMuon model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (model.NGAYMUON == null)
+                {
+                    ModelState.AddModelError("", "Ngày mượn không được bỏ trống");
+                    return View();
+                }
+                else
+                {
+                    try
+                    {
+                        PHIEUMUON pm = _services.Db.PHIEUMUONs.Where(p => p.MAPHIEUMUON == model.MAPHIEUMUON).FirstOrDefault();
+                        pm.MANSD = model.MANSD;
+                        pm.NGAYMUON = model.NGAYMUON;
+                        pm.NGAYTRA = model.NGAYTRA;
+                        _services.Db.SubmitChanges();
+                        Session["EditBorrowedBook"] = true;
+                        return Redirect("BorrowedBook");
+                    }
+                    catch (Exception ex)
+                    {
+                        ModelState.AddModelError("", "Cập nhật thất bại!");
+                        return View();
+                    }
+                }
+            }
+            ModelState.AddModelError("", "Vui lòng điền đẩy đủ thông tin!");
+            return View();
+        }
+
         public ActionResult SendBackBook()
         {
             return View();
@@ -416,6 +604,26 @@ namespace QL_ThuVien.Controllers
             carts.Add(new BANSAOSACH { MABANSAO = int.Parse(mabs), MASACH = int.Parse(mas) });
             Session["cartBooks"] = carts;
             return true;
+        }
+        [HttpPost]
+        public bool RemoveCartBooks(string mabs, string mas)
+        {
+            List<BANSAOSACH> carts = Session["cartBooks"] as List<BANSAOSACH>;
+            if (carts == null)
+            {
+                carts = new List<BANSAOSACH>();
+            }
+            var iFind = carts.FirstOrDefault(x => x.MABANSAO == int.Parse(mabs));
+            if (iFind == null)
+                return false;
+            carts.Remove(iFind);
+            Session["cartBooks"] = carts;
+            return true;
+        }
+        
+        public void ClearCartBooks()
+        {
+            Session["cartBooks"] = new List<BANSAOSACH>();
         }
     }
 }

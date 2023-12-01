@@ -43,11 +43,93 @@ namespace QL_ThuVien.Controllers
                 ))
             ));
         }
-        [HttpPost]
-        public ActionResult AjaxGetEmptyRoom(string dateTimeSend, double hourUse)
+
+        public ActionResult Create()
         {
-            return Json(GetEmptyRooms(dateTimeSend, hourUse));
+            return View();
         }
+        [HttpPost]
+        public ActionResult Create(PHONG phong)
+        {
+            if (ModelState.IsValid)
+            {
+                _services.Db.PHONGs.InsertOnSubmit(phong);
+                _services.Db.SubmitChanges();
+                return RedirectToAction("Index");
+            }
+            return View(phong);
+        }
+        public ActionResult Edit(int id)
+        {
+            var phong = _services.Db.PHONGs.FirstOrDefault(p => p.MAPHONG == id);
+
+            if (phong == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(phong);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(PHONG phong)
+        {
+            if (ModelState.IsValid)
+            {
+                var existingPhong = _services.Db.PHONGs.FirstOrDefault(p => p.MAPHONG == phong.MAPHONG);
+
+                if (existingPhong != null)
+                {
+                    // Update existingPhong with values from phong
+                    existingPhong.TENPHONG = phong.TENPHONG;
+                    existingPhong.VITRI = phong.VITRI;
+                    // Update other properties as needed
+
+                    _services.Db.SubmitChanges();
+                    return RedirectToAction("Index");
+                }
+            }
+
+            return View(phong);
+        }
+
+        public ActionResult Delete(int id)
+        {
+            var phong = _services.Db.PHONGs.FirstOrDefault(p => p.MAPHONG == id);
+
+            if (phong == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(phong);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            var phong = _services.Db.PHONGs.FirstOrDefault(p => p.MAPHONG == id);
+
+            if (phong != null)
+            {
+                _services.Db.PHONGs.DeleteOnSubmit(phong);
+                _services.Db.SubmitChanges();
+            }
+            return RedirectToAction("Index");
+        }
+        
+        public ActionResult Detail(int id)
+        {
+            var phong = _services.Db.PHONGs.FirstOrDefault(p => p.MAPHONG == id);
+
+            if (phong == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(phong);
+        }
+
         public ActionResult AllRoom()
         {
             return View();

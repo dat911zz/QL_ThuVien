@@ -8,6 +8,7 @@ using QL_ThuVien.Models;
 using PagedList;
 using Newtonsoft.Json;
 using System.Globalization;
+using System.Web.Security;
 
 namespace QL_ThuVien.Controllers
 {
@@ -146,6 +147,15 @@ namespace QL_ThuVien.Controllers
 
             int result = _services.DbContext.Exceute(string.Format("exec ADD_ChiTietMuonPhong '{0}', '{1}', '{2}', '{3}'", maNSD, maPhong, tStart, tEnd));
 
+
+            var lendRoomDetail = _services.Db.CHITIETMUONPHONGs.FirstOrDefault(ctmp => ctmp.MANSD == maNSD && ctmp.MAPHONG == maPhong && ctmp.THOIGIANMUON.Equals(tStart));
+            if (lendRoomDetail != null)
+            {
+                var NVList = _services.DbContext.QueryTable<NhanVien>("nhanvien");
+                var ticket = FormsAuthentication.Decrypt(Request.Cookies[".ASPXAUTH"].Value) ?? null;
+                lendRoomDetail.MANHANVIEN = _services.Db.TAIKHOANs.ToList().SingleOrDefault(x => x.TENDN.Equals(ticket.Name)).MANHANVIEN;
+                _services.Db.SubmitChanges();
+            }
             if (result == 0)
             {
                 return "Thao tác thất bại, vui lòng kiểm tra lại!";

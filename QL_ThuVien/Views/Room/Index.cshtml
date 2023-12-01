@@ -222,8 +222,9 @@
             <div class="col-4"><input type="radio" name="hour" value="16h" /> <span>16h</span></div>
         </div>
     </div>
-    <div class="col-md-2">
-        <a class="ml-2 btn btn-success" onclick="filterRoomByTime()">Lọc</a>
+    <div class="col-md-5 row">
+        <a class="ml-2 btn btn-success col-3" onclick="filterRoomByTime()">Lọc</a>
+        <input class="ml-2 choose-time form-control col" type="text" readonly id="tmp-select-time" style="height: 40.8px;" value="" />
     </div>
     <div class="row">
         <div id="floor-4" class="floor-container col-md-7 m-3">
@@ -232,7 +233,7 @@
                 <div class="middle-room m-f4 stripes">
                     <div class="rectangle reception">Thủ Thư</div>
                     <div class="middle-room-label">Khoảng Không Gian Thư Viện</div>
-                    <div r-id="4" class="room room-1-f4 rectangle">
+                    <div r-id="4" class="room room-1-f4 rectangle" data-toggle="modal" data-target="#myModal">
                         <div>Phòng Thuyết Trình</div>
                     </div>
                 </div>
@@ -288,7 +289,7 @@
                 <th>Mã Phòng</th>
                 <th>Tên Phòng</th>
                 <th>Vị Trí</th>
-                <th>Tình Trạng</th>
+                @*<th>Tình Trạng</th>*@
                 <th class="text-center">Tổng số lượt mượn</th>
             </tr>
         </thead>
@@ -299,7 +300,7 @@
                     <td>@item.MAPHONG</td>
                     <td>@item.TENPHONG</td>
                     <td>@item.VITRI</td>
-                    <td>
+                    @*<td>
                         @if (emptyRooms.ToString().Contains(item.MAPHONG.ToString()))
                         {
                             <span style="color: green">Phòng trống</span>
@@ -308,7 +309,7 @@
                         {
                             <span style="color: red">Đang sử dụng</span>
                         }
-                    </td>
+                    </td>*@
                     <td style="text-align: center">@item.CHITIETMUONPHONGs.Count</td>
                     @*<td>
                             @{
@@ -359,7 +360,7 @@
                 <div id="frm-lendroom" class="modal-body">
                     <div class="row form-group">
                         <div class="col-md-5">
-                            <h5>Phòng</h5>
+                            <h5>Mã Phòng</h5>
                         </div>
                         <div class="col-md">
                             <input class="choose-time form-control" type="text" readonly name="f-room" value="" />
@@ -387,6 +388,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <button type="button" class="btn btn-success" onclick="processLendRoom()">Đặt phòng</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
                 </div>
             </div>
@@ -424,6 +426,7 @@
         setTimeout(() => {
             var timepicker = convertDateTime($('.choose-time').val(), $('input[name="hour"]:checked').val());
             console.log("You have chosen time: " + timepicker);
+            $('#tmp-select-time').val(timepicker);
             getRoomStates(timepicker);
         }, 100);      
     }
@@ -448,21 +451,52 @@
         var frm = $('#frm-lendroom');
         var timepicker = convertDateTime($('.choose-time').val(), $('input[name="hour"]:checked').val());
         frm.find('input[name="f-startTime"]').val(timepicker);
+        frm.find('input[name="f-room"]').val(pos);
         pickedRoom = pos;
     }
     function processLendRoom() {
         var frm = $('#frm-lendroom');
 
-
-        var userId = ;
+        var userId = $('#UserSelects').val();
         var roomId = pickedRoom;
         var lendTime = convertDateTime($('.choose-time').val(), $('input[name="hour"]:checked').val());
 
+        $.ajax({
+            url: "/Room/LendRoom",
+            type: "POST",
+            data: { maNSD: userId, maPhong: roomId, tgMuon: lendTime },
+            success: function (r) {
+                if (r == 'ok') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thành Công',
+                        html: '<div style="color: green; font-weight: bold;">Đã đã đặt phòng thành công</div><div>Mã người dùng: <b>' + userId + "</b> ; Mã phòng: <b>" + roomId + '</b>; Thời gian bắt đầu mượn: <b>' + lendTime + '</b></div>',
+                        showConfirmButton: true,
+                        timer: 8000
+                    }).then((result) => {
+                        location.reload();
+                    });
+                }
+                else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Thất Bại',
+                        html: '<span style="font-weight: bold">Có lỗi đã xảy ra, vui lòng thử lại! <br/>Chi tiết: </span><span style="color: red;">' + r + '</span>',
+                        showConfirmButton: true,
+                        timer: 3500
+                    })
+                }
+            }
+        });
+        /*console.log(userId, roomId, lendTime);*/
     }
     function convertDateTime(date, time) {
         var timepart = time.split('h');
+        timepart[0] = timepart[0].length >= 2 ? timepart[0] : ("0" + timepart[0]);
+        timepart[1] = timepart[1].length >= 2 ? timepart[1] : ((timepart[1].length === 0 ? "00" : "0" + timepart[1]));
+
+
         var timers = timepart[0] + ":" + (timepart[1] === "" ? "0" : timepart[1]) + ":00.000";
-        console.log(timepart);
         return date + " " + timers;
     }
     var room_states = [];

@@ -302,7 +302,7 @@
                     <td>@item.MAPHONG</td>
                     <td>@item.TENPHONG</td>
                     <td>@item.VITRI</td>
-                    <td>
+                    @*<td>
                         @if (emptyRooms.ToString().Contains(item.MAPHONG.ToString()))
                         {
                             <span style="color: green">Phòng trống</span>
@@ -318,7 +318,7 @@
                                 <span style="color: red">Đang sử dụng</span>
                             }
                         }
-                    </td>
+                    </td>*@
                     <td style="text-align: center">@item.CHITIETMUONPHONGs.Count</td>
 
                     @if (isValidUser)
@@ -501,7 +501,7 @@
     var room_states = [];
     function getRoomStates(time) {
         $.ajax({
-            url: "/Room/AjaxGetEmptyRoom",
+            url: "/Room/AjaxGetEmptyRooms",
             type: "POST",
             data: { dateTimeSend: time, hourUse: 2 },
             success: function (result) {

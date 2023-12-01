@@ -139,6 +139,12 @@ namespace QL_ThuVien.Controllers
             return View();
         }
         [HttpPost]
+        public ActionResult AjaxGetEmptyRooms(string dateTimeSend, double hourUse)
+        {
+            return Json(GetEmptyRooms(dateTimeSend, hourUse));
+        }
+
+        [HttpPost]
         public string LendRoom(int maNSD, int maPhong, string tgMuon)
         {
             DateTime tStart = DateTime.Parse(tgMuon, CultureInfo.InvariantCulture);

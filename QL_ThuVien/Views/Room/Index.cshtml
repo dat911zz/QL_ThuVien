@@ -4,6 +4,7 @@
 @{
     ViewBag.Title = "Phòng";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
+    bool isValidUser = QL_ThuVien.Intergrate.Services.Helper.SecurityHelper.HasPermission(HttpContext.Current);
     var emptyRooms = Html.Action("GetEmptyRooms", new { dateTimeSend = DateTime.Now, hourUse = 2 });
 }
 <head>
@@ -290,6 +291,7 @@
                 <th>Vị Trí</th>
                 <th>Tình Trạng</th>
                 <th class="text-center">Tổng số lượt mượn</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -306,37 +308,32 @@
                         }
                         else
                         {
-                            <span style="color: red">Đang sử dụng</span>
-                        }
-                    </td>
-                    <td style="text-align: center">@item.CHITIETMUONPHONGs.Count</td>
-                    @*<td>
-                            @{
-                                var nsd = item.CHITIETMUONPHONGs.SingleOrDefault(x => x.THOIGIANMUON.Equals(DateTime.Now));
-                                if (nsd != null)
-                                {
-                                    <span>@nsd.THETHUVIEN.NGUOISUDUNG.HOTEN</span>
-                                }
-                                else
-                                {
-                                    <span>Trống!</span>
-                                }
-                            }
-                        </td>
-                        <td>
-                            @if (item.CHITIETMUONPHONGs.Any(x => x.THOIGIANMUON.Equals(DateTime.Now)))
+                            if (item.CHITIETMUONPHONGs.Count == 0)
                             {
-                                <span style="color: red">Đang sử dụng</span>
+                                <span style="color: green">Phòng trống</span>
                             }
                             else
                             {
-                                <span style="color: forestgreen">Phòng trống</span>
+                                <span style="color: red">Đang sử dụng</span>
                             }
-                        </td>*@
-                    @*<td class="text-center">
-                            <button class="btn btn-secondary m-l-0">Chỉnh Sửa</button>
-                            <button class="btn btn-danger">Xóa</button>
-                        </td>*@
+                        }
+                    </td>
+                    <td style="text-align: center">@item.CHITIETMUONPHONGs.Count</td>
+
+                    @if (isValidUser)
+                    {
+                        <td class="text-center">
+                            <a class="btn btn-primary btn-edit m-l-0 px-075" href="/Room/Detail/@item.MAPHONG" title="Thông tin chi tiết">
+                                <i class="fa fa-info" aria-hidden="true"></i>
+                            </a>
+                            <a class="btn btn-primary btn-edit m-l-0 px-075" href="/Room/Edit/@item.MAPHONG" title="Chỉnh sửa thông tin">
+                                <i class="fa fa-pencil" aria-hidden="true"></i>
+                            </a>
+                            <a class="btn btn-danger btn-edit m-l-0 px-075" onclick="DVNConfirm('Xóa', 'Phòng', '/Room/Delete', @item.MAPHONG)" title="Xóa">
+                                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                            </a>
+                        </td>
+                    }
                 </tr>
 
             }
@@ -393,6 +390,8 @@
 
         </div>
     </div>
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }), new PagedListRenderOptions { LiElementClasses = new[] { "pagedList" } })
+
 </body>
 <script>
     var currentFloor = 3;

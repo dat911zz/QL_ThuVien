@@ -105,14 +105,13 @@ namespace QL_ThuVien.Areas.Admin.Controllers
             {
                 var account = _services.DbContext.QueryTable<TaiKhoanV2>("TaiKhoan").SingleOrDefault(x => x.MaTaiKhoan == model.MaTaiKhoan);
                 //Update
-                var result = _services.DbContext.Exceute("exec SP_CapNhatTaiKhoan @matk, '@tendn', '@mk', N'@cv'",
-                    new
-                    {
-                        matk = model.MaTaiKhoan,
-                        tendn = model.TenDN,
-                        mk = model.MatKhau,
-                        cv = model.ChucVu
-                    });
+                var result = _services.DbContext.Exceute(string.Format("exec SP_CapNhatTaiKhoan {0}, N'{1}', N'{2}', N'{3}'",
+
+                       model.MaTaiKhoan,
+                       model.TenDN,
+                       model.MatKhau,
+                       model.ChucVu
+                    ));
                 if (result == 0)
                 {
                     throw new Exception("Thao tác thất bại, vui lòng kiểm tra lại!");
@@ -146,7 +145,7 @@ namespace QL_ThuVien.Areas.Admin.Controllers
             {
                 return ex.Message;
             }
-            
+
         }
 
         #region Thêm nhân viên
@@ -227,7 +226,7 @@ namespace QL_ThuVien.Areas.Admin.Controllers
                        ));
                 }
                 //Update
-                
+
                 if (result == 0)
                 {
                     return "Thao tác thất bại, vui lòng kiểm tra lại!";
@@ -238,11 +237,11 @@ namespace QL_ThuVien.Areas.Admin.Controllers
         }
         public ActionResult GetPermsOfObject(string target, string dbObject)
         {
-            return Content(JsonConvert.SerializeObject(_services.DbHelper.GetListString(string.Format("dbo.FN_LayDSQuyenTrenObject('{0}', '{1}')", 
+            return Content(JsonConvert.SerializeObject(_services.DbHelper.GetListString(string.Format("dbo.FN_LayDSQuyenTrenObject('{0}', '{1}')",
                     target,
                     dbObject),
             "*")));
-            
+
         }
         public ActionResult GetPermStatesOfObject(string target, string dbObject)
         {

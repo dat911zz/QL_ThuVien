@@ -9,7 +9,7 @@
 }
 @if (role.Equals("Không") || role.Equals("Sinh viên") || role.Equals("Giảng viên"))
 {
-
+    
 }
 else
 {
@@ -105,7 +105,16 @@ else
                         <span class="nav-link-text ms-1">Tạo thông báo</span>
                     </a>
                 </li>
-
+                @if (role.Equals("Quản trị viên"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("CP_V2", "Admin")">
+                            <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="administrator"><path fill="#231f20" d="M18 18H5.867C4.247 18 3 19.38 3 21v2h18v-2c0-1.62-1.38-3-3-3zM12 1a8 8 0 0 0-8 8c0 4.419 3.581 8 8 8s8-3.581 8-8a8 8 0 0 0-8-8zm-1 12L7.5 9.5 9 8l2 2 4-4 1.5 1.5L11 13z"></path></svg>                            </div>
+                            <span class="nav-link-text ms-1">ADMIN</span>
+                        </a>
+                    </li>
+                }
                 <li class="nav-item mt-3">
                     <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">QUẢN LÝ SÁCH</h6>
                     <ul class="parent-child">
@@ -161,27 +170,27 @@ else
                             </a>
                         </li>
                         @*<li class="nav-item">
-                                <a class="nav-link m-l-0 " href="@Url.Action("EmptyRoom","Room")">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-exclamation" viewBox="0 0 16 16">
-                                            <path d="M7.293 1.5a1 1 0 0 1 1.414 0L11 3.793V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v3.293l2.354 2.353a.5.5 0 0 1-.708.708L8 2.207l-5 5V13.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 2 13.5V8.207l-.646.647a.5.5 0 1 1-.708-.708L7.293 1.5Z" />
-                                            <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Zm-3.5-2a.5.5 0 0 0-.5.5v1.5a.5.5 0 1 0 1 0V11a.5.5 0 0 0-.5-.5Zm0 4a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1Z" />
-                                        </svg>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Phòng Trống</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link m-l-0 " href="~/Room/LendRoom">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-lock" viewBox="0 0 16 16">
-                                            <path d="M7.293 1.5a1 1 0 0 1 1.414 0L11 3.793V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v3.293l2.354 2.353a.5.5 0 0 1-.708.708L8 2.207l-5 5V13.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 2 13.5V8.207l-.646.647a.5.5 0 1 1-.708-.708L7.293 1.5Z" />
-                                            <path d="M10 13a1 1 0 0 1 1-1v-1a2 2 0 0 1 4 0v1a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-2Zm3-3a1 1 0 0 0-1 1v1h2v-1a1 1 0 0 0-1-1Z" />
-                                        </svg>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Cho Mượn</span>
-                                </a>
-                            </li>*@
+                    <a class="nav-link m-l-0 " href="@Url.Action("EmptyRoom","Room")">
+                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-exclamation" viewBox="0 0 16 16">
+                                <path d="M7.293 1.5a1 1 0 0 1 1.414 0L11 3.793V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v3.293l2.354 2.353a.5.5 0 0 1-.708.708L8 2.207l-5 5V13.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 2 13.5V8.207l-.646.647a.5.5 0 1 1-.708-.708L7.293 1.5Z" />
+                                <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Zm-3.5-2a.5.5 0 0 0-.5.5v1.5a.5.5 0 1 0 1 0V11a.5.5 0 0 0-.5-.5Zm0 4a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1Z" />
+                            </svg>
+                        </div>
+                        <span class="nav-link-text ms-1">Phòng Trống</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link m-l-0 " href="~/Room/LendRoom">
+                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-lock" viewBox="0 0 16 16">
+                                <path d="M7.293 1.5a1 1 0 0 1 1.414 0L11 3.793V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v3.293l2.354 2.353a.5.5 0 0 1-.708.708L8 2.207l-5 5V13.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 2 13.5V8.207l-.646.647a.5.5 0 1 1-.708-.708L7.293 1.5Z" />
+                                <path d="M10 13a1 1 0 0 1 1-1v-1a2 2 0 0 1 4 0v1a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-2Zm3-3a1 1 0 0 0-1 1v1h2v-1a1 1 0 0 0-1-1Z" />
+                            </svg>
+                        </div>
+                        <span class="nav-link-text ms-1">Cho Mượn</span>
+                    </a>
+                </li>*@
                     </ul>
                 </li>
 

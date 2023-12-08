@@ -534,7 +534,9 @@
     <Compile Include="Controllers\RoomController.cs" />
     <Compile Include="Controllers\ProvinceAPIController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="DTO\ChiTietPhieuMuon.cs" />
     <Compile Include="DTO\PhieuMuon.cs" />
+    <Compile Include="DTO\SachDTO.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

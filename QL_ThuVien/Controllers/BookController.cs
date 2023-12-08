@@ -37,13 +37,21 @@ namespace QL_ThuVien.Controllers
         [AuthorizeRole(Roles = "Quản trị viên, Nhân Viên")]
         public ActionResult Index()
         {
-            IEnumerable<Sach> books = _services.DbContext.QueryTable<Sach>("Sach").OrderByDescending(x => x.MaSach);
-            Session["NXBList"] = _services.DbContext.QueryTable<NhaXuatBan>("NhaXuatBan");
-            Session["CDList"] = _services.DbContext.QueryTable<ChuDe>("ChuDe");
-            Session["NXBSelectList"] = new SelectList(Session["NXBList"] as List<NhaXuatBan>, "MaNXB", "TenNXB");
-            Session["CDSelectList"] = new SelectList(Session["CDList"] as List<ChuDe>, "MaChuDe", "TenChuDe");
-            Session["SachList"] = _services.Db.SACHes.ToList();
-            return View(books);
+            var saches = (from s in _services.Db.SACHes
+                       join nxb in _services.Db.NHAXUATBANs on s.MANXB equals nxb.MANXB
+                       join cd in _services.Db.CHUDEs on s.MACHUDE equals cd.MACHUDE
+                       select new SachDTO
+                       {
+                           MaSach = s.MASACH,
+                           TenSach = s.TENSACH,
+                           AnhBia = s.ANHBIA,
+                           NamXuatBan = (DateTime)s.NAMXUATBAN,
+                           TenNXB = nxb.TENNXB,
+                           TenChuDe = cd.TENCHUDE,
+                           SLBS = (from bs in _services.Db.BANSAOSACHes where bs.MASACH == s.MASACH select bs).Count(),
+                           SLDangMuon = (from bs in _services.Db.BANSAOSACHes where bs.MASACH == s.MASACH && bs.TINHTRANG select bs).Count()
+                       }).OrderByDescending(x => x.MaSach).ToList();
+            return View(saches);
         }
         public ActionResult BoostrapTableTest()
         {      
@@ -451,33 +459,30 @@ namespace QL_ThuVien.Controllers
         public ActionResult BorrowedBook()
         {
             var list = (from pm in _services.Db.PHIEUMUONs 
-                        join nv in _services.Db.NHANVIENs 
-                            on pm.MANHANVIEN equals nv.MANHANVIEN 
-                        join ttv in _services.Db.THETHUVIENs
-                            on pm.MANSD equals ttv.MATTV
-                        select new
+                        join nv in _services.Db.NHANVIENs on pm.MANHANVIEN equals nv.MANHANVIEN 
+                        join ttv in _services.Db.THETHUVIENs on pm.MANSD equals ttv.MATTV
+                        select new DTO.PhieuMuon
                         {
-                            pm,
-                            nv,
-                            ttv
+                            MAPHIEUMUON = pm.MAPHIEUMUON,
+                            MANHANVIEN = pm.MANHANVIEN,
+                            MANSD = pm.MANSD,
+                            NGAYMUON = pm.NGAYMUON,
+                            NGAYTRA = pm.NGAYTRA,
+                            HOTEN_NV = nv.HOTEN,
+                            SODIENTHOAI_NV = nv.SODIENTHOAI,
+                            HOTEN_ND = ttv.HOTEN,
+                            SODIENTHOAI_ND = ttv.SODIENTHOAI,
+                            ChiTietPhieuMuons = (from s in _services.Db.SACHes
+                                                 join bs in _services.Db.BANSAOSACHes on s.MASACH equals bs.MABANSAO
+                                                 join cttpm in _services.Db.CHITIETMUONSACHes on bs.MABANSAO equals cttpm.MABANSAO
+                                                 where cttpm.MAPHIEUMUON == pm.MAPHIEUMUON
+                                                 select new ChiTietPhieuMuon
+                                                 {
+                                                     MaBanSao = bs.MABANSAO,
+                                                     TenSach = s.TENSACH
+                                                 }).ToList()
                         }).ToList();
-            List<DTO.PhieuMuon> res = new List<DTO.PhieuMuon>();
-            list.ForEach(i =>
-            {
-                res.Add(new DTO.PhieuMuon
-                {
-                    MAPHIEUMUON = i.pm.MAPHIEUMUON,
-                    MANHANVIEN = i.pm.MANHANVIEN,
-                    MANSD = i.pm.MANSD,
-                    NGAYMUON = i.pm.NGAYMUON,
-                    NGAYTRA = i.pm.NGAYTRA,
-                    HOTEN_NV = i.nv.HOTEN,
-                    SODIENTHOAI_NV = i.nv.SODIENTHOAI,
-                    HOTEN_ND = i.ttv.HOTEN,
-                    SODIENTHOAI_ND = i.ttv.SODIENTHOAI
-                });
-            });
-            return View(res);
+            return View(list);
         }
 
         public ActionResult DetailsBorrowedBook(int maphieumuon)
@@ -487,26 +492,30 @@ namespace QL_ThuVien.Controllers
                             on pm.MANHANVIEN equals nv.MANHANVIEN
                         join ttv in _services.Db.THETHUVIENs
                             on pm.MANSD equals ttv.MATTV
-                        select new
+                        select new DTO.PhieuMuon
                         {
-                            pm,
-                            nv,
-                            ttv
+                            MAPHIEUMUON = pm.MAPHIEUMUON,
+                            MANHANVIEN = pm.MANHANVIEN,
+                            MANSD = pm.MANSD,
+                            NGAYMUON = pm.NGAYMUON,
+                            NGAYTRA = pm.NGAYTRA,
+                            HOTEN_NV = nv.HOTEN,
+                            SODIENTHOAI_NV = nv.SODIENTHOAI,
+                            HOTEN_ND = ttv.HOTEN,
+                            SODIENTHOAI_ND = ttv.SODIENTHOAI,
+                            ChiTietPhieuMuons = (from s in _services.Db.SACHes
+                                                 join bs in _services.Db.BANSAOSACHes on s.MASACH equals bs.MASACH
+                                                 join cttpm in _services.Db.CHITIETMUONSACHes on bs.MABANSAO equals cttpm.MABANSAO
+                                                 where cttpm.MAPHIEUMUON == pm.MAPHIEUMUON
+                                                 select new ChiTietPhieuMuon
+                                                 {
+                                                     MaBanSao = bs.MABANSAO,
+                                                     TenSach = s.TENSACH
+                                                 }).ToList()
                         }).FirstOrDefault();
             if (phieumuon == null)
                 throw new Exception("Không tìm thấy phiếu mượn");
-            return View(new DTO.PhieuMuon
-            {
-                MAPHIEUMUON = phieumuon.pm.MAPHIEUMUON,
-                MANHANVIEN = phieumuon.pm.MANHANVIEN,
-                MANSD = phieumuon.pm.MANSD,
-                NGAYMUON = phieumuon.pm.NGAYMUON,
-                NGAYTRA = phieumuon.pm.NGAYTRA,
-                HOTEN_NV = phieumuon.nv.HOTEN,
-                SODIENTHOAI_NV = phieumuon.nv.SODIENTHOAI,
-                HOTEN_ND = phieumuon.ttv.HOTEN,
-                SODIENTHOAI_ND = phieumuon.ttv.SODIENTHOAI
-            });
+            return View(phieumuon);
         }
         public ActionResult EditBorrowedBook(int maphieumuon)
         {
@@ -624,6 +633,26 @@ namespace QL_ThuVien.Controllers
         public void ClearCartBooks()
         {
             Session["cartBooks"] = new List<BANSAOSACH>();
+        }
+
+        [HttpPost]
+        public string DestroyBook(string mabs, string lydo)
+        {
+            if (string.IsNullOrEmpty(mabs))
+                return JsonConvert.SerializeObject(new { res = false, msg = "Mã bản sao đang trống" });
+            //var obj = _services.Db.Tie
+            if (string.IsNullOrEmpty(lydo))
+                return JsonConvert.SerializeObject(new { res = false, msg = "Lý do hủy bản sao đang trống" });
+            var cookie = HttpContext.Request.Cookies[".ASPXAUTH"];
+            if (cookie == null)
+            {
+                Session.Clear();
+                return JsonConvert.SerializeObject(new { res = false, msg = "Vui lòng xác thực đăng nhập lại" });
+            }
+            var ticket = FormsAuthentication.Decrypt(cookie.Value);
+            int manv = (int)_services.Db.TAIKHOANs.Where(x => x.TENDN == ticket.Name).First().MANHANVIEN;
+            DateTime d = DateTime.Now;
+            return JsonConvert.SerializeObject(new { res = true, msg = "Tiêu hủy bản sao thành công" });
         }
     }
 }

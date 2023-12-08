@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -16,5 +17,6 @@ namespace QL_ThuVien.DTO
         public string SODIENTHOAI_ND { get; set; }
         public DateTime NGAYMUON { get; set; }
         public DateTime? NGAYTRA {  get; set; }
+        public List<ChiTietPhieuMuon> ChiTietPhieuMuons { get; set; } = new List<ChiTietPhieuMuon>();
     }
 }

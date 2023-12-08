@@ -1,11 +1,9 @@
-﻿@model IEnumerable<QL_ThuVien.Models.Sach>
+﻿
+@model IEnumerable<QL_ThuVien.DTO.SachDTO>
 @{
     ViewBag.Title = "Sách";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
     bool isValidUser = QL_ThuVien.Intergrate.Services.Helper.SecurityHelper.HasPermission(HttpContext.Current);
-    var NXBList = Session["NXBList"] as List<QL_ThuVien.Models.NhaXuatBan>;
-    var CDList = Session["CDList"] as List<QL_ThuVien.Models.ChuDe>;
-    var SachList = Session["SachList"] as List<QL_ThuVien.Models.SACH>;
 }
 <style>
     .dataTables_filter > label, .dataTables_length > label {
@@ -93,12 +91,12 @@
                             <td>
                                 @item.TenSach
                             </td>
-                            <td>@NXBList.SingleOrDefault(x => x.MaNXB == item.MaNXB).TenNXB</td>
-                            <td>@CDList.SingleOrDefault(x => x.MaChuDe == item.MaChuDe).TenChuDe</td>
+                            <td>@item.TenNXB</td>
+                            <td>@item.TenChuDe</td>
                             <td class="text-center">@(item.NamXuatBan.ToShortDateString())</td>
                             @*<td class="text-center">@(item.GiaSach.ToString("#,###.##đ", new System.Globalization.CultureInfo("en-US", false).NumberFormat))</td>*@
                             <td class="slbs" sid="@item.MaSach">   
-                                <span>Đang thống kê...</span>
+                                @Html.Raw(item.GetHtmlSLTon())
                             </td>
                             @*<td><div class="short-tent">@item.MoTa</div></td>*@
                             @if (isValidUser)

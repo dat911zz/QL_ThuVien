@@ -146,5 +146,26 @@ namespace QL_ThuVien.Controllers
             Session["SearchCredential"] = txtSearch;
             return View(books.ToPagedList(pageNumber, pageSize));
         }
+
+        public string[] GetViPham()
+        {
+            string[] viPham = { };
+
+
+            return viPham;
+        }
+
+        public string[] GetMuonSach()
+        {
+            string[] muonSach = { };
+
+            return muonSach;
+        }
+        public string[] GetTraSach()
+        {
+            string[] traSach = { };
+
+            return traSach;
+        }
     }
 }

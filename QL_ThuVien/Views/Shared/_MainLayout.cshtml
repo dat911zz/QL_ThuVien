@@ -245,15 +245,15 @@
             new Chart(ctx, {
                 type: "bar",
                 data: {
-                    labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                    labels: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
                     datasets: [{
-                        label: "Sales",
+                        label: "Vi Phạm",
                         tension: 0.4,
                         borderWidth: 0,
                         borderRadius: 4,
                         borderSkipped: false,
-                        backgroundColor: "#fff",
-                        data: [450, 200, 100, 220, 500, 100, 400, 230, 500],
+                        backgroundColor: "#ef1c21",
+                        data: [150, 200, 120, 220, 100, 190, 160, 230, 100, 200, 120, 210],
                         maxBarThickness: 6
                     },],
                 },
@@ -279,7 +279,7 @@
                             },
                             ticks: {
                                 suggestedMin: 0,
-                                suggestedMax: 500,
+                                suggestedMax: 300,
                                 beginAtZero: true,
                                 padding: 15,
                                 font: {
@@ -323,9 +323,9 @@
             new Chart(ctx2, {
                 type: "line",
                 data: {
-                    labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                    labels: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
                     datasets: [{
-                        label: "Mobile apps",
+                        label: "Mượn sách",
                         tension: 0.4,
                         borderWidth: 0,
                         pointRadius: 0,
@@ -333,12 +333,12 @@
                         borderWidth: 3,
                         backgroundColor: gradientStroke1,
                         fill: true,
-                        data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
+                        data: [150, 200, 120, 220, 100, 190, 160, 230, 100, 200, 120, 210],
                         maxBarThickness: 6
 
                     },
                     {
-                        label: "Websites",
+                        label: "Trả Sách",
                         tension: 0.4,
                         borderWidth: 0,
                         pointRadius: 0,
@@ -346,7 +346,7 @@
                         borderWidth: 3,
                         backgroundColor: gradientStroke2,
                         fill: true,
-                        data: [30, 90, 40, 140, 290, 290, 340, 230, 400],
+                        data: [150, 200, 120, 220, 400, 190, 260, 130, 100, 200, 120, 210],
                         maxBarThickness: 6
                     },
                     ],

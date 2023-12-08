@@ -41,6 +41,7 @@ namespace QL_ThuVien.Controllers
             var saches = (from s in _services.Db.SACHes
                        join nxb in _services.Db.NHAXUATBANs on s.MANXB equals nxb.MANXB
                        join cd in _services.Db.CHUDEs on s.MACHUDE equals cd.MACHUDE
+                       where (from tl in _services.Db.THANHLies where tl.MASACH == s.MASACH select tl).Count() <= 0
                        select new SachDTO
                        {
                            MaSach = s.MASACH,
@@ -289,7 +290,7 @@ namespace QL_ThuVien.Controllers
                     return "Không tìm thấy sách có mã " + id;
                 }
                 var bansaos = (from bs in _services.Db.BANSAOSACHes where bs.MASACH == sach.MASACH select bs).ToList();
-                if(bansaos.Select(x => x.TINHTRANG).Count() > 0)
+                if(bansaos.Where(x => x.TINHTRANG).Count() > 0)
                 {
                     return "Hiện tại sách đang có bản sao được mượn, không thể thanh lý toàn bộ";
                 }

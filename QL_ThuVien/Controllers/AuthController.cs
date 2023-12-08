@@ -34,8 +34,9 @@ namespace QL_ThuVien.Controllers
         {
             CaptchaHelper.captchaText = CaptchaHelper.GenerateCaptchaCode(4);
             Session["captchaCode"] = CaptchaHelper.captchaText;
-            Session["NXBList"] = _services.Db.NHAXUATBANs.ToList();
-            Session["CDList"] = _services.Db.CHUDEs.ToList();
+
+            Session["NXBList"] = _services.DbContext.QueryTable<NhaXuatBan>("NhaXuatBan");
+            Session["CDList"] = _services.DbContext.QueryTable<ChuDe>("ChuDe");
             Session["NXBSelectList"] = new SelectList(Session["NXBList"] as List<NhaXuatBan>, "MaNXB", "TenNXB");
             Session["CDSelectList"] = new SelectList(Session["CDList"] as List<ChuDe>, "MaChuDe", "TenChuDe");
             Session["SachList"] = _services.Db.SACHes.ToList();

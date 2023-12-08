@@ -111,7 +111,7 @@
                                     <a class="btn btn-primary btn-edit m-l-0 px-075" href="/Book/Edit/@item.MaSach" title="Chỉnh sửa thông tin">
                                         <i class="fa fa-pencil" aria-hidden="true"></i>
                                     </a>
-                                    <a class="btn btn-danger btn-edit m-l-0 px-075" onclick="DVNConfirm('Xóa', 'Sách', '/Book/Delete', @item.MaSach)" title="Xóa">
+                                    <a class="btn btn-danger btn-edit m-l-0 px-075 btn-liquidation-book" data-mas="@item.MaSach" data-dg="@item.GiaSach" title="Thanh Lý">
                                         <i class="fa fa-trash-o" aria-hidden="true"></i>
                                     </a>
                                 </td>
@@ -130,24 +130,104 @@
     </div>
 </body>
 <script>
-    var listSLBS = $(".slbs").get().reverse();
-    for (var i = 0; i < listSLBS.length; i++) {
-        var id = $(listSLBS[i]).attr("sid");
-        loadSLBS($(listSLBS[i]), id);
-    }
     $(document).ready(function () {
-        
-    });
-    function loadSLBS(that, _id) {
-        $.ajax({
-            url: "/Book/CountSLBS",
-            data: {
-                id: _id,
-            },
-            success: function (data) {
-                var content = data == "0" ? '<span style="color:red">Chưa nhập hàng</span>' : '<span style="color:green">' + data + '<span/>';
-                $(that).html(content);
+        $(".btn-liquidation-book").click(function () {
+            var mas = $(this).data('mas');
+            var giaSach = $(this).data('dg');
+            if (mas == '') {
+                return;
             }
+            var d = '@Html.Raw(DateTime.Now.ToString("dd/MM/yyyy"))';
+            $('body').append(
+                `
+                    <div id="liquidation-s">
+                        <div style="position: fixed; top: 0; bottom: 0; left: 0; right: 0; z-index: 1000; background-color: rgba(0, 0, 0, 0.5); display:flex; align-items:center; justify-content:center;">
+                            <div class="content" style="background-color:white; width:60%; border-radius:10px; padding:20px 40px;">
+                                <div><h4 style="color:blue; text-transform: uppercase; text-align: center;">thanh lý sách</h4></div>
+                                <div class="row">
+                                    <div class="col-4">Mã sách</div>
+                                    <div class="col-8 mas">${mas}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4">Ngày thực hiện</div>
+                                    <div class="col-8">${d}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4">Đơn giá</div>
+                                    <div class="col-8">
+                                        <input class="don_gia form-control" type="number" min="1" max="1000000000" value="${giaSach}" />
+                                    </div>
+                                </div>
+                                <div style="text-align: right; padding-right: 12px;"><div class="btn btn-primary">Thực hiện</div></div>
+                            </div>
+                        </div>
+                        <style>
+                            .content > div {
+                                margin: 10px 0;
+                            }
+                        </style>
+                    </div>
+                `
+            );
+            addEventPopup();
+        });
+    });
+    function addEventPopup() {
+        $('#liquidation-s').click(function () {
+            $(this).remove();
+        });
+        $('#liquidation-s .content').click(function (e) {
+            e.stopPropagation();
+        });
+        $('#liquidation-s .btn').click(function () {
+            let functionName = 'Thanh lý';
+            let objectName = 'Sách';
+            let id = $('#liquidation-s .mas').html();
+            Swal.fire({
+                icon: 'warning',
+                title: 'Cảnh Báo!',
+                html: '<div>Bạn có chắc muốn thực hiện hành động này?</div>'
+                    + '<div>Chi tiết: <span style="font-weight: bold">' + functionName.toLowerCase() + ' ' + objectName.toLowerCase() + ' có mã là <span style="color: red">' + id + '</span></span></div>',
+                showCancelButton: true,
+                confirmButtonText: functionName,
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        url: '/Book/Delete',
+                        data: {
+                            id: id,
+                            dongia: $('#liquidation-s input').val()
+                        },
+                        success: function (r) {
+                            if (r == 'ok') {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Thành Công',
+                                    text: 'Đã ' + functionName.toLowerCase() + ' ' + objectName.toLowerCase() + ' có mã là ' + id + ' !',
+                                    showConfirmButton: true,
+                                    timer: 2000
+                                }).then((result) => {
+                                    location.reload();
+                                });
+                            }
+                            else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Thất Bại',
+                                    html: '<span style="font-weight: bold">Có lỗi đã xảy ra, vui lòng thử lại! <br/>Chi tiết: </span><span style="color: red;">' + r + '</span>',
+                                    showConfirmButton: true,
+                                    timer: 3500
+                                })
+                            }
+                            if (reload) {
+                                window.location.reload();
+                            }
+                        }
+                    });
+                }
+            })
         });
     }
 </script>

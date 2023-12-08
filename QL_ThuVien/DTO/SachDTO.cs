@@ -13,6 +13,7 @@ namespace QL_ThuVien.DTO
         public DateTime NamXuatBan { get; set; }
         public string TenNXB { get; set; }
         public string TenChuDe { get; set; }
+        public int GiaSach { get; set; }
         public int SLBS { get; set; }
         public int SLDangMuon { get; set; }
         public string GetHtmlSLTon()

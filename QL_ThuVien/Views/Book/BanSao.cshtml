@@ -61,11 +61,14 @@
         });
         $(".btn-destroy-book").click(function () {
             var mabs = $(this).data('mabs');
+            if (mabs == '') {
+                return;
+            }
             var d = '@Html.Raw(DateTime.Now.ToString("dd/MM/yyyy"))';
             $('body').append(
                 `
                     <div id="destroy-bs">
-                        <div style="position: fixed; top: 0; bottom: 0; left: 0; right: 0; z-index: 100000; background-color: rgba(0, 0, 0, 0.5); display:flex; align-items:center; justify-content:center;">
+                        <div style="position: fixed; top: 0; bottom: 0; left: 0; right: 0; z-index: 1000; background-color: rgba(0, 0, 0, 0.5); display:flex; align-items:center; justify-content:center;">
                             <div class="content" style="background-color:white; width:60%; border-radius:10px; padding:20px 40px;">
                                 <div><h4 style="color:blue; text-transform: uppercase; text-align: center;">tiêu hủy bản sao sách</h4></div>
                                 <div class="row">
@@ -112,6 +115,8 @@
                     lydo: $('#destroy-bs textarea').val()
                 },
                 success: function (data) {
+                    data = JSON.parse(data);
+                    console.log(data, data.res, data.msg);
                     if (data.res) {
                         Swal.fire({
                             icon: 'success',
@@ -120,6 +125,7 @@
                             showConfirmButton: true,
                             timer: 1000
                         });
+                        window.location.reload();
                     }
                     else {
                         Swal.fire({
@@ -130,6 +136,7 @@
                             timer: 1000
                         });
                     }
+                    $('#destroy-bs').remove();
                 }
             });
         });

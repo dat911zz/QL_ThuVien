@@ -538,6 +538,7 @@
     <Compile Include="DTO\BanSaoDestroy.cs" />
     <Compile Include="DTO\ChiTietPhieuMuon.cs" />
     <Compile Include="DTO\PhieuMuon.cs" />
+    <Compile Include="DTO\LiquidatedBookDTO.cs" />
     <Compile Include="DTO\SachDTO.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -647,7 +648,6 @@
     <Content Include="Views\Error\Index.cshtml" />
     <Content Include="Views\Book\Index.cshtml" />
     <Content Include="Views\Book\BorrowBook.cshtml" />
-    <Content Include="Views\Book\SendBackBook.cshtml" />
     <Content Include="Views\Room\EmptyRoom.cshtml" />
     <Content Include="Views\Room\LendRoom.cshtml" />
     <Content Include="Views\Home\LibaryStats.cshtml" />
@@ -682,6 +682,9 @@
     <Content Include="Views\Book\DetailsBorrowedBook.cshtml" />
     <Content Include="Views\Book\EditBorrowedBook.cshtml" />
     <Content Include="Views\Book\DestroyedBook.cshtml" />
+    <Content Include="Views\Book\LiquidatedBook.cshtml" />
+    <Content Include="Views\Book\SendedBackBook.cshtml" />
+    <Content Include="Views\Book\SendBackBook.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -615,7 +615,40 @@ namespace QL_ThuVien.Controllers
             return View();
         }
 
-        public ActionResult SendBackBook()
+        public ActionResult SendBackBook(int maphieumuon)
+        {
+            var phieumuon = (from pm in _services.Db.PHIEUMUONs
+                             where pm.MAPHIEUMUON == maphieumuon
+                             join nv in _services.Db.NHANVIENs
+                                 on pm.MANHANVIEN equals nv.MANHANVIEN
+                             join ttv in _services.Db.THETHUVIENs
+                                 on pm.MANSD equals ttv.MATTV
+                             select new DTO.PhieuMuon
+                             {
+                                 MAPHIEUMUON = pm.MAPHIEUMUON,
+                                 MANHANVIEN = pm.MANHANVIEN,
+                                 MANSD = pm.MANSD,
+                                 NGAYMUON = pm.NGAYMUON,
+                                 NGAYTRA = pm.NGAYTRA,
+                                 HOTEN_NV = nv.HOTEN,
+                                 SODIENTHOAI_NV = nv.SODIENTHOAI,
+                                 HOTEN_ND = ttv.HOTEN,
+                                 SODIENTHOAI_ND = ttv.SODIENTHOAI,
+                                 ChiTietPhieuMuons = (from s in _services.Db.SACHes
+                                                      join bs in _services.Db.BANSAOSACHes on s.MASACH equals bs.MASACH
+                                                      join cttpm in _services.Db.CHITIETMUONSACHes on bs.MABANSAO equals cttpm.MABANSAO
+                                                      where cttpm.MAPHIEUMUON == pm.MAPHIEUMUON
+                                                      select new ChiTietPhieuMuon
+                                                      {
+                                                          MaBanSao = bs.MABANSAO,
+                                                          TenSach = s.TENSACH
+                                                      }).ToList()
+                             }).FirstOrDefault();
+            if (phieumuon == null)
+                throw new Exception("Không tìm thấy phiếu mượn");
+            return View(phieumuon);
+        }
+        public ActionResult SendedBackBook()
         {
             return View();
         }
@@ -727,6 +760,27 @@ namespace QL_ThuVien.Controllers
                             LyDoTieuHuy = th.LYDO
                         }).ToList();
             return View(list);
+        }
+
+        public ActionResult LiquidatedBook()
+        {
+            var saches = (from s in _services.Db.SACHes
+                          join nxb in _services.Db.NHAXUATBANs on s.MANXB equals nxb.MANXB
+                          join cd in _services.Db.CHUDEs on s.MACHUDE equals cd.MACHUDE
+                          join tl in _services.Db.THANHLies on s.MASACH equals tl.MASACH
+                          select new LiquidatedBookDTO
+                          {
+                              MaSach = s.MASACH,
+                              TenSach = s.TENSACH,
+                              AnhBia = s.ANHBIA,
+                              NamXuatBan = (DateTime)s.NAMXUATBAN,
+                              TenNXB = nxb.TENNXB,
+                              TenChuDe = cd.TENCHUDE,
+                              NgayThanhLy = tl.NGAY,
+                              SoLuongThanhLy = (int)tl.SOLUONG,
+                              GiaThanhLy = (int)tl.DONGIA
+                          }).OrderByDescending(x => x.MaSach).ToList();
+            return View(saches);
         }
     }
 }

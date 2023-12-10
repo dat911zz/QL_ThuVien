@@ -8,6 +8,7 @@ using QL_ThuVien.Models;
 using PagedList;
 using Newtonsoft.Json;
 using System.Globalization;
+using System.Web.Security;
 
 namespace QL_ThuVien.Controllers
 {
@@ -24,6 +25,8 @@ namespace QL_ThuVien.Controllers
         // GET: Room
         public ActionResult Index(int? page)
         {
+            ViewBag.userList = _services.Db.THETHUVIENs.ToList();
+
             int pageSize = 5;
             int pageNumber = (page ?? 1);
             IEnumerable<PHONG> rooms = _services.Db.PHONGs.ToList();
@@ -40,6 +43,93 @@ namespace QL_ThuVien.Controllers
                 ))
             ));
         }
+
+        public ActionResult Create()
+        {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult Create(PHONG phong)
+        {
+            if (ModelState.IsValid)
+            {
+                _services.Db.PHONGs.InsertOnSubmit(phong);
+                _services.Db.SubmitChanges();
+                return RedirectToAction("Index");
+            }
+            return View(phong);
+        }
+        public ActionResult Edit(int id)
+        {
+            var phong = _services.Db.PHONGs.FirstOrDefault(p => p.MAPHONG == id);
+
+            if (phong == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(phong);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(PHONG phong)
+        {
+            if (ModelState.IsValid)
+            {
+                var existingPhong = _services.Db.PHONGs.FirstOrDefault(p => p.MAPHONG == phong.MAPHONG);
+
+                if (existingPhong != null)
+                {
+                    // Update existingPhong with values from phong
+                    existingPhong.TENPHONG = phong.TENPHONG;
+                    existingPhong.VITRI = phong.VITRI;
+                    // Update other properties as needed
+
+                    _services.Db.SubmitChanges();
+                    return RedirectToAction("Index");
+                }
+            }
+
+            return View(phong);
+        }
+
+        public ActionResult Delete(int id)
+        {
+            var phong = _services.Db.PHONGs.FirstOrDefault(p => p.MAPHONG == id);
+
+            if (phong == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(phong);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            var phong = _services.Db.PHONGs.FirstOrDefault(p => p.MAPHONG == id);
+
+            if (phong != null)
+            {
+                _services.Db.PHONGs.DeleteOnSubmit(phong);
+                _services.Db.SubmitChanges();
+            }
+            return RedirectToAction("Index");
+        }
+        
+        public ActionResult Detail(int id)
+        {
+            var phong = _services.Db.PHONGs.FirstOrDefault(p => p.MAPHONG == id);
+
+            if (phong == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(phong);
+        }
+
         public ActionResult AllRoom()
         {
             return View();
@@ -48,9 +138,35 @@ namespace QL_ThuVien.Controllers
         {
             return View();
         }
-        public ActionResult LendRoom()
+        [HttpPost]
+        public ActionResult AjaxGetEmptyRooms(string dateTimeSend, double hourUse)
         {
-            return View();
+            return Json(GetEmptyRooms(dateTimeSend, hourUse));
+        }
+
+        [HttpPost]
+        public string LendRoom(int maNSD, int maPhong, string tgMuon)
+        {
+            DateTime tStart = DateTime.Parse(tgMuon, CultureInfo.InvariantCulture);
+            double tLenght = 2;
+            DateTime tEnd = tStart.AddHours(tLenght);
+
+            int result = _services.DbContext.Exceute(string.Format("exec ADD_ChiTietMuonPhong '{0}', '{1}', '{2}', '{3}'", maNSD, maPhong, tStart, tEnd));
+
+
+            var lendRoomDetail = _services.Db.CHITIETMUONPHONGs.FirstOrDefault(ctmp => ctmp.MANSD == maNSD && ctmp.MAPHONG == maPhong && ctmp.THOIGIANMUON.Equals(tStart));
+            if (lendRoomDetail != null)
+            {
+                var NVList = _services.DbContext.QueryTable<NhanVien>("nhanvien");
+                var ticket = FormsAuthentication.Decrypt(Request.Cookies[".ASPXAUTH"].Value) ?? null;
+                lendRoomDetail.MANHANVIEN = _services.Db.TAIKHOANs.ToList().SingleOrDefault(x => x.TENDN.Equals(ticket.Name)).MANHANVIEN;
+                _services.Db.SubmitChanges();
+            }
+            if (result == 0)
+            {
+                return "Thao tác thất bại, vui lòng kiểm tra lại!";
+            }
+            return "ok";
         }
     }
 }

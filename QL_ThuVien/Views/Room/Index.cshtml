@@ -1,8 +1,10 @@
 ﻿@using PagedList.Mvc;
+@using QL_ThuVien.Models; 
 @model PagedList.IPagedList<QL_ThuVien.Models.PHONG>
 @{
     ViewBag.Title = "Phòng";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
+    bool isValidUser = QL_ThuVien.Intergrate.Services.Helper.SecurityHelper.HasPermission(HttpContext.Current);
     var emptyRooms = Html.Action("GetEmptyRooms", new { dateTimeSend = DateTime.Now, hourUse = 2 });
 }
 <head>
@@ -15,7 +17,263 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr.js"></script>
 </head>
+<style>
+    .test {
+        max-width: max-content;
+        padding: 20px;
+        display: block;
+    }
+
+    .styled-table {
+        border-collapse: collapse;
+        margin: auto;
+        font-size: 0.9em;
+        font-family: sans-serif;
+        width: inherit;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    }
+
+        .styled-table thead tr {
+            background-color: #333333;
+            color: #ffffff;
+            text-align: left;
+        }
+
+        .styled-table th,
+        .styled-table td {
+            padding: 12px 15px;
+        }
+
+        .styled-table tbody tr {
+            border-bottom: 1px solid #dddddd;
+        }
+
+            .styled-table tbody tr:nth-of-type(even) {
+                background-color: #f3f3f3;
+            }
+
+            .styled-table tbody tr:last-of-type {
+                border-bottom: 2px solid #333333;
+            }
+
+    .rectangle {
+        height: 90px;
+        width: 80px;
+        border: 1px solid #555;
+    }
+
+    .floor {
+        border: 1px dashed #5f5f5f;
+        height: 400px;
+        padding: 3px;
+        position: relative;
+    }
+
+    .middle-room {
+        position: absolute;
+        width: 95.5%;
+        height: 360px;
+        border: 1px dashed #555;
+        top: 20px;
+        left: 21px;
+        right: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .door {
+        position: absolute;
+        top: 0;
+        width: 80px;
+        height: 20px;
+        background: #5f5f5f;
+        color: #fff;
+        font-size: 12px;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .door-1 {
+        left: 20px;
+    }
+
+    .door-2 {
+        left: 320px;
+    }
+
+    .room {
+        font-size: 12px;
+        right: 0;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        background: antiquewhite;
+    }
+
+        .room:hover, .building-floor:hover {
+            border: 5px dashed blue;
+            cursor: pointer;
+        }
+
+    .room-1 {
+        position: absolute;
+        top: 0;
+    }
+
+    .room-2 {
+        position: absolute;
+        top: 90px;
+    }
+
+    .room-3 {
+        position: absolute;
+        top: 180px;
+    }
+
+    .room-4 {
+        position: absolute;
+        top: 270px;
+    }
+
+    .room-1-f4 {
+        position: absolute;
+        top: 0;
+        width: 30%;
+    }
+
+    .reception {
+        position: absolute;
+        left: 80px;
+        top: 5px;
+        background: #d25e5e;
+        height: 40px !important;
+        color: #fff;
+        font-size: 12px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .stripes {
+        background: repeating-linear-gradient(-45deg, #afafaf, #afafaf 5px, white 5px, white 10px);
+    }
+    .choose{
+        background: #abd0fea9;
+    }
+    .middle-room-label {
+        color: #fff;
+        font-weight: bold;
+        padding: 10px;
+        background: #5a5a5adb;
+    }
+
+    .building-floor {
+        width: 100%;
+        height: 60px;
+        font-size: 12px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .inuse {
+        background: #d25e5e;
+        color: #fff;
+    }
+    .empty{
+
+    }
+    .select2-qltv {
+        width: 260px;
+    }
+</style>
 <body>
+    <div class="test">
+        <div class="header ml-0">
+            <h2 class="position-relative" style="color: #440ccb ">SƠ ĐỒ PHÒNG</h2>
+            <hr class="bg-dark"></hr>
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-md-2">
+            <label for="choose-time" class="text-2xl">Ngày</label>
+        </div>
+        <div class="col-md-3">
+            <input id="choose-time" class="choose-time form-control" type="date" name="choose-time" value="" placeholder="Chọn thời gian" />
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-md-2">
+            <label for="choose-time" class="text-2xl">Khung giờ</label>
+        </div>
+        <div class="col-md-3 row radio-container">
+            <div class="col-4"><input checked type="radio" name="hour" value="7h" />  <span>7h</span></div>
+            <div class="col-4"><input type="radio" name="hour" value="8h" />  <span>8h</span></div>
+            <div class="col-4"><input type="radio" name="hour" value="9h" />  <span>9h</span></div>
+            <div class="col-4"><input type="radio" name="hour" value="10h" /> <span>10h</span></div>
+            <div class="col-4"><input type="radio" name="hour" value="11h" /> <span>11h</span></div>
+            <div class="col-4"><input type="radio" name="hour" value="12h30" /> <span>12h30h</span></div>
+            <div class="col-4"><input type="radio" name="hour" value="13h" /> <span>13h</span></div>
+            <div class="col-4"><input type="radio" name="hour" value="14h" /> <span>14h</span></div>
+            <div class="col-4"><input type="radio" name="hour" value="15h" /> <span>15h</span></div>
+            <div class="col-4"><input type="radio" name="hour" value="16h" /> <span>16h</span></div>
+        </div>
+    </div>
+    <div class="col-md-5 row">
+        <a class="ml-2 btn btn-success col-3" onclick="filterRoomByTime()">Lọc</a>
+        <input class="ml-2 choose-time form-control col" type="text" readonly id="tmp-select-time" style="height: 40.8px;" value="" />
+    </div>
+    <div class="row">
+        <div id="floor-4" class="floor-container col-md-7 m-3">
+            <h3>Tầng 4</h3>
+            <div class="container floor">
+                <div class="middle-room m-f4 stripes">
+                    <div class="rectangle reception">Thủ Thư</div>
+                    <div class="middle-room-label">Khoảng Không Gian Thư Viện</div>
+                    <div r-id="4" class="room room-1-f4 rectangle" data-toggle="modal" data-target="#myModal">
+                        <div>Phòng Thuyết Trình</div>
+                    </div>
+                </div>
+                <div class="door door-2">Cầu thang</div>
+            </div>
+        </div>
+        <div id="floor-3" class="floor-container col-md-7 m-3">
+            <h3>Tầng 3</h3>
+            <div class="container floor">
+                <div class="middle-room stripes">
+                    <div class="rectangle reception">Thủ Thư</div>
+                    <div class="middle-room-label">Khoảng Không Gian Thư Viện</div>
+                    <div r-id="1" class="room room-1 rectangle" data-toggle="modal" data-target="#myModal">
+                        <div>Phòng 1</div>
+                    </div>
+                    <div r-id="2" class="room room-2 rectangle" data-toggle="modal" data-target="#myModal">
+                        <div>Phòng 2</div>
+                    </div>
+                    <div r-id="3" class="room room-3 rectangle" data-toggle="modal" data-target="#myModal">
+                        <div>Phòng 3</div>
+                    </div>
+                    <div r-id="5" class="room room-4 rectangle" data-toggle="modal" data-target="#myModal">
+                        <div>Phòng Hội Thảo</div>
+                    </div>
+                </div>
+                <div class="door door-1">Cửa ra nhà F</div>
+                <div class="door door-2">Cầu thang</div>
+            </div>
+        </div>
+        <div class="col-md-3 m-3">
+            <h3>Danh sách tầng</h3>
+            <div class="container floor f4">
+                <div id="cf-1" class="rectangle building-floor">Tầng 4</div>
+                <div id="cf-2" class="rectangle building-floor">Tầng 3</div>
+                <div id="cf-3" class="rectangle building-floor stripes">Tầng 2</div>
+                <div id="cf-4" class="rectangle building-floor stripes">Tầng 1</div>
+            </div>
+        </div>
+    </div>
     <div class="test">
         <div class="header ml-0">
             <h2 class="position-relative" style="color: #440ccb ">DANH SÁCH PHÒNG</h2>
@@ -23,17 +281,18 @@
         </div>
     </div>
     @*<div style="float: right; margin-bottom: 10px;">
-        <button class="btn btn-info m-1">+ Thêm Phòng</button>
-        <button class="btn btn-success m-1">+ Thêm Từ File</button>
-    </div>*@
+            <button class="btn btn-info m-1">+ Thêm Phòng</button>
+            <button class="btn btn-success m-1">+ Thêm Từ File</button>
+        </div>*@
     <table class="styled-table">
         <thead>
             <tr>
                 <th>Mã Phòng</th>
                 <th>Tên Phòng</th>
                 <th>Vị Trí</th>
-                <th>Tình Trạng</th>
+                @*<th>Tình Trạng</th>*@
                 <th class="text-center">Tổng số lượt mượn</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -43,44 +302,39 @@
                     <td>@item.MAPHONG</td>
                     <td>@item.TENPHONG</td>
                     <td>@item.VITRI</td>
-                    <td>
+                    @*<td>
                         @if (emptyRooms.ToString().Contains(item.MAPHONG.ToString()))
                         {
                             <span style="color: green">Phòng trống</span>
                         }
                         else
                         {
-                            <span style="color: red">Đang sử dụng</span>
-                        }
-                    </td>
-                    <td style="text-align: center">@item.CHITIETMUONPHONGs.Count</td>
-                    @*<td>
-                        @{
-                            var nsd = item.CHITIETMUONPHONGs.SingleOrDefault(x => x.THOIGIANMUON.Equals(DateTime.Now));
-                            if (nsd != null)
+                            if (item.CHITIETMUONPHONGs.Count == 0)
                             {
-                                <span>@nsd.THETHUVIEN.NGUOISUDUNG.HOTEN</span>
+                                <span style="color: green">Phòng trống</span>
                             }
                             else
                             {
-                                <span>Trống!</span>
+                                <span style="color: red">Đang sử dụng</span>
                             }
                         }
-                    </td>
-                    <td>
-                        @if (item.CHITIETMUONPHONGs.Any(x => x.THOIGIANMUON.Equals(DateTime.Now)))
-                        {
-                            <span style="color: red">Đang sử dụng</span>
-                        }
-                        else
-                        {
-                            <span style="color: forestgreen">Phòng trống</span>
-                        }
                     </td>*@
-                    @*<td class="text-center">
-                        <button class="btn btn-secondary m-l-0">Chỉnh Sửa</button>
-                        <button class="btn btn-danger">Xóa</button>
-                    </td>*@
+                    <td style="text-align: center">@item.CHITIETMUONPHONGs.Count</td>
+
+                    @if (isValidUser)
+                    {
+                        <td class="text-center">
+                            <a class="btn btn-primary btn-edit m-l-0 px-075" href="/Room/Detail/@item.MAPHONG" title="Thông tin chi tiết">
+                                <i class="fa fa-info" aria-hidden="true"></i>
+                            </a>
+                            <a class="btn btn-primary btn-edit m-l-0 px-075" href="/Room/Edit/@item.MAPHONG" title="Chỉnh sửa thông tin">
+                                <i class="fa fa-pencil" aria-hidden="true"></i>
+                            </a>
+                            <a class="btn btn-danger btn-edit m-l-0 px-075" onclick="DVNConfirm('Xóa', 'Phòng', '/Room/Delete', @item.MAPHONG)" title="Xóa">
+                                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                            </a>
+                        </td>
+                    }
                 </tr>
 
             }
@@ -90,4 +344,182 @@
     {
         <div style="text-align: center; margin-top: 20px">Không tìm thầy kết quả</div>
     }
+    <!-- Modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Đăng ký mượn phòng</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div id="frm-lendroom" class="modal-body">
+                    <div class="row form-group">
+                        <div class="col-md-5">
+                            <h5>Mã Phòng</h5>
+                        </div>
+                        <div class="col-md">
+                            <input class="choose-time form-control" type="text" readonly name="f-room" value="" />
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-md-5">
+                            <h5>Người sử dụng</h5>
+                        </div>
+                        <div class="col-md">
+                            @Html.DropDownList("UserSelects", (ViewBag.userList as IList<THETHUVIEN>).Select(s => new SelectListItem
+                           {
+                               Text = s.HOTEN,
+                               Value = s.MATTV.ToString()
+                           }), new { id = "UserSelects", @class = "select2-qltv form-control", name = "f-user" })
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-md-5">
+                            <h5>Thời gian đặt</h5>
+                        </div>
+                        <div class="col-md">
+                            <input class="choose-time form-control" type="text" readonly name="f-startTime" value="" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" onclick="processLendRoom()">Đặt phòng</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }), new PagedListRenderOptions { LiElementClasses = new[] { "pagedList" } })
+
 </body>
+<script>
+    var currentFloor = 3;
+    var totalFloor = 4;
+    var pickedRoom = 0;
+
+    loadConfig();
+    filterRoomByTime();
+
+    $('.building-floor:not(.stripes)').on('click', function () {
+        currentFloor = totalFloor - $(this).index();
+        chooseFloor(currentFloor);
+    });
+    $('.room').on('click', function (e) {
+        filterRoomByTime();
+        var picked_room_id = $(this).attr('r-id');
+        console.log(picked_room_id, $(this).hasClass('inuse'));
+        if ($(this).hasClass('inuse')) {
+            Swal.fire("Phòng "+ picked_room_id +" đang được sử dụng");
+        } else {
+            chooseRoom(picked_room_id);
+        }
+    });
+    function loadConfig() {
+        chooseFloor(currentFloor);
+        configTimePicker();
+    }
+    function filterRoomByTime() {
+        setTimeout(() => {
+            var timepicker = convertDateTime($('.choose-time').val(), $('input[name="hour"]:checked').val());
+            console.log("You have chosen time: " + timepicker);
+            $('#tmp-select-time').val(timepicker);
+            getRoomStates(timepicker);
+        }, 100);      
+    }
+    function configTimePicker() {
+        var selector = $('.choose-time');
+        let currentDate = new Date().toISOString().slice(0, -14); //yyyy-MM-ddThh:mm
+        selector[0].value = currentDate;
+        selector[0].min = currentDate;
+    }
+    function chooseFloor(pos) {
+        var floor = $('.building-floor:not(.stripes)');
+        var floorContainer = $('.floor-container');
+
+        floor.removeClass("choose");
+        $(floor[totalFloor - pos]).addClass("choose");
+        floorContainer.hide();
+        $(floorContainer[totalFloor - pos]).show();
+    }
+
+    function chooseRoom(pos) {
+        console.log("press room");
+        var frm = $('#frm-lendroom');
+        var timepicker = convertDateTime($('.choose-time').val(), $('input[name="hour"]:checked').val());
+        frm.find('input[name="f-startTime"]').val(timepicker);
+        frm.find('input[name="f-room"]').val(pos);
+        pickedRoom = pos;
+    }
+    function processLendRoom() {
+        var frm = $('#frm-lendroom');
+
+        var userId = $('#UserSelects').val();
+        var roomId = pickedRoom;
+        var lendTime = convertDateTime($('.choose-time').val(), $('input[name="hour"]:checked').val());
+
+        $.ajax({
+            url: "/Room/LendRoom",
+            type: "POST",
+            data: { maNSD: userId, maPhong: roomId, tgMuon: lendTime },
+            success: function (r) {
+                if (r == 'ok') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thành Công',
+                        html: '<div style="color: green; font-weight: bold;">Đã đã đặt phòng thành công</div><div>Mã người dùng: <b>' + userId + "</b> ; Mã phòng: <b>" + roomId + '</b>; Thời gian bắt đầu mượn: <b>' + lendTime + '</b></div>',
+                        showConfirmButton: true,
+                        timer: 8000
+                    }).then((result) => {
+                        location.reload();
+                    });
+                }
+                else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Thất Bại',
+                        html: '<span style="font-weight: bold">Có lỗi đã xảy ra, vui lòng thử lại! <br/>Chi tiết: </span><span style="color: red;">' + r + '</span>',
+                        showConfirmButton: true,
+                        timer: 3500
+                    })
+                }
+            }
+        });
+        /*console.log(userId, roomId, lendTime);*/
+    }
+    function convertDateTime(date, time) {
+        var timepart = time.split('h');
+        timepart[0] = timepart[0].length >= 2 ? timepart[0] : ("0" + timepart[0]);
+        timepart[1] = timepart[1].length >= 2 ? timepart[1] : ((timepart[1].length === 0 ? "00" : "0" + timepart[1]));
+
+
+        var timers = timepart[0] + ":" + (timepart[1] === "" ? "0" : timepart[1]) + ":00.000";
+        return date + " " + timers;
+    }
+    var room_states = [];
+    function getRoomStates(time) {
+        $.ajax({
+            url: "/Room/AjaxGetEmptyRooms",
+            type: "POST",
+            data: { dateTimeSend: time, hourUse: 2 },
+            success: function (result) {
+                room_states = JSON.parse(result.Content);
+                console.log(room_states);
+                changeRoomStates();
+            }
+        });
+    }
+    function changeRoomStates() {
+        $('.room').each(function (idx, e) {
+            var id = $(this).attr('r-id');
+            if (room_states.includes(id)) {
+                $(this).removeClass("inuse");
+            } else {
+                $(this).addClass("inuse");
+            }
+        //    console.log(idx, e, room_states, $(this).attr('r-id'), room_states.includes($(this).attr('r-id')));
+        });
+    }
+</script>

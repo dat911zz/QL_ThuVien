@@ -18,15 +18,6 @@
       <Association Name="NHANVIEN_YEUCAU" Member="NHANVIEN" ThisKey="MANHANVIEN" OtherKey="MANHANVIEN" Type="NHANVIEN" IsForeignKey="true" />
     </Type>
   </Table>
-  <Table Name="dbo.BIVIPHAM" Member="BIVIPHAMs">
-    <Type Name="BIVIPHAM">
-      <Column Name="MAVIPHAM" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="MAPHIEUMUON" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="MAPHIEUTRA" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Association Name="PHIEUTRA_BIVIPHAM" Member="PHIEUTRA" ThisKey="MAPHIEUMUON,MAPHIEUTRA" OtherKey="MAPHIEUMUON,MAPHIEUTRA" Type="PHIEUTRA" IsForeignKey="true" />
-      <Association Name="VIPHAM_BIVIPHAM" Member="VIPHAM" ThisKey="MAVIPHAM" OtherKey="MAVIPHAM" Type="VIPHAM" IsForeignKey="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.CUNGCAP" Member="CUNGCAPs">
     <Type Name="CUNGCAP">
       <Column Name="MANHACUNGCAP" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
@@ -57,15 +48,6 @@
       <Column Name="MABANSAO" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="MAPHIEUMUON" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Association Name="PHIEUMUON_CHITIETMUONSACH" Member="PHIEUMUON" ThisKey="MAPHIEUMUON" OtherKey="MAPHIEUMUON" Type="PHIEUMUON" IsForeignKey="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.CHITIETTRASACH" Member="CHITIETTRASACHes">
-    <Type Name="CHITIETTRASACH">
-      <Column Name="MAPHIEUMUON" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="MAPHIEUTRA" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="MASACH" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="MABANSAO" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Association Name="PHIEUTRA_CHITIETTRASACH" Member="PHIEUTRA" ThisKey="MAPHIEUMUON,MAPHIEUTRA" OtherKey="MAPHIEUMUON,MAPHIEUTRA" Type="PHIEUTRA" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.CHUDE" Member="CHUDEs">
@@ -147,16 +129,6 @@
       <Association Name="PHIEUMUON_PHIEUTRA" Member="PHIEUTRAs" ThisKey="MAPHIEUMUON" OtherKey="MAPHIEUMUON" Type="PHIEUTRA" />
       <Association Name="NHANVIEN_PHIEUMUON" Member="NHANVIEN" ThisKey="MANHANVIEN" OtherKey="MANHANVIEN" Type="NHANVIEN" IsForeignKey="true" />
       <Association Name="THETHUVIEN_PHIEUMUON" Member="THETHUVIEN" ThisKey="MANSD" OtherKey="MATTV" Type="THETHUVIEN" IsForeignKey="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.PHIEUTRA" Member="PHIEUTRAs">
-    <Type Name="PHIEUTRA">
-      <Column Name="MAPHIEUMUON" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="MAPHIEUTRA" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="NGAYTRATHAT" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Association Name="PHIEUTRA_BIVIPHAM" Member="BIVIPHAMs" ThisKey="MAPHIEUMUON,MAPHIEUTRA" OtherKey="MAPHIEUMUON,MAPHIEUTRA" Type="BIVIPHAM" />
-      <Association Name="PHIEUTRA_CHITIETTRASACH" Member="CHITIETTRASACHes" ThisKey="MAPHIEUMUON,MAPHIEUTRA" OtherKey="MAPHIEUMUON,MAPHIEUTRA" Type="CHITIETTRASACH" />
-      <Association Name="PHIEUMUON_PHIEUTRA" Member="PHIEUMUON" ThisKey="MAPHIEUMUON" OtherKey="MAPHIEUMUON" Type="PHIEUMUON" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.PHONG" Member="PHONGs">
@@ -265,6 +237,32 @@
       <Column Name="LYDO" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
       <Association Name="BANSAOSACH_TIEUHUY" Member="BANSAOSACH" ThisKey="MABANSAO" OtherKey="MABANSAO" Type="BANSAOSACH" IsForeignKey="true" />
       <Association Name="NHANVIEN_TIEUHUY" Member="NHANVIEN" ThisKey="MANHANVIEN" OtherKey="MANHANVIEN" Type="NHANVIEN" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.BIVIPHAM" Member="BIVIPHAMs">
+    <Type Name="BIVIPHAM">
+      <Column Name="MAVIPHAM" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="MAPHIEUTRA" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Association Name="VIPHAM_BIVIPHAM" Member="VIPHAM" ThisKey="MAVIPHAM" OtherKey="MAVIPHAM" Type="VIPHAM" IsForeignKey="true" />
+      <Association Name="PHIEUTRA_BIVIPHAM" Member="PHIEUTRA" ThisKey="MAPHIEUTRA" OtherKey="MAPHIEUTRA" Type="PHIEUTRA" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CHITIETTRASACH" Member="CHITIETTRASACHes">
+    <Type Name="CHITIETTRASACH">
+      <Column Name="MAPHIEUTRA" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="MABANSAO" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Association Name="PHIEUTRA_CHITIETTRASACH" Member="PHIEUTRA" ThisKey="MAPHIEUTRA" OtherKey="MAPHIEUTRA" Type="PHIEUTRA" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.PHIEUTRA" Member="PHIEUTRAs">
+    <Type Name="PHIEUTRA">
+      <Column Name="MAPHIEUMUON" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="MAPHIEUTRA" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="NGAYTRATHAT" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="MANHANVIEN" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="PHIEUTRA_BIVIPHAM" Member="BIVIPHAMs" ThisKey="MAPHIEUTRA" OtherKey="MAPHIEUTRA" Type="BIVIPHAM" />
+      <Association Name="PHIEUTRA_CHITIETTRASACH" Member="CHITIETTRASACHes" ThisKey="MAPHIEUTRA" OtherKey="MAPHIEUTRA" Type="CHITIETTRASACH" />
+      <Association Name="PHIEUMUON_PHIEUTRA" Member="PHIEUMUON" ThisKey="MAPHIEUMUON" OtherKey="MAPHIEUMUON" Type="PHIEUMUON" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>

@@ -19,6 +19,7 @@ using NPOI.OpenXmlFormats;
 using NPOI.XWPF.UserModel;
 using QL_ThuVien.DTO;
 using System.Web.Security;
+using NPOI.SS.Formula.Functions;
 
 namespace QL_ThuVien.Controllers
 {
@@ -37,13 +38,25 @@ namespace QL_ThuVien.Controllers
         [AuthorizeRole(Roles = "Quản trị viên, Nhân Viên")]
         public ActionResult Index()
         {
-            IEnumerable<Sach> books = _services.DbContext.QueryTable<Sach>("Sach").OrderByDescending(x => x.MaSach);
-            Session["NXBList"] = _services.DbContext.QueryTable<NhaXuatBan>("NhaXuatBan");
-            Session["CDList"] = _services.DbContext.QueryTable<ChuDe>("ChuDe");
-            Session["NXBSelectList"] = new SelectList(Session["NXBList"] as List<NhaXuatBan>, "MaNXB", "TenNXB");
-            Session["CDSelectList"] = new SelectList(Session["CDList"] as List<ChuDe>, "MaChuDe", "TenChuDe");
-            Session["SachList"] = _services.Db.SACHes.ToList();
-            return View(books);
+            var saches = (from s in _services.Db.SACHes
+                       join nxb in _services.Db.NHAXUATBANs on s.MANXB equals nxb.MANXB
+                       join cd in _services.Db.CHUDEs on s.MACHUDE equals cd.MACHUDE
+                       where (from tl in _services.Db.THANHLies where tl.MASACH == s.MASACH select tl).Count() <= 0
+                       select new SachDTO
+                       {
+                           MaSach = s.MASACH,
+                           TenSach = s.TENSACH,
+                           AnhBia = s.ANHBIA,
+                           NamXuatBan = (DateTime)s.NAMXUATBAN,
+                           TenNXB = nxb.TENNXB,
+                           TenChuDe = cd.TENCHUDE,
+                           GiaSach = s.GIASACH,
+                           SLBS = (from bs in _services.Db.BANSAOSACHes
+                                   where bs.MASACH == s.MASACH && (from th in _services.Db.TIEUHUYs where th.MABANSAO == bs.MABANSAO select th).Count() <= 0
+                                   select bs).Count(),
+                           SLDangMuon = (from bs in _services.Db.BANSAOSACHes where bs.MASACH == s.MASACH && bs.TINHTRANG select bs).Count()
+                       }).OrderByDescending(x => x.MaSach).ToList();
+            return View(saches);
         }
         public ActionResult BoostrapTableTest()
         {      
@@ -254,22 +267,49 @@ namespace QL_ThuVien.Controllers
         [HttpPost]
         [AuthorizeRole(Roles = "Quản trị viên, Nhân Viên")]
 
-        public string Delete(int id)
+        public string Delete(int id, string dongia)
         {
             try
             {
-                var sach = _services.Db.SACHes.Single(x => x.MASACH == id);
+                double dg;
+                if (string.IsNullOrEmpty(dongia) || !double.TryParse(dongia, out dg))
+                    return "Hệ thống không nhận được đơn giá thanh lý";
+                if (dg < 0 || dg > 1000000000)
+                    return "Đơn giá thanh lý bất thường";
+                var cookie = HttpContext.Request.Cookies[".ASPXAUTH"];
+                if (cookie == null)
+                {
+                    Session.Clear();
+                    return "Vui lòng xác thực đăng nhập lại";
+                }
+                var ticket = FormsAuthentication.Decrypt(cookie.Value);
+                int manv = (int)_services.Db.TAIKHOANs.Where(x => x.TENDN == ticket.Name).First().MANHANVIEN;
+                var sach = (from s in _services.Db.SACHes where s.MASACH == id && (from tl in _services.Db.THANHLies where tl.MASACH == s.MASACH select tl).Count() <= 0 select s).FirstOrDefault();
                 if (sach == null)
                 {
                     return "Không tìm thấy sách có mã " + id;
                 }
-                string fullPath = Request.MapPath("~/Assets/HinhAnhSP/" + sach.ANHBIA);
-                if (System.IO.File.Exists(fullPath))
+                var bansaos = (from bs in _services.Db.BANSAOSACHes where bs.MASACH == sach.MASACH select bs).ToList();
+                if(bansaos.Where(x => x.TINHTRANG).Count() > 0)
                 {
-                    System.IO.File.Delete(fullPath);
+                    return "Hiện tại sách đang có bản sao được mượn, không thể thanh lý toàn bộ";
                 }
-                _services.Db.SACHes.DeleteOnSubmit(sach);
-                _services.Db.SubmitChanges();
+                try
+                {
+                    _services.Db.THANHLies.InsertOnSubmit(new THANHLY
+                    {
+                        MANHANVIEN = manv,
+                        MASACH = sach.MASACH,
+                        NGAY = DateTime.Now,
+                        SOLUONG = bansaos.Count(),
+                        DONGIA = dg
+                    });
+                    _services.Db.SubmitChanges();
+                }
+                catch (Exception e)
+                {
+                    return "Truy cập cơ sở dữ liệu thất bại";
+                }
                 return "ok";
             }
             catch (Exception ex)
@@ -287,7 +327,7 @@ namespace QL_ThuVien.Controllers
         [AuthorizeRole(Roles = "Quản trị viên, Nhân Viên")]
         public ActionResult Edit(SACH model, HttpPostedFileBase uploadImg)
         {
-            if (model.NAMXUATBAN?.CompareTo(DateTime.Now) > 0 || model.NAMXUATBAN?.CompareTo(DateTime.Parse("01-01-1780")) < 0)
+            if (model.NAMXUATBAN.CompareTo(DateTime.Now) > 0 || model.NAMXUATBAN.CompareTo(DateTime.Parse("01-01-1780")) < 0)
             {
                 ModelState.AddModelError("NAMXUATBAN", "Năm đã nhập không hợp lệ!");
                 return View(model);
@@ -368,7 +408,9 @@ namespace QL_ThuVien.Controllers
 
         public ActionResult BanSao(int id)
         {
-            var listBS = _services.Db.BANSAOSACHes.Where(bs => bs.MASACH == id).ToList();
+            var listBS = (from bs in _services.Db.BANSAOSACHes
+                          where bs.MASACH == id && (from th in _services.Db.TIEUHUYs where th.MABANSAO == bs.MABANSAO select th).Count() <= 0
+                          select bs).ToList();
             return View(listBS);
         }
 
@@ -451,33 +493,30 @@ namespace QL_ThuVien.Controllers
         public ActionResult BorrowedBook()
         {
             var list = (from pm in _services.Db.PHIEUMUONs 
-                        join nv in _services.Db.NHANVIENs 
-                            on pm.MANHANVIEN equals nv.MANHANVIEN 
-                        join ttv in _services.Db.THETHUVIENs
-                            on pm.MANSD equals ttv.MATTV
-                        select new
+                        join nv in _services.Db.NHANVIENs on pm.MANHANVIEN equals nv.MANHANVIEN 
+                        join ttv in _services.Db.THETHUVIENs on pm.MANSD equals ttv.MATTV
+                        select new DTO.PhieuMuon
                         {
-                            pm,
-                            nv,
-                            ttv
+                            MAPHIEUMUON = pm.MAPHIEUMUON,
+                            MANHANVIEN = pm.MANHANVIEN,
+                            MANSD = pm.MANSD,
+                            NGAYMUON = pm.NGAYMUON,
+                            NGAYTRA = pm.NGAYTRA,
+                            HOTEN_NV = nv.HOTEN,
+                            SODIENTHOAI_NV = nv.SODIENTHOAI,
+                            HOTEN_ND = ttv.HOTEN,
+                            SODIENTHOAI_ND = ttv.SODIENTHOAI,
+                            ChiTietPhieuMuons = (from s in _services.Db.SACHes
+                                                 join bs in _services.Db.BANSAOSACHes on s.MASACH equals bs.MABANSAO
+                                                 join cttpm in _services.Db.CHITIETMUONSACHes on bs.MABANSAO equals cttpm.MABANSAO
+                                                 where cttpm.MAPHIEUMUON == pm.MAPHIEUMUON
+                                                 select new ChiTietPhieuMuon
+                                                 {
+                                                     MaBanSao = bs.MABANSAO,
+                                                     TenSach = s.TENSACH
+                                                 }).ToList()
                         }).ToList();
-            List<DTO.PhieuMuon> res = new List<DTO.PhieuMuon>();
-            list.ForEach(i =>
-            {
-                res.Add(new DTO.PhieuMuon
-                {
-                    MAPHIEUMUON = i.pm.MAPHIEUMUON,
-                    MANHANVIEN = i.pm.MANHANVIEN,
-                    MANSD = i.pm.MANSD,
-                    NGAYMUON = i.pm.NGAYMUON,
-                    NGAYTRA = i.pm.NGAYTRA,
-                    HOTEN_NV = i.nv.HOTEN,
-                    SODIENTHOAI_NV = i.nv.SODIENTHOAI,
-                    HOTEN_ND = i.ttv.HOTEN,
-                    SODIENTHOAI_ND = i.ttv.SODIENTHOAI
-                });
-            });
-            return View(res);
+            return View(list);
         }
 
         public ActionResult DetailsBorrowedBook(int maphieumuon)
@@ -487,26 +526,30 @@ namespace QL_ThuVien.Controllers
                             on pm.MANHANVIEN equals nv.MANHANVIEN
                         join ttv in _services.Db.THETHUVIENs
                             on pm.MANSD equals ttv.MATTV
-                        select new
+                        select new DTO.PhieuMuon
                         {
-                            pm,
-                            nv,
-                            ttv
+                            MAPHIEUMUON = pm.MAPHIEUMUON,
+                            MANHANVIEN = pm.MANHANVIEN,
+                            MANSD = pm.MANSD,
+                            NGAYMUON = pm.NGAYMUON,
+                            NGAYTRA = pm.NGAYTRA,
+                            HOTEN_NV = nv.HOTEN,
+                            SODIENTHOAI_NV = nv.SODIENTHOAI,
+                            HOTEN_ND = ttv.HOTEN,
+                            SODIENTHOAI_ND = ttv.SODIENTHOAI,
+                            ChiTietPhieuMuons = (from s in _services.Db.SACHes
+                                                 join bs in _services.Db.BANSAOSACHes on s.MASACH equals bs.MASACH
+                                                 join cttpm in _services.Db.CHITIETMUONSACHes on bs.MABANSAO equals cttpm.MABANSAO
+                                                 where cttpm.MAPHIEUMUON == pm.MAPHIEUMUON
+                                                 select new ChiTietPhieuMuon
+                                                 {
+                                                     MaBanSao = bs.MABANSAO,
+                                                     TenSach = s.TENSACH
+                                                 }).ToList()
                         }).FirstOrDefault();
             if (phieumuon == null)
                 throw new Exception("Không tìm thấy phiếu mượn");
-            return View(new DTO.PhieuMuon
-            {
-                MAPHIEUMUON = phieumuon.pm.MAPHIEUMUON,
-                MANHANVIEN = phieumuon.pm.MANHANVIEN,
-                MANSD = phieumuon.pm.MANSD,
-                NGAYMUON = phieumuon.pm.NGAYMUON,
-                NGAYTRA = phieumuon.pm.NGAYTRA,
-                HOTEN_NV = phieumuon.nv.HOTEN,
-                SODIENTHOAI_NV = phieumuon.nv.SODIENTHOAI,
-                HOTEN_ND = phieumuon.ttv.HOTEN,
-                SODIENTHOAI_ND = phieumuon.ttv.SODIENTHOAI
-            });
+            return View(phieumuon);
         }
         public ActionResult EditBorrowedBook(int maphieumuon)
         {
@@ -572,7 +615,40 @@ namespace QL_ThuVien.Controllers
             return View();
         }
 
-        public ActionResult SendBackBook()
+        public ActionResult SendBackBook(int maphieumuon)
+        {
+            var phieumuon = (from pm in _services.Db.PHIEUMUONs
+                             where pm.MAPHIEUMUON == maphieumuon
+                             join nv in _services.Db.NHANVIENs
+                                 on pm.MANHANVIEN equals nv.MANHANVIEN
+                             join ttv in _services.Db.THETHUVIENs
+                                 on pm.MANSD equals ttv.MATTV
+                             select new DTO.PhieuMuon
+                             {
+                                 MAPHIEUMUON = pm.MAPHIEUMUON,
+                                 MANHANVIEN = pm.MANHANVIEN,
+                                 MANSD = pm.MANSD,
+                                 NGAYMUON = pm.NGAYMUON,
+                                 NGAYTRA = pm.NGAYTRA,
+                                 HOTEN_NV = nv.HOTEN,
+                                 SODIENTHOAI_NV = nv.SODIENTHOAI,
+                                 HOTEN_ND = ttv.HOTEN,
+                                 SODIENTHOAI_ND = ttv.SODIENTHOAI,
+                                 ChiTietPhieuMuons = (from s in _services.Db.SACHes
+                                                      join bs in _services.Db.BANSAOSACHes on s.MASACH equals bs.MASACH
+                                                      join cttpm in _services.Db.CHITIETMUONSACHes on bs.MABANSAO equals cttpm.MABANSAO
+                                                      where cttpm.MAPHIEUMUON == pm.MAPHIEUMUON
+                                                      select new ChiTietPhieuMuon
+                                                      {
+                                                          MaBanSao = bs.MABANSAO,
+                                                          TenSach = s.TENSACH
+                                                      }).ToList()
+                             }).FirstOrDefault();
+            if (phieumuon == null)
+                throw new Exception("Không tìm thấy phiếu mượn");
+            return View(phieumuon);
+        }
+        public ActionResult SendedBackBook()
         {
             return View();
         }
@@ -624,6 +700,87 @@ namespace QL_ThuVien.Controllers
         public void ClearCartBooks()
         {
             Session["cartBooks"] = new List<BANSAOSACH>();
+        }
+
+        [HttpPost]
+        public string DestroyBook(string mabs, string lydo)
+        {
+            int mabansao;
+            if (string.IsNullOrEmpty(mabs) || !int.TryParse(mabs, out mabansao))
+                return JsonConvert.SerializeObject(new { res = false, msg = "Hệ thống không nhận được mã bản sao" });
+            var obj = _services.Db.TIEUHUYs.Where(x => x.MABANSAO == mabansao).FirstOrDefault();
+            if(obj != null)
+                return JsonConvert.SerializeObject(new { res = false, msg = string.Format("Bản sao này đã hủy trước đó\n- Thời gian: {0}\n- Lý do: {1}", obj.NGAY?.ToString("dd/MM/yyyy HH:mm:ss"), obj.LYDO) });
+            else if(_services.Db.BANSAOSACHes.Where(x => x.MABANSAO == mabansao && x.TINHTRANG).FirstOrDefault() != null)
+                return JsonConvert.SerializeObject(new { res = false, msg = "Sách đang được mượn. Không được hủy." });
+            if (string.IsNullOrEmpty(lydo))
+                return JsonConvert.SerializeObject(new { res = false, msg = "Lý do hủy bản sao đang trống" });
+            var cookie = HttpContext.Request.Cookies[".ASPXAUTH"];
+            if (cookie == null)
+            {
+                Session.Clear();
+                return JsonConvert.SerializeObject(new { res = false, msg = "Vui lòng xác thực đăng nhập lại" });
+            }
+            var ticket = FormsAuthentication.Decrypt(cookie.Value);
+            int manv = (int)_services.Db.TAIKHOANs.Where(x => x.TENDN == ticket.Name).First().MANHANVIEN;
+            DateTime d = DateTime.Now;
+            try
+            {
+                _services.Db.TIEUHUYs.InsertOnSubmit(new TIEUHUY
+                {
+                    MABANSAO = mabansao,
+                    MANHANVIEN = manv,
+                    NGAY = d,
+                    LYDO = lydo
+                });
+                _services.Db.SubmitChanges();
+            }
+            catch (Exception e)
+            {
+                return JsonConvert.SerializeObject(new { res = false, msg = "Truy cập cơ sở dữ liệu thất bại" });
+            }
+            return JsonConvert.SerializeObject(new { res = true, msg = "Tiêu hủy bản sao thành công" });
+        }
+
+        public ActionResult DestroyedBook()
+        {
+            var list = (from th in _services.Db.TIEUHUYs
+                        join nv in _services.Db.NHANVIENs on th.MANHANVIEN equals nv.MANHANVIEN
+                        join bs in _services.Db.BANSAOSACHes on th.MABANSAO equals bs.MABANSAO
+                        join s in _services.Db.SACHes on bs.MASACH equals s.MASACH
+                        select new BanSaoDestroy
+                        {
+                            MaSach = s.MASACH,
+                            TenSach = s.TENSACH,
+                            MaBanSao = bs.MABANSAO,
+                            MANHANVIEN = nv.MANHANVIEN,
+                            HOTEN_NV = nv.HOTEN,
+                            SODIENTHOAI_NV = nv.SODIENTHOAI,
+                            NgayTieuHuy = (DateTime)th.NGAY,
+                            LyDoTieuHuy = th.LYDO
+                        }).ToList();
+            return View(list);
+        }
+
+        public ActionResult LiquidatedBook()
+        {
+            var saches = (from s in _services.Db.SACHes
+                          join nxb in _services.Db.NHAXUATBANs on s.MANXB equals nxb.MANXB
+                          join cd in _services.Db.CHUDEs on s.MACHUDE equals cd.MACHUDE
+                          join tl in _services.Db.THANHLies on s.MASACH equals tl.MASACH
+                          select new LiquidatedBookDTO
+                          {
+                              MaSach = s.MASACH,
+                              TenSach = s.TENSACH,
+                              AnhBia = s.ANHBIA,
+                              NamXuatBan = (DateTime)s.NAMXUATBAN,
+                              TenNXB = nxb.TENNXB,
+                              TenChuDe = cd.TENCHUDE,
+                              NgayThanhLy = tl.NGAY,
+                              SoLuongThanhLy = (int)tl.SOLUONG,
+                              GiaThanhLy = (int)tl.DONGIA
+                          }).OrderByDescending(x => x.MaSach).ToList();
+            return View(saches);
         }
     }
 }

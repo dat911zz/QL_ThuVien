@@ -1,22 +1,50 @@
 ﻿@using PagedList.Mvc;
-@model PagedList.IPagedList<QL_ThuVien.Models.Sach>
+@model IEnumerable<QL_ThuVien.DTO.SachDTO>
 @{
     ViewBag.Title = "Sách";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
     bool isValidUser = QL_ThuVien.Intergrate.Services.Helper.SecurityHelper.HasPermission(HttpContext.Current);
-    var NXBList = Session["NXBList"] as List<QL_ThuVien.Models.NhaXuatBan>;
-    var CDList = Session["CDList"] as List<QL_ThuVien.Models.ChuDe>;
 }
-<head>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr.css">
-    <link id="pagestyle" href="~/Assets/css/soft-ui-dashboard.css?v=1.0.6" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr.js"></script>
-</head>
+<style>
+    .dataTables_filter > label, .dataTables_length > label {
+        font-size: 1rem;
+    }
+
+    table {
+        border-collapse: collapse;
+        table-layout: fixed;
+        width: 310px;
+    }
+
+    .table th {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .table td, .table th {
+        white-space: normal !important;
+    }
+
+    .short-tent {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 5;
+        -webkit-box-orient: vertical;
+        word-break: break-word;
+        min-height: 3em;
+    }
+
+    a.btn.btn-secondary.btn-edit.m-l-0.px-075, a.btn.btn-danger.px-075 {
+        padding-left: 0.75rem !important;
+    }
+
+    table.dataTable thead > tr > th {
+        text-align: center;
+        background-color: #333333;
+        color: #ffffff;
+    }
+</style>
 <body>
     <div class="test">
         <div class="header ml-0">
@@ -24,99 +52,77 @@
             <hr class="bg-dark"></hr>
         </div>
     </div>
-    @*<h6 class="d-inline-flex m-4">Chọn Giá Bán: </h6>
-        <div class="dropdown d-inline-flex">
-            <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" style="color: gray;">
-                Giá Bán
-            </button>
-            <div class="dropdown-menu dropdown-menu-right" style="margin-right: 20px;">
-                <a class="dropdown-item" href="#">Từ 0đ - 100,000đ</a>
-                <a class="dropdown-item" href="#">Từ 100,000đ - 500,000đ</a>
-                <a class="dropdown-item" href="#">Trên 500.000đ</a>
-            </div>
-        </div>
-        <h6 class="d-inline-flex m-4">Chọn Mã Sách: </h6>
-        <div class="dropdown d-inline-flex">
-            <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" style="color: gray;">
-                Mã Sách
-            </button>
-            <div class="dropdown-menu dropdown-menu-right">
-                <a class="dropdown-item" href="#">1</a>
-                <a class="dropdown-item" href="#">2</a>
-                <a class="dropdown-item" href="#">3</a>
-            </div>
-        </div>
-        <h6 class="d-inline-flex m-4">Chọn Chủ Đề: </h6>
-        <div class="dropdown d-inline-flex">
-            <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" style="color: gray;">
-                Chủ Đề
-            </button>
-            <div class="dropdown-menu dropdown-menu-right">
-                @foreach (var item in Session["CDList"] as SelectList)
-                {
-                    <a class="dropdown-item" href="@item.Value">@item.Text</a>
-                }
-            </div>
-        </div>*@
-    <table class="styled-table">
-        <colgroup>
-            <col style="width: 15%;">
-            <col style="width: 2%;">
-            <col style="width: 15%;">
-            <col style="width: 8%;">
-            <col style="width: 8%;">
-            <col style="width: 5%;">
-            <col style="width: 5%;">
-            <col style="width: 20%;">
-            <col style="width: 25%;">
-        </colgroup>
-        <thead>
-            <tr class="text-center">
-                <th>Ảnh Bìa</th>
-                <th>Mã Sách</th>
-                <th>Tên Sách</th>
-                <th>NXB</th>
-                <th>Chủ Đề</th>
-                <th>Năm Xuất Bản</th>
-                <th>Giá Sách</th>
-                <th>Mô Tả</th>
-                <th class="text-center">Công Cụ</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td><img src="~/Assets/HinhAnhSP/@item.AnhBia" style="height: 10rem; width: 100%" alt="ANHBIA_@item.AnhBia" /></td>
-                    <td class="text-center">@item.MaSach</td>
-                    <td>
-                        @item.TenSach
-                    </td>
-                    <td>@NXBList.SingleOrDefault(x => x.MaNXB == item.MaNXB).TenNXB</td>
-                    <td>@CDList.SingleOrDefault(x => x.MaChuDe == item.MaChuDe).TenChuDe</td>
-                    <td class="text-center">@(item.NamXuatBan.ToShortDateString())</td>
-                    <td class="text-center">@(item.GiaSach.ToString("#,###.##đ", new System.Globalization.CultureInfo("en-US", false).NumberFormat))</td>
-                    <td><div class="short-tent">@item.MoTa</div></td>
-                    @if (isValidUser)
+    <div class="container">
+        <div class="table">
+            <table class="table" id="table_id" width="100%" cellspacing="0">
+                <colgroup>
+                    <col style="width: 15%;">
+                    <col style="width: 8%;">
+                    <col style="width: 15%;">
+                    <col style="width: 8%;">
+                    <col style="width: 8%;">
+                    <col style="width: auto;">
+                    <col style="width: 12%">
+                    @*<col style="width: 10%;">*@
+                </colgroup>
+                <thead>
+                    <tr class="text-center">
+                        <th>Ảnh Bìa</th>
+                        <th>Mã Sách</th>
+                        <th>Tên Sách</th>
+                        <th>NXB</th>
+                        <th>Chủ Đề</th>
+                        <th>Năm Xuất Bản</th>
+                        <th>Số lượng tồn</th>
+                        @*<th>Mô Tả</th>*@
+                        <th class="text-center">Công Cụ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
                     {
-                        <td class="text-center">
-                            <a class="btn btn-secondary btn-edit m-l-0 px-075" href="/Book/Edit/@item.MaSach">
-                                <span><img src="https://img.icons8.com/windows/23/null/pencil.png" /></span>
-                                Sửa
-                            </a>
-                            <a class="btn btn-danger px-075" onclick="DVNConfirm('Xóa', 'Sách', '/Book/Delete', @item.MaSach)"><span><img src="https://img.icons8.com/carbon-copy/26/null/delete-forever--v1.png" /></span> Xóa</a>
-                        </td>
+                        <tr>
+                            <td><img src="~/Assets/HinhAnhSP/@item.AnhBia" style="height: 10rem; width: 100%" alt="ANHBIA_@item.AnhBia" /></td>
+                            <td class="text-center">@item.MaSach</td>
+                            <td>
+                                @item.TenSach
+                            </td>
+                            <td>@item.TenNXB</td>
+                            <td>@item.TenChuDe</td>
+                            <td class="text-center">@(item.NamXuatBan.ToShortDateString())</td>
+                            @*<td class="text-center">@(item.GiaSach.ToString("#,###.##đ", new System.Globalization.CultureInfo("en-US", false).NumberFormat))</td>*@
+                            <td class="slbs" sid="@item.MaSach">
+                                @Html.Raw(item.GetHtmlSLTon())
+                            </td>
+                            @*<td><div class="short-tent">@item.MoTa</div></td>*@
+                            @if (isValidUser)
+                            {
+                                <td class="text-center">
+                                    <a class="btn btn-primary btn-edit m-l-0 px-075" href="/Book/Detail/@item.MaSach" title="Thông tin chi tiết">
+                                        <i class="fa fa-info" aria-hidden="true"></i>
+                                    </a>
+                                    <a class="btn btn-primary btn-edit m-l-0 px-075" href="/Book/BanSao/@item.MaSach" title="Bản sao sách">
+                                        <i class="fa fa-file-text" aria-hidden="true"></i>
+                                    </a>
+                                    <a class="btn btn-primary btn-edit m-l-0 px-075" href="/Book/Edit/@item.MaSach" title="Chỉnh sửa thông tin">
+                                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                                    </a>
+                                    <a class="btn btn-danger btn-edit m-l-0 px-075 btn-liquidation-book" data-mas="@item.MaSach" data-dg="@item.GiaSach" title="Thanh Lý">
+                                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                    </a>
+                                </td>
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
+                        </tr>
                     }
-                </tr>
-            }
-        </tbody>
-    </table>
-    <div id="container center" style="margin-left: 20px">
-        <p></p>
-        <p></p>
-        <div class="pagination" style="display:inline-block !important; vertical-align:middle; margin-left: 320px;">
-            @Html.PagedListPager(Model, page => Url.Action("BookLookUp", new { page, txtSearch = Session["SearchCredential"] != null ? Session["SearchCredential"].ToString() : "" }))
+                </tbody>
+            </table>
+
         </div>
+
     </div>
 </body>
 <style>

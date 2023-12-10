@@ -1,0 +1,103 @@
+﻿
+@model IEnumerable<QL_ThuVien.DTO.LiquidatedBookDTO>
+@{
+    ViewBag.Title = "Tài Liệu Đã Thanh Lý";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+    bool isValidUser = QL_ThuVien.Intergrate.Services.Helper.SecurityHelper.HasPermission(HttpContext.Current);
+}
+<style>
+    .dataTables_filter > label, .dataTables_length > label {
+        font-size: 1rem;
+    }
+
+    table {
+        border-collapse: collapse;
+        table-layout: fixed;
+        width: 310px;
+    }
+
+    .table th {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .table td, .table th {
+        white-space: normal !important;
+    }
+
+    .short-tent {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 5;
+        -webkit-box-orient: vertical;
+        word-break: break-word;
+        min-height: 3em;
+    }
+
+    a.btn.btn-secondary.btn-edit.m-l-0.px-075, a.btn.btn-danger.px-075 {
+        padding-left: 0.75rem !important;
+    }
+
+    table.dataTable thead > tr > th {
+        text-align: center;
+        background-color: #333333;
+        color: #ffffff;
+    }
+</style>
+<body>
+    <div class="test">
+        <div class="header ml-0">
+            <h2 class="position-relative" style="color: #440ccb ">DANH SÁCH TÀI LIỆU ĐÃ THANH LÝ</h2>
+            <hr class="bg-dark"></hr>
+        </div>
+    </div>
+    <div class="container">
+        <div class="table">
+            <table class="table" id="table_id" width="100%" cellspacing="0">
+                <colgroup>
+                    <col style="width: 15%;">
+                    <col style="width: 8%;">
+                    <col style="width: 15%;">
+                    <col style="width: 14%;">
+                    <col style="width: 14%;">
+                    <col style="width: 8%;">
+                    <col style="width: 16%">
+                    <col style="width: 5%">
+                    <col style="width: 7%">
+                </colgroup>
+                <thead>
+                    <tr class="text-center">
+                        <th>Ảnh Bìa</th>
+                        <th>Mã Sách</th>
+                        <th>Tên Sách</th>
+                        <th>NXB</th>
+                        <th>Chủ Đề</th>
+                        <th>Năm Xuất Bản</th>
+                        <th>Ngày Thanh Lý</th>
+                        <th>Số Lượng Thanh Lý</th>
+                        <th>Giá Thanh Lý</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td><img src="~/Assets/HinhAnhSP/@item.AnhBia" style="height: 10rem; width: 100%" alt="ANHBIA_@item.AnhBia" /></td>
+                            <td class="text-center">@item.MaSach</td>
+                            <td>@item.TenSach</td>
+                            <td>@item.TenNXB</td>
+                            <td>@item.TenChuDe</td>
+                            <td class="text-center">@(item.NamXuatBan.ToShortDateString())</td>
+                            <td class="text-center">@(item.NgayThanhLy.ToString("dd/MM/yyyy HH:mm:ss"))</td>
+                            <td>@item.SoLuongThanhLy</td>
+                            <td>@string.Format("{0:#,###}", item.GiaThanhLy)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+</body>

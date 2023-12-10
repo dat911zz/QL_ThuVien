@@ -45,3 +45,28 @@
         <div class="col-9">@(Model.NGAYTRA == null ? "Chưa trả" : Model.NGAYTRA?.ToString("dd/MM/yyyy HH:mm:ss"))</div>
     </div>
 </div>
+
+<h4 style="margin-left:10px;">Thông tin sách</h4>
+<table class="table" id="table_id" width="100%" cellspacing="0">
+    <colgroup>
+        <col style="width: 15%;">
+        <col style="width: 85%;">
+    </colgroup>
+    <thead>
+        <tr class="text-center">
+            <th>Mã Bản Sao</th>
+            <th>Tên Sách</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.ChiTietPhieuMuons)
+        {
+            <tr>
+                <td class="text-center">@item.MaBanSao</td>
+                <td>
+                    @item.TenSach
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

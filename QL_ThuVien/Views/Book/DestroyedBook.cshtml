@@ -1,0 +1,57 @@
+﻿@model IEnumerable<QL_ThuVien.DTO.BanSaoDestroy>
+@{
+    ViewBag.Title = "Danh Sách Bản Sao Đã Tiêu Hủy";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+
+<body>
+    <div class="test">
+        <div class="header ml-0">
+            <h2 class="position-relative" style="color: #440ccb ">DANH SÁCH BẢN SAO ĐÃ TIÊU HỦY</h2>
+            <hr class="bg-dark"></hr>
+        </div>
+    </div>
+    <div class="container">
+        <div class="table">
+            <table class="table" id="table_id" width="100%" cellspacing="0">
+                <colgroup>
+                    <col style="width: 5%;">
+                    <col style="width: 15%;">
+                    <col style="width: 5%;">
+                    <col style="width: 5%">
+                    <col style="width: 18%;">
+                    <col style="width: 10%;">
+                    <col style="width: 12%;">
+                    <col style="width: 30%">
+                </colgroup>
+                <thead>
+                    <tr class="text-center">
+                        <th>Mã Sách</th>
+                        <th>Tên Sách</th>
+                        <th>Mã Bản Sao</th>
+                        <th>Mã NV</th>
+                        <th>Tên NV</th>
+                        <th>SĐT NV</th>
+                        <th>Ngày Tiêu Hủy</th>
+                        <th>Lý Do</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.MaSach</td>
+                            <td>@item.TenSach</td>
+                            <td>@item.MaBanSao</td>
+                            <td>@item.MANHANVIEN</td>
+                            <td>@item.HOTEN_NV</td>
+                            <td>@item.SODIENTHOAI_NV</td>
+                            <td>@item.NgayTieuHuy.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                            <td>@item.LyDoTieuHuy</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>

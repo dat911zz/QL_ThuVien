@@ -650,7 +650,28 @@ namespace QL_ThuVien.Controllers
         }
         public ActionResult SendedBackBook()
         {
-            return View();
+            var list = (from pt in _services.Db.PHIEUTRAs
+                        join nv in _services.Db.NHANVIENs on pt.MANHANVIEN equals nv.MANHANVIEN
+                        join pm in _services.Db.PHIEUMUONs on pt.MAPHIEUMUON equals pm.MAPHIEUMUON
+                        join nsd in _services.Db.THETHUVIENs on pm.MANSD equals nsd.MATTV
+                        select new PhieuTra
+                        {
+                            MaPhieuTra = pt.MAPHIEUTRA,
+                            MaPhieuMuon = pt.MAPHIEUMUON,
+                            NgayTra = pt.NGAYTRATHAT,
+                            MANHANVIEN = nv.MANHANVIEN,
+                            HOTEN_NV = nv.HOTEN,
+                            SODIENTHOAI_NV = nv.SODIENTHOAI,
+                            MANSD = nsd.MATTV,
+                            HOTEN_ND = nsd.HOTEN,
+                            SODIENTHOAI_ND = nsd.SODIENTHOAI,
+                            ChiTietPhieuTras = (from ctpt in _services.Db.CHITIETTRASACHes
+                                                where ctpt.MAPHIEUTRA == pt.MAPHIEUTRA
+                                                join bs in _services.Db.BANSAOSACHes on ctpt.MABANSAO equals bs.MABANSAO
+                                                join s in _services.Db.SACHes on bs.MASACH equals s.MASACH
+                                                select new ChiTietPhieuTra { MaBanSao = ctpt.MABANSAO, TenSach = s.TENSACH}).ToList()
+                        }).ToList();
+            return View(list);
         }
         public ActionResult SearchBooks()
         {

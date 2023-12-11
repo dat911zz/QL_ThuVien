@@ -507,15 +507,40 @@ namespace QL_ThuVien.Controllers
                             HOTEN_ND = ttv.HOTEN,
                             SODIENTHOAI_ND = ttv.SODIENTHOAI,
                             ChiTietPhieuMuons = (from s in _services.Db.SACHes
-                                                 join bs in _services.Db.BANSAOSACHes on s.MASACH equals bs.MABANSAO
+                                                 join bs in _services.Db.BANSAOSACHes on s.MASACH equals bs.MASACH
                                                  join cttpm in _services.Db.CHITIETMUONSACHes on bs.MABANSAO equals cttpm.MABANSAO
                                                  where cttpm.MAPHIEUMUON == pm.MAPHIEUMUON
                                                  select new ChiTietPhieuMuon
                                                  {
                                                      MaBanSao = bs.MABANSAO,
+                                                     MaSach = s.MASACH,
                                                      TenSach = s.TENSACH
                                                  }).ToList()
                         }).ToList();
+            foreach (var item in list)
+            {
+                List<int> idBS = (from pt in _services.Db.PHIEUTRAs
+                                  where pt.MAPHIEUMUON == item.MAPHIEUMUON
+                                  join ctpt in _services.Db.CHITIETTRASACHes on pt.MAPHIEUTRA equals ctpt.MAPHIEUTRA
+                                  select ctpt.MABANSAO).ToList();
+                int i = 0;
+                if(item.MAPHIEUMUON == 105)
+                {
+                   int a = 0;
+                }
+                foreach (var bs in item.ChiTietPhieuMuons)
+                {
+                    if(!idBS.Contains(bs.MaBanSao))
+                    {
+                        break;
+                    }
+                    i++;
+                }
+                if(idBS.Count > 0 && i == idBS.Count)
+                {
+                    item.isSended = true;
+                }
+            }
             return View(list);
         }
 
@@ -544,6 +569,7 @@ namespace QL_ThuVien.Controllers
                                                  select new ChiTietPhieuMuon
                                                  {
                                                      MaBanSao = bs.MABANSAO,
+                                                     MaSach = s.MASACH,
                                                      TenSach = s.TENSACH
                                                  }).ToList()
                         }).FirstOrDefault();
@@ -637,16 +663,119 @@ namespace QL_ThuVien.Controllers
                                  ChiTietPhieuMuons = (from s in _services.Db.SACHes
                                                       join bs in _services.Db.BANSAOSACHes on s.MASACH equals bs.MASACH
                                                       join cttpm in _services.Db.CHITIETMUONSACHes on bs.MABANSAO equals cttpm.MABANSAO
-                                                      where cttpm.MAPHIEUMUON == pm.MAPHIEUMUON
+                                                      where cttpm.MAPHIEUMUON == pm.MAPHIEUMUON && (from pt in _services.Db.PHIEUTRAs
+                                                                                                    where pt.MAPHIEUMUON == pm.MAPHIEUMUON
+                                                                                                    join ctpt in _services.Db.CHITIETTRASACHes on pt.MAPHIEUTRA equals ctpt.MAPHIEUTRA
+                                                                                                    where cttpm.MABANSAO == ctpt.MABANSAO
+                                                                                                    select ctpt).Count() <= 0
                                                       select new ChiTietPhieuMuon
                                                       {
                                                           MaBanSao = bs.MABANSAO,
+                                                          MaSach = s.MASACH,
                                                           TenSach = s.TENSACH
                                                       }).ToList()
                              }).FirstOrDefault();
             if (phieumuon == null)
                 throw new Exception("Không tìm thấy phiếu mượn");
+            var viphams = new List<VIPHAM>() { new VIPHAM { MAVIPHAM = - 1, TENVIPHAM = "Không", XULYVIPHAM = "0" } };
+            viphams.AddRange(_services.Db.VIPHAMs.ToList());
+            Session["ViPhams"] = viphams;
             return View(phieumuon);
+        }
+        [HttpPost]
+        public ActionResult SendBackBook(int maphieumuon, string source)
+        {
+            List<ChiTietPhieuTra> list = JsonConvert.DeserializeObject<List<ChiTietPhieuTra>>(source);
+            List<ChiTietPhieuTra> khongViPham = new List<ChiTietPhieuTra>();
+            List<ChiTietPhieuTra> biViPham = new List<ChiTietPhieuTra>();
+            var cookie = HttpContext.Request.Cookies[".ASPXAUTH"];
+            if (cookie == null)
+            {
+                Session.Clear();
+                return RedirectToAction("Index", "Auth");
+            }
+            var ticket = FormsAuthentication.Decrypt(cookie.Value);
+            int manv = (int)_services.Db.TAIKHOANs.Where(x => x.TENDN == ticket.Name).First().MANHANVIEN;
+            foreach (var item in list)
+            {
+                if(item.MaViPham == -1)
+                {
+                    khongViPham.Add(item);
+                }
+                else
+                {
+                    biViPham.Add(item);
+                }
+            }
+            foreach (var item in biViPham)
+            {
+                DateTime date = DateTime.Now;
+                _services.Db.PHIEUTRAs.InsertOnSubmit(new PHIEUTRA
+                {
+                    MAPHIEUMUON = maphieumuon,
+                    NGAYTRATHAT = date,
+                    MANHANVIEN = manv
+                });
+                _services.Db.SubmitChanges();
+                PHIEUTRA pt_new = _services.Db.PHIEUTRAs.Where(x => x.MAPHIEUMUON == maphieumuon && x.NGAYTRATHAT == date).OrderByDescending(x => x.MAPHIEUTRA).FirstOrDefault();
+                if(pt_new != null)
+                {
+                    _services.Db.BIVIPHAMs.InsertOnSubmit(new BIVIPHAM
+                    {
+                        MAVIPHAM = item.MaViPham,
+                        MAPHIEUTRA = pt_new.MAPHIEUTRA
+                    });
+                    _services.Db.CHITIETTRASACHes.InsertOnSubmit(new CHITIETTRASACH
+                    {
+                        MAPHIEUTRA = pt_new.MAPHIEUTRA,
+                        MABANSAO = item.MaBanSao
+                    });
+                    _services.Db.SubmitChanges();
+                }
+            }
+            bool newed = false;
+            PHIEUTRA pt_new_2 = null;
+            foreach (var item in khongViPham)
+            {
+                if(!newed)
+                {
+                    DateTime date = DateTime.Now;
+                    _services.Db.PHIEUTRAs.InsertOnSubmit(new PHIEUTRA
+                    {
+                        MAPHIEUMUON = maphieumuon,
+                        NGAYTRATHAT = date,
+                        MANHANVIEN = manv
+                    });
+                    _services.Db.SubmitChanges();
+                    pt_new_2 = _services.Db.PHIEUTRAs.Where(x => x.MAPHIEUMUON == maphieumuon && x.NGAYTRATHAT == date).FirstOrDefault();
+                    newed = true;
+                }
+                if(pt_new_2 != null)
+                {
+                    _services.Db.CHITIETTRASACHes.InsertOnSubmit(new CHITIETTRASACH
+                    {
+                        MAPHIEUTRA = pt_new_2.MAPHIEUTRA,
+                        MABANSAO = item.MaBanSao
+                    });
+                    var bs = _services.Db.BANSAOSACHes.Where(b => b.MABANSAO == item.MaBanSao).FirstOrDefault();
+                    if(bs != null)
+                    {
+                        bs.TINHTRANG = false;
+                    }
+                    _services.Db.SubmitChanges();
+                }
+            }
+            PHIEUMUON pm = _services.Db.PHIEUMUONs.Where(x => x.MAPHIEUMUON == maphieumuon).FirstOrDefault();
+            if(pm != null)
+            {
+                PHIEUTRA pt = _services.Db.PHIEUTRAs.Where(x => x.MAPHIEUMUON == maphieumuon).OrderByDescending(x => x.MAPHIEUTRA).FirstOrDefault();
+                if(pt != null)
+                {
+                    pm.NGAYTRA = pt.NGAYTRATHAT;
+                    _services.Db.SubmitChanges();
+                }
+            }
+            return Redirect("/Book/SendedBackBook");
         }
         public ActionResult SendedBackBook()
         {
@@ -669,9 +798,50 @@ namespace QL_ThuVien.Controllers
                                                 where ctpt.MAPHIEUTRA == pt.MAPHIEUTRA
                                                 join bs in _services.Db.BANSAOSACHes on ctpt.MABANSAO equals bs.MABANSAO
                                                 join s in _services.Db.SACHes on bs.MASACH equals s.MASACH
-                                                select new ChiTietPhieuTra { MaBanSao = ctpt.MABANSAO, TenSach = s.TENSACH}).ToList()
+                                                select new ChiTietPhieuTra { MaBanSao = ctpt.MABANSAO, TenSach = s.TENSACH }).ToList()
                         }).ToList();
             return View(list);
+        }
+        public ActionResult DetailsSendedBackBook(int maphieutra)
+        {
+            var phieutra = (from pt in _services.Db.PHIEUTRAs
+                        where pt.MAPHIEUTRA == maphieutra
+                        join nv in _services.Db.NHANVIENs on pt.MANHANVIEN equals nv.MANHANVIEN
+                        join pm in _services.Db.PHIEUMUONs on pt.MAPHIEUMUON equals pm.MAPHIEUMUON
+                        join nsd in _services.Db.THETHUVIENs on pm.MANSD equals nsd.MATTV
+                        select new PhieuTra
+                        {
+                            MaPhieuTra = pt.MAPHIEUTRA,
+                            MaPhieuMuon = pt.MAPHIEUMUON,
+                            NgayTra = pt.NGAYTRATHAT,
+                            MANHANVIEN = nv.MANHANVIEN,
+                            HOTEN_NV = nv.HOTEN,
+                            SODIENTHOAI_NV = nv.SODIENTHOAI,
+                            MANSD = nsd.MATTV,
+                            HOTEN_ND = nsd.HOTEN,
+                            SODIENTHOAI_ND = nsd.SODIENTHOAI,
+                            ChiTietPhieuTras = (from ctpt in _services.Db.CHITIETTRASACHes
+                                                where ctpt.MAPHIEUTRA == pt.MAPHIEUTRA
+                                                join bs in _services.Db.BANSAOSACHes on ctpt.MABANSAO equals bs.MABANSAO
+                                                join s in _services.Db.SACHes on bs.MASACH equals s.MASACH
+                                                select new ChiTietPhieuTra { 
+                                                    MaBanSao = ctpt.MABANSAO,
+                                                    MaSach = s.MASACH,
+                                                    TenSach = s.TENSACH
+                                                }).ToList()
+                        }).FirstOrDefault();
+            var viphams = new List<VIPHAM>() { new VIPHAM { MAVIPHAM = -1, TENVIPHAM = "Không", XULYVIPHAM = "0" } };
+            viphams.AddRange(_services.Db.VIPHAMs.ToList());
+            Session["ViPhams"] = viphams;
+            BIVIPHAM bvp = _services.Db.BIVIPHAMs.Where(x => x.MAPHIEUTRA == phieutra.MaPhieuTra).FirstOrDefault();
+            if(bvp != null)
+            {
+                foreach (var ct in phieutra.ChiTietPhieuTras)
+                {
+                    ct.MaViPham = bvp.MAVIPHAM;
+                }
+            }
+            return View(phieutra);
         }
         public ActionResult SearchBooks()
         {

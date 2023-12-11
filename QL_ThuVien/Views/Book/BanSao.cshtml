@@ -43,14 +43,15 @@
                                 <span class="@(!item.TINHTRANG && !containsCart ? "btn-add-cart-book btn-primary" : "btn-secondary") btn btn-edit m-l-0 px-075" title="Thêm bản sao vào phiếu mượn">
                                     <i class="fa fa-plus-circle" aria-hidden="true"></i>
                                 </span>
+                                <span data-mabs="@item.MABANSAO" class="@(!item.TINHTRANG && !containsCart ? "btn-destroy-book btn-danger" : "btn-secondary") btn btn-edit m-l-0 px-075" title="Tiêu hủy">
+                                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                </span>
                             </td>
                         </tr>
                     }
                 </tbody>
             </table>
-
         </div>
-
     </div>
 </body>
 <script>
@@ -58,5 +59,86 @@
         $(".btn-add-cart-book").click(function () {
             addCartBooks($(this).parents('tr').find('td:eq(0)').html(), $(this).parents('tr').find('td:eq(1)').html(), $(this));
         });
+        $(".btn-destroy-book").click(function () {
+            var mabs = $(this).data('mabs');
+            if (mabs == '') {
+                return;
+            }
+            var d = '@Html.Raw(DateTime.Now.ToString("dd/MM/yyyy"))';
+            $('body').append(
+                `
+                    <div id="destroy-bs">
+                        <div style="position: fixed; top: 0; bottom: 0; left: 0; right: 0; z-index: 1000; background-color: rgba(0, 0, 0, 0.5); display:flex; align-items:center; justify-content:center;">
+                            <div class="content" style="background-color:white; width:60%; border-radius:10px; padding:20px 40px;">
+                                <div><h4 style="color:blue; text-transform: uppercase; text-align: center;">tiêu hủy bản sao sách</h4></div>
+                                <div class="row">
+                                    <div class="col-4">Mã bản sao</div>
+                                    <div class="col-8 mabs">${mabs}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4">Ngày thực hiện</div>
+                                    <div class="col-8">${d}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4">Lý do</div>
+                                    <div class="col-8">
+                                        <textarea class="ly_do form-control" style="height:150px; resize:none;"></textarea>
+                                    </div>
+                                </div>
+                                <div style="text-align: right; padding-right: 12px;"><div class="btn btn-primary">Thực hiện</div></div>
+                            </div>
+                        </div>
+                        <style>
+                            .content > div {
+                                margin: 10px 0;
+                            }
+                        </style>
+                    </div>
+                `
+            );
+            addEventPopup();
+        });
     });
+    function addEventPopup() {
+        $('#destroy-bs').click(function () {
+            $(this).remove();
+        });
+        $('#destroy-bs .content').click(function (e) {
+            e.stopPropagation();
+        });
+        $('#destroy-bs .btn').click(function () {
+            $.ajax({
+                type: "POST",
+                url: "/Book/DestroyBook",
+                data: {
+                    mabs: $('#destroy-bs .mabs').html(),
+                    lydo: $('#destroy-bs textarea').val()
+                },
+                success: function (data) {
+                    data = JSON.parse(data);
+                    console.log(data, data.res, data.msg);
+                    if (data.res) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành Công',
+                            text: data.msg,
+                            showConfirmButton: true,
+                            timer: 1000
+                        });
+                        window.location.reload();
+                    }
+                    else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Thất Bại',
+                            text: data.msg,
+                            showConfirmButton: true,
+                            timer: 1000
+                        });
+                    }
+                    $('#destroy-bs').remove();
+                }
+            });
+        });
+    }
 </script>

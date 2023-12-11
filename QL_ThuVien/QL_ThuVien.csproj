@@ -263,6 +263,7 @@
     <Content Include="Assets\Img\home-decor-1.jpg" />
     <Content Include="Assets\Img\home-decor-2.jpg" />
     <Content Include="Assets\Img\home-decor-3.jpg" />
+    <Content Include="Assets\Img\icon\remove-book-icon.svg" />
     <Content Include="Assets\Img\IMG_8204_1.jpg" />
     <Content Include="Assets\Img\ivana-square.jpg" />
     <Content Include="Assets\Img\ivancik.jpg" />
@@ -535,7 +536,13 @@
     <Compile Include="Controllers\RoomController.cs" />
     <Compile Include="Controllers\ProvinceAPIController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="DTO\BanSaoDestroy.cs" />
+    <Compile Include="DTO\ChiTietPhieuMuon.cs" />
+    <Compile Include="DTO\ChiTietPhieuTra.cs" />
     <Compile Include="DTO\PhieuMuon.cs" />
+    <Compile Include="DTO\LiquidatedBookDTO.cs" />
+    <Compile Include="DTO\PhieuTra.cs" />
+    <Compile Include="DTO\SachDTO.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -547,9 +554,6 @@
     <Compile Include="Models\NhaXuatBan.cs" />
     <Compile Include="Models\Perms.cs" />
     <Compile Include="Models\PhieuMuon.cs" />
-    <Compile Include="Models\QLTV.cs">
-      <DependentUpon>QLTV.dbml</DependentUpon>
-    </Compile>
     <Compile Include="Models\QLTV.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -570,11 +574,6 @@
     <Content Include="NLog.config" />
     <Content Include="Areas\Admin\Views\web.config" />
     <Content Include="Areas\Admin\Views\CP\Index.cshtml" />
-    <Content Include="Models\QLTV.dbml">
-      <Generator>MSLinqToSQLGenerator</Generator>
-      <LastGenOutput>QLTV.designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="Areas\Admin\Views\CP\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\CP\Details.cshtml" />
     <Content Include="Areas\Admin\Views\CP\Create.cshtml" />
@@ -596,44 +595,16 @@
     <Content Include="Areas\UserPage\Views\GioSach\GioSachPartial.cshtml" />
     <Content Include="Areas\UserPage\Views\GioSach\Index.cshtml" />
     <Content Include="Areas\Admin\Views\CP_V2\ManagePermissions.cshtml" />
-    <Content Include="Logs\2022-11-30-api.log" />
-    <Content Include="Logs\2022-12-01-api.log" />
-    <Content Include="Logs\2022-12-02-api.log" />
-    <Content Include="Logs\2022-12-04-api.log" />
-    <Content Include="Logs\2022-12-05-api.log" />
-    <Content Include="Logs\2022-12-09-api.log" />
-    <Content Include="Logs\2022-12-11-api.log" />
-    <Content Include="Logs\2022-12-12-api.log" />
-    <Content Include="Logs\2022-12-13-api.log" />
-    <Content Include="Logs\2022-12-15-api.log" />
-    <Content Include="Logs\2022-12-17-api.log" />
-    <Content Include="Logs\2022-12-18-api.log" />
-    <Content Include="Logs\2022-12-19-api.log" />
-    <Content Include="Logs\2022-12-20-api.log" />
-    <Content Include="Logs\2022-12-21-api.log" />
-    <Content Include="Logs\2022-12-22-api.log" />
-    <Content Include="Logs\2022-12-23-api.log" />
-    <Content Include="Logs\2022-12-26-api.log" />
-    <Content Include="Logs\2022-12-27-api.log" />
-    <Content Include="Logs\2022-12-28-api.log" />
-    <Content Include="Logs\2022-12-29-api.log" />
-    <Content Include="Logs\2022-12-30-api.log" />
-    <Content Include="Logs\2022-12-31-api.log" />
-    <Content Include="Logs\2023-01-01-api.log" />
-    <Content Include="Logs\2023-01-02-api.log" />
-    <Content Include="Logs\2023-01-03-api.log" />
-    <Content Include="Logs\2023-01-04-api.log" />
-    <Content Include="Logs\2023-01-05-api.log" />
-    <Content Include="Logs\2023-01-06-api.log" />
-    <Content Include="Logs\2023-01-08-api.log" />
-    <Content Include="Logs\2023-01-09-api.log" />
-    <Content Include="Logs\2023-01-10-api.log" />
-    <Content Include="Logs\2023-01-11-api.log" />
     <Content Include="Assets\Fonts\fontawesome-webfont.eot" />
     <Content Include="Assets\Fonts\fontawesome-webfont.ttf" />
     <Content Include="Assets\Fonts\fontawesome-webfont.woff" />
     <Content Include="Assets\Fonts\fontawesome-webfont.woff2" />
     <Content Include="Assets\Fonts\FontAwesome.otf" />
+    <Content Include="Models\QLTV.dbml">
+      <Generator>MSLinqToSQLGenerator</Generator>
+      <LastGenOutput>QLTV.designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="Models\QLTV.dbml.layout">
       <DependentUpon>QLTV.dbml</DependentUpon>
     </None>
@@ -681,10 +652,15 @@
     <Content Include="Views\Book\BorrowedBook.cshtml" />
     <Content Include="Views\Book\DetailsBorrowedBook.cshtml" />
     <Content Include="Views\Book\EditBorrowedBook.cshtml" />
+    <Content Include="Views\Book\DestroyedBook.cshtml" />
+    <Content Include="Views\Book\LiquidatedBook.cshtml" />
+    <Content Include="Views\Book\SendedBackBook.cshtml" />
+    <Content Include="Views\Book\SendBackBook.cshtml" />
     <Content Include="Views\Room\Create.cshtml" />
     <Content Include="Views\Room\Edit.cshtml" />
     <Content Include="Views\Room\Delete.cshtml" />
     <Content Include="Views\Room\Detail.cshtml" />
+    <Content Include="Views\Book\DetailsSendedBackBook.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -698,6 +674,7 @@
     <Folder Include="Areas\Admin\Views\Employees\" />
     <Folder Include="Areas\UserPage\Data\" />
     <Folder Include="excelfolder\" />
+    <Folder Include="Logs\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\QL_ThuVien.Intergrate\QL_ThuVien.Intergrate.csproj">

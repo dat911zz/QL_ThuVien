@@ -412,7 +412,7 @@
         var picked_room_id = $(this).attr('r-id');
         console.log(picked_room_id, $(this).hasClass('inuse'));
         if ($(this).hasClass('inuse')) {
-            Swal.fire("Phòng "+  +" đang được sử dụng");
+            Swal.fire("Phòng "+ picked_room_id +" đang được sử dụng");
         } else {
             chooseRoom(picked_room_id);
         }

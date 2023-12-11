@@ -1,16 +1,13 @@
-﻿@model IEnumerable<QL_ThuVien.DTO.PhieuMuon>
+﻿@model IEnumerable<QL_ThuVien.DTO.PhieuTra>
 @{
-    ViewBag.Title = "Danh Sách Phiếu Mượn";
+    ViewBag.Title = "Danh Sách Phiếu Trả";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
     bool isValidUser = QL_ThuVien.Intergrate.Services.Helper.SecurityHelper.HasPermission(HttpContext.Current);
-    bool? isEdit = (bool?)Session["EditBorrowedBook"];
-    string resBorrow = Session["borrowBooks"] == null ? "" : Session["borrowBooks"].ToString();
-    Session["EditBorrowedBook"] = null;
-    Session["borrowBooks"] = null;
     <style>
         .borrow td {
             color: #ac0c0c;
         }
+
         .borrowed td {
             color: #016601;
         }
@@ -20,7 +17,7 @@
 <body>
     <div class="test">
         <div class="header ml-0">
-            <h2 class="position-relative" style="color: #440ccb ">DANH SÁCH PHIẾU MƯỢN</h2>
+            <h2 class="position-relative" style="color: #440ccb ">DANH SÁCH PHIẾU TRẢ</h2>
         </div>
     </div>
     <div class="container">
@@ -28,7 +25,7 @@
             <table class="table" id="table_id" width="100%" cellspacing="0">
                 <colgroup>
                     <col style="width: 10%;">
-                    <col style="width: 15%;">
+                    <col style="width: 10%;">
                     <col style="width: 15%;">
                     <col style="width: 15%;">
                     <col style="width: 15%;">
@@ -37,8 +34,8 @@
                 </colgroup>
                 <thead>
                     <tr class="text-center">
+                        <th>Mã Phiếu Trả</th>
                         <th>Mã Phiếu Mượn</th>
-                        <th>Người Lập</th>
                         <th>Ngày Mượn</th>
                         <th>Ngày Trả</th>
                         <th>Tên Người Mượn</th>
@@ -49,24 +46,18 @@
                 <tbody>
                     @foreach (var item in Model)
                     {
-                        <tr class="@(item.isSended ? "borrowed" : "borrow")">
-                            <td>@item.MAPHIEUMUON</td>
-                            <td>@item.HOTEN_NV</td>
+                        <tr>
+                            <td>@item.MaPhieuTra</td>
+                            <td>@item.MaPhieuMuon</td>
                             <td>@item.NGAYMUON.ToString("dd/MM/yyyy HH:mm:ss")</td>
-                            <td>@((!item.isSended) ? "Chưa trả" : item.NGAYTRA?.ToString("dd/MM/yyyy HH:mm:ss"))</td>
+                            <td>@item.NgayTra.ToString("dd/MM/yyyy HH:mm:ss")</td>
                             <td>@item.HOTEN_ND</td>
                             <td>@item.SODIENTHOAI_ND</td>
                             @if (isValidUser)
                             {
                                 <td class="text-center">
-                                    <a class="btn btn-primary btn-edit m-l-0 px-075" href="/Book/DetailsBorrowedBook?maphieumuon=@(item.MAPHIEUMUON)" title="Thông tin chi tiết">
+                                    <a class="btn btn-primary btn-edit m-l-0 px-075" href="/Book/DetailsSendedBackBook?maphieutra=@item.MaPhieuTra" title="Thông tin chi tiết">
                                         <i class="fa fa-info" aria-hidden="true"></i>
-                                    </a>
-                                    <a class="btn btn-primary btn-edit m-l-0 px-075" href="/Book/EditBorrowedBook?maphieumuon=@(item.MAPHIEUMUON)" title="Chỉnh sửa thông tin">
-                                        <i class="fa fa-pencil" aria-hidden="true"></i>
-                                    </a>
-                                    <a class="btn btn-primary btn-edit m-l-0 px-075" href="/Book/SendBackBook?maphieumuon=@(item.MAPHIEUMUON)" title="Lập phiếu trả">
-                                        <i class="fa fa-check-square-o" aria-hidden="true"></i>
                                     </a>
                                 </td>
                             }
@@ -84,24 +75,6 @@
 
 <script>
     $(document).ready(function () {
-        if ('@Html.Raw(isEdit.ToString().ToLower())' == 'true') {
-            Swal.fire({
-                icon: 'success',
-                title: 'Thông Báo!',
-                text: 'Cập nhật thành công',
-                showConfirmButton: true,
-                timer: 1500
-            })
-        }
-        if ('@Html.Raw(resBorrow)' != '') {
-            Swal.fire({
-                icon: 'info',
-                title: 'Thông Báo!',
-                text: '@Html.Raw(resBorrow)',
-                showConfirmButton: true,
-                timer: 1500
-            })
-        }
         setTimeout(function () {
             $('#table_id').DataTable().order([0, 'desc']).draw()
         }, 1000);

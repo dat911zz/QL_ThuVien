@@ -1,44 +1,134 @@
-﻿@{
-    ViewBag.Title = "SendBackBook";
-    Layout = "~/Views/Shared/_MainLayout.cshtml";
-}
+﻿@model QL_ThuVien.DTO.PhieuMuon
 
-<body>
-    <div class="test">
-        <div class="header ml-0">
-            <h2 class="position-relative" style="color: #440ccb ">TÀI LIỆU ĐÃ TRẢ</h2>
-            <hr class="bg-dark"></hr>
+@{
+    ViewBag.Title = "Lập Phiếu Trả Tài Liệu";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+    var viphams = Session["ViPhams"] as List<QL_ThuVien.Models.VIPHAM>;
+}
+<style>
+    select {
+        border-top: none;
+        border-left: none;
+        border-right: none;
+        border-bottom: 1px dashed #000;
+        width: 100%;
+        padding: 4px 8px;
+    }
+</style>
+
+<h2>Thông tin chi tiết</h2>
+
+<form action="/Book/SendBackBook" method="post" name="SendBack">
+    <input id="source" name="source" style="display:none;" />
+    <input id="maphieumuon" name="maphieumuon" value="@Model.MAPHIEUMUON" style="display:none;" />
+    <div>
+        <div class="row">
+            <div class="col-3">Mã phiếu mượn</div>
+            <div class="col-9">@Html.DisplayFor(model => model.MAPHIEUMUON)</div>
+        </div>
+        <div class="row" style="color:red; font-weight:bold;">
+            <div class="col-3">Mã nhân viên</div>
+            <div class="col-9">@Html.DisplayFor(model => model.MANHANVIEN)</div>
+        </div>
+        <div class="row" style="color:red; font-weight:bold;">
+            <div class="col-3">Tên nhân viên</div>
+            <div class="col-9">@Html.DisplayFor(model => model.HOTEN_NV)</div>
+        </div>
+        <div class="row" style="color:red; font-weight:bold;">
+            <div class="col-3">SĐT nhân viên</div>
+            <div class="col-9">@Html.DisplayFor(model => model.SODIENTHOAI_NV)</div>
+        </div>
+        <div class="row">
+            <div class="col-3">Mã thẻ thư viện</div>
+            <div class="col-9">@Html.DisplayFor(model => model.MANSD)</div>
+        </div>
+        <div class="row">
+            <div class="col-3">Tên người mượn</div>
+            <div class="col-9">@Html.DisplayFor(model => model.HOTEN_ND)</div>
+        </div>
+        <div class="row">
+            <div class="col-3">SĐT người mượn</div>
+            <div class="col-9">@Html.DisplayFor(model => model.SODIENTHOAI_ND)</div>
+        </div>
+        <div class="row">
+            <div class="col-3">Ngày mượn</div>
+            <div class="col-9">@(Model.NGAYMUON.ToString("dd/MM/yyyy HH:mm:ss"))</div>
+        </div>
+        <div class="row" style="color:@(Model.NGAYTRA == null ? "red" : "green")">
+            <div class="col-3">Ngày trả</div>
+            <div class="col-9">@(Model.NGAYTRA == null ? "Chưa trả" : Model.NGAYTRA?.ToString("dd/MM/yyyy HH:mm:ss"))</div>
         </div>
     </div>
-    <button class="add-room">+ Thêm Sách</button>
-    <table class="styled-table">
-        <thead>
+</form>
+
+<h4 style="margin-left:10px;">Thông tin sách</h4>
+<table width="100%" cellspacing="0" class="table-bordered">
+    <colgroup>
+        <col style="width: 5%;">
+        <col style="width: 10%;">
+        <col style="width: 10%;">
+        <col style="width: 65%;">
+        <col style="width: 10%;">
+    </colgroup>
+    <thead>
+        <tr class="text-center">
+            <th></th>
+            <th>Mã Sách</th>
+            <th>Mã Bản Sao</th>
+            <th>Tên Sách</th>
+            <th>Vi Phạm</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.ChiTietPhieuMuons)
+        {
             <tr>
-                <th>Mã Phòng</th>
-                <th>Tên Phòng</th>
-                <th>Vị Trí</th>
-                <th>Người Sử Dụng</th>
-                <th>Tình Trạng</th>
-                <th>Công Cụ</th>
+                <td style="text-align:center;"><input type="checkbox" id="@item.MaBanSao" /></td>
+                <td class="text-center masach">@item.MaSach</td>
+                <td class="text-center mabansao">@item.MaBanSao</td>
+                <td class="tensach">
+                    @item.TenSach
+                </td>
+                <td>
+                    <select class="mavipham">
+                        @foreach (var vp in viphams)
+                        {
+                            <option value="@vp.MAVIPHAM">@vp.TENVIPHAM</option>
+                        }
+                    </select>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>1001</td>
-                <td>Phòng Học Tập</td>
-                <td>A101</td>
-                <td>Only Han</td>
-                <td>Còn Trống</td>
-                <td>Only Han</td>
-            </tr>
-            <tr class="active-row">
-                <td>1002</td>
-                <td>Phòng VIP</td>
-                <td>A102</td>
-                <td>Only Hằng</td>
-                <td>Còn Trống</td>
-                <td>Only Han</td>
-            </tr>
-        </tbody>
-    </table>
-</body>
+        }
+    </tbody>
+</table>
+<div style="margin-top:20px; text-align:center;">
+    <button class="btn btn-primary">
+        Lập Phiếu Trả
+    </button>
+</div>
+
+<script>
+    $('button').click(function () {
+        if ($('table input:checkbox:checked').length <= 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Cảnh báo',
+                text: 'Chưa chọn bản sao để lập phiếu trả',
+                showConfirmButton: true,
+                timer: 2000
+            });
+            return;
+        }
+        var phieutras = [];
+        $('table input:checkbox:checked').each(function (i, item) {
+            let tr = $(item).parents('tr');
+            let pt = {};
+            pt.MaBanSao = $(tr).find('.mabansao').html();
+            pt.TenSach = $(tr).find('.tensach').html();
+            pt.MaViPham = $(tr).find('.mavipham').val();
+            phieutras.push(pt);
+        });
+        $('#source').val(JSON.stringify(phieutras));
+        document.forms.SendBack.submit();
+    });
+</script>

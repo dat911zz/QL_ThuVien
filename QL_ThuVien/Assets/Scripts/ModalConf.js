@@ -1,4 +1,4 @@
-﻿var DVNConfirm = (functionName, objectName, url, id) => {
+﻿var DVNConfirm = (functionName, objectName, url, id, reload = false) => {
     Swal.fire({
         icon: 'warning',
         title: 'Cảnh Báo!',
@@ -33,6 +33,9 @@
                             showConfirmButton: true,
                             timer: 3500
                         })
+                    }
+                    if (reload) {
+                        window.location.reload();
                     }
                 }
             });

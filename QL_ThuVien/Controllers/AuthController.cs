@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -20,7 +21,8 @@ namespace QL_ThuVien.Controllers
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private ServicesContainer _services;
         public AuthController()
-        {            
+        {
+            _services = ServicesContainer.Container;
         }
 
         /// <summary>
@@ -31,7 +33,13 @@ namespace QL_ThuVien.Controllers
         public ActionResult Index()
         {
             CaptchaHelper.captchaText = CaptchaHelper.GenerateCaptchaCode(4);
-            Session["captchaCode"] = CaptchaHelper.captchaText; 
+            Session["captchaCode"] = CaptchaHelper.captchaText;
+
+            Session["NXBList"] = _services.DbContext.QueryTable<NhaXuatBan>("NhaXuatBan");
+            Session["CDList"] = _services.DbContext.QueryTable<ChuDe>("ChuDe");
+            Session["NXBSelectList"] = new SelectList(Session["NXBList"] as List<NhaXuatBan>, "MaNXB", "TenNXB");
+            Session["CDSelectList"] = new SelectList(Session["CDList"] as List<ChuDe>, "MaChuDe", "TenChuDe");
+            Session["SachList"] = _services.Db.SACHes.ToList();
             //Kiểm tra đã có ticket chưa?
             try
             {
@@ -52,7 +60,6 @@ namespace QL_ThuVien.Controllers
                         throw new Exception();
                     }
                 }
-                
             }
             catch (Exception ex)
             {

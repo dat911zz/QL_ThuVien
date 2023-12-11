@@ -1,0 +1,48 @@
+﻿@model QL_ThuVien.Models.THETHUVIEN
+@{
+    ViewBag.Title = "Hóa Đơn Xử Lý Vi Phạm";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+
+<div style="min-height: 100vh; margin: 20px auto; padding: 20px; width: 60%; border-radius: 10px; box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.5); ">
+    <div class="row" style="align-items:center;">
+        <div class="col-6"><img src="~/Assets/Img/Logo.png" alt="Logo" style="height:50px;" /></div>
+        <div class="col-6">
+            <div style="text-align:right">
+                <span>@Html.Raw(DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"))</span>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin-top:30px; margin-left:20px;">
+        <div>Đến: @Model.HOTEN</div>
+        <div>SĐT: @Model.SODIENTHOAI</div>
+        <div>Email: @Model.EMAIL</div>
+        <div>Địa chỉ: @Model.DIACHI</div>
+    </div>
+    <div>
+        <table class="table">
+            <colgroup>
+                <col style="width: 10%;">
+                <col style="width: 10%;">
+                <col style="width: 10%;">
+                <col style="width: 40%">
+                <col style="width: 15%">
+                <col style="width: 15%">
+            </colgroup>
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Mã Phiếu Trả</th>
+                    <th scope="col">Mã Sách</th>
+                    <th scope="col">Mã Bản Sao</th>
+                    <th scope="col">Tên Sách</th>
+                    <th scope="col">Tiền Phạt</th>
+                    <th scope="col">Vi Phạm</th>
+                </tr>
+            </thead>
+            <tbody>
+                @Html.Raw(Session["HTMLHD"])
+            </tbody>
+        </table>
+        <div style="text-align:right; margin-top:20px;">Tổng tiền: <span style="font-weight:bold; color:red;">@Html.Raw(string.Format("{0:#,###}", Session["TTHD"]).Replace(",", "."))</span></div>
+    </div>
+</div>

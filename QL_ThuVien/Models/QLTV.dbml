@@ -89,6 +89,7 @@
       <Association Name="NHANVIEN_TAIKHOAN" Member="TAIKHOANs" ThisKey="MANHANVIEN" OtherKey="MANHANVIEN" Type="TAIKHOAN" />
       <Association Name="NHANVIEN_THANHLY" Member="THANHLies" ThisKey="MANHANVIEN" OtherKey="MANHANVIEN" Type="THANHLY" />
       <Association Name="NHANVIEN_TIEUHUY" Member="TIEUHUYs" ThisKey="MANHANVIEN" OtherKey="MANHANVIEN" Type="TIEUHUY" />
+      <Association Name="NHANVIEN_HOADONVIPHAM" Member="HOADONVIPHAMs" ThisKey="MANHANVIEN" OtherKey="MANHANVIEN" Type="HOADONVIPHAM" />
       <Association Name="TAIKHOAN_NHANVIEN" Member="TAIKHOAN" ThisKey="MATAIKHOAN" OtherKey="MATAIKHOAN" Type="TAIKHOAN" IsForeignKey="true" />
     </Type>
   </Table>
@@ -208,6 +209,7 @@
       <Column Name="NGAYHETHAN" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Association Name="THETHUVIEN_CHITIETMUONPHONG" Member="CHITIETMUONPHONGs" ThisKey="MATTV" OtherKey="MANSD" Type="CHITIETMUONPHONG" />
       <Association Name="THETHUVIEN_PHIEUMUON" Member="PHIEUMUONs" ThisKey="MATTV" OtherKey="MANSD" Type="PHIEUMUON" />
+      <Association Name="THETHUVIEN_HOADONVIPHAM" Member="HOADONVIPHAMs" ThisKey="MATTV" OtherKey="MATTV" Type="HOADONVIPHAM" />
     </Type>
   </Table>
   <Table Name="dbo.THONGBAO" Member="THONGBAOs">
@@ -262,7 +264,20 @@
       <Column Name="MANHANVIEN" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Association Name="PHIEUTRA_BIVIPHAM" Member="BIVIPHAMs" ThisKey="MAPHIEUTRA" OtherKey="MAPHIEUTRA" Type="BIVIPHAM" />
       <Association Name="PHIEUTRA_CHITIETTRASACH" Member="CHITIETTRASACHes" ThisKey="MAPHIEUTRA" OtherKey="MAPHIEUTRA" Type="CHITIETTRASACH" />
+      <Association Name="PHIEUTRA_HOADONVIPHAM" Member="HOADONVIPHAMs" ThisKey="MAPHIEUTRA" OtherKey="MAPHIEUTRA" Type="HOADONVIPHAM" />
       <Association Name="PHIEUMUON_PHIEUTRA" Member="PHIEUMUON" ThisKey="MAPHIEUMUON" OtherKey="MAPHIEUMUON" Type="PHIEUMUON" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.HOADONVIPHAM" Member="HOADONVIPHAMs">
+    <Type Name="HOADONVIPHAM">
+      <Column Name="MAHOADON" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="MAPHIEUTRA" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="MANHANVIEN" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="MATTV" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="THANHTIEN" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Association Name="PHIEUTRA_HOADONVIPHAM" Member="PHIEUTRA" ThisKey="MAPHIEUTRA" OtherKey="MAPHIEUTRA" Type="PHIEUTRA" IsForeignKey="true" />
+      <Association Name="NHANVIEN_HOADONVIPHAM" Member="NHANVIEN" ThisKey="MANHANVIEN" OtherKey="MANHANVIEN" Type="NHANVIEN" IsForeignKey="true" />
+      <Association Name="THETHUVIEN_HOADONVIPHAM" Member="THETHUVIEN" ThisKey="MATTV" OtherKey="MATTV" Type="THETHUVIEN" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>

@@ -660,6 +660,7 @@
     <Content Include="Views\Room\Delete.cshtml" />
     <Content Include="Views\Room\Detail.cshtml" />
     <Content Include="Views\Book\DetailsSendedBackBook.cshtml" />
+    <Content Include="Views\Book\HoaDon.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

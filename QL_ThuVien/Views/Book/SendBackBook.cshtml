@@ -1,44 +1,75 @@
-﻿@{
-    ViewBag.Title = "SendBackBook";
+﻿@model QL_ThuVien.DTO.PhieuMuon
+
+@{
+    ViewBag.Title = "Lập Phiếu Trả Tài Liệu";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
 }
 
-<body>
-    <div class="test">
-        <div class="header ml-0">
-            <h2 class="position-relative" style="color: #440ccb ">TÀI LIỆU ĐÃ TRẢ</h2>
-            <hr class="bg-dark"></hr>
-        </div>
+<h2>Thông tin chi tiết</h2>
+
+<div>
+    <div class="row">
+        <div class="col-3">Mã phiếu mượn</div>
+        <div class="col-9">@Html.DisplayFor(model => model.MAPHIEUMUON)</div>
     </div>
-    <button class="add-room">+ Thêm Sách</button>
-    <table class="styled-table">
-        <thead>
+    <div class="row" style="color:red; font-weight:bold;">
+        <div class="col-3">Mã nhân viên</div>
+        <div class="col-9">@Html.DisplayFor(model => model.MANHANVIEN)</div>
+    </div>
+    <div class="row" style="color:red; font-weight:bold;">
+        <div class="col-3">Tên nhân viên</div>
+        <div class="col-9">@Html.DisplayFor(model => model.HOTEN_NV)</div>
+    </div>
+    <div class="row" style="color:red; font-weight:bold;">
+        <div class="col-3">SĐT nhân viên</div>
+        <div class="col-9">@Html.DisplayFor(model => model.SODIENTHOAI_NV)</div>
+    </div>
+    <div class="row">
+        <div class="col-3">Mã thẻ thư viện</div>
+        <div class="col-9">@Html.DisplayFor(model => model.MANSD)</div>
+    </div>
+    <div class="row">
+        <div class="col-3">Tên người mượn</div>
+        <div class="col-9">@Html.DisplayFor(model => model.HOTEN_ND)</div>
+    </div>
+    <div class="row">
+        <div class="col-3">SĐT người mượn</div>
+        <div class="col-9">@Html.DisplayFor(model => model.SODIENTHOAI_ND)</div>
+    </div>
+    <div class="row">
+        <div class="col-3">Ngày mượn</div>
+        <div class="col-9">@(Model.NGAYMUON.ToString("dd/MM/yyyy HH:mm:ss"))</div>
+    </div>
+    <div class="row" style="color:@(Model.NGAYTRA == null ? "red" : "green")">
+        <div class="col-3">Ngày trả</div>
+        <div class="col-9">@(Model.NGAYTRA == null ? "Chưa trả" : Model.NGAYTRA?.ToString("dd/MM/yyyy HH:mm:ss"))</div>
+    </div>
+</div>
+
+<h4 style="margin-left:10px;">Thông tin sách</h4>
+<table class="table" width="100%" cellspacing="0">
+    <colgroup>
+        <col style="width: 5%;">
+        <col style="width: 15%;">
+        <col style="width: 80%;">
+    </colgroup>
+    <thead>
+        <tr class="text-center">
+            <th></th>
+            <th>Mã Bản Sao</th>
+            <th>Tên Sách</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.ChiTietPhieuMuons)
+        {
             <tr>
-                <th>Mã Phòng</th>
-                <th>Tên Phòng</th>
-                <th>Vị Trí</th>
-                <th>Người Sử Dụng</th>
-                <th>Tình Trạng</th>
-                <th>Công Cụ</th>
+                <td><input type="checkbox" id="@item.MaBanSao" /></td>
+                <td class="text-center">@item.MaBanSao</td>
+                <td>
+                    @item.TenSach
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>1001</td>
-                <td>Phòng Học Tập</td>
-                <td>A101</td>
-                <td>Only Han</td>
-                <td>Còn Trống</td>
-                <td>Only Han</td>
-            </tr>
-            <tr class="active-row">
-                <td>1002</td>
-                <td>Phòng VIP</td>
-                <td>A102</td>
-                <td>Only Hằng</td>
-                <td>Còn Trống</td>
-                <td>Only Han</td>
-            </tr>
-        </tbody>
-    </table>
-</body>
+        }
+    </tbody>
+</table>

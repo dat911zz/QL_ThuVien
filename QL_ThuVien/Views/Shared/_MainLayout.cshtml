@@ -89,6 +89,8 @@
                     if (data == 'True') {
                         $("#cover-cart-books").load("/Book/CartBooks");
                         $(objTrigger).removeClass("btn-add-cart-book btn-primary").addClass("btn-secondary");
+                        $(objTrigger).siblings('.btn-destroy-book').data('mabs', '');
+                        $(objTrigger).siblings('.btn-destroy-book').removeClass("btn-destroy-book btn-danger").addClass("btn-secondary");
                         Swal.fire({
                             icon: 'success',
                             title: 'Thành Công',

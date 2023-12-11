@@ -263,6 +263,7 @@
     <Content Include="Assets\Img\home-decor-1.jpg" />
     <Content Include="Assets\Img\home-decor-2.jpg" />
     <Content Include="Assets\Img\home-decor-3.jpg" />
+    <Content Include="Assets\Img\icon\remove-book-icon.svg" />
     <Content Include="Assets\Img\IMG_8204_1.jpg" />
     <Content Include="Assets\Img\ivana-square.jpg" />
     <Content Include="Assets\Img\ivancik.jpg" />
@@ -535,7 +536,11 @@
     <Compile Include="Controllers\RoomController.cs" />
     <Compile Include="Controllers\ProvinceAPIController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="DTO\BanSaoDestroy.cs" />
+    <Compile Include="DTO\ChiTietPhieuMuon.cs" />
     <Compile Include="DTO\PhieuMuon.cs" />
+    <Compile Include="DTO\LiquidatedBookDTO.cs" />
+    <Compile Include="DTO\SachDTO.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -547,9 +552,6 @@
     <Compile Include="Models\NhaXuatBan.cs" />
     <Compile Include="Models\Perms.cs" />
     <Compile Include="Models\PhieuMuon.cs" />
-    <Compile Include="Models\QLTV.cs">
-      <DependentUpon>QLTV.dbml</DependentUpon>
-    </Compile>
     <Compile Include="Models\QLTV.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -570,11 +572,6 @@
     <Content Include="NLog.config" />
     <Content Include="Areas\Admin\Views\web.config" />
     <Content Include="Areas\Admin\Views\CP\Index.cshtml" />
-    <Content Include="Models\QLTV.dbml">
-      <Generator>MSLinqToSQLGenerator</Generator>
-      <LastGenOutput>QLTV.designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="Areas\Admin\Views\CP\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\CP\Details.cshtml" />
     <Content Include="Areas\Admin\Views\CP\Create.cshtml" />
@@ -634,6 +631,11 @@
     <Content Include="Assets\Fonts\fontawesome-webfont.woff" />
     <Content Include="Assets\Fonts\fontawesome-webfont.woff2" />
     <Content Include="Assets\Fonts\FontAwesome.otf" />
+    <Content Include="Models\QLTV.dbml">
+      <Generator>MSLinqToSQLGenerator</Generator>
+      <LastGenOutput>QLTV.designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="Models\QLTV.dbml.layout">
       <DependentUpon>QLTV.dbml</DependentUpon>
     </None>
@@ -647,7 +649,6 @@
     <Content Include="Views\Error\Index.cshtml" />
     <Content Include="Views\Book\Index.cshtml" />
     <Content Include="Views\Book\BorrowBook.cshtml" />
-    <Content Include="Views\Book\SendBackBook.cshtml" />
     <Content Include="Views\Room\EmptyRoom.cshtml" />
     <Content Include="Views\Room\LendRoom.cshtml" />
     <Content Include="Views\Home\LibaryStats.cshtml" />
@@ -681,6 +682,10 @@
     <Content Include="Views\Book\BorrowedBook.cshtml" />
     <Content Include="Views\Book\DetailsBorrowedBook.cshtml" />
     <Content Include="Views\Book\EditBorrowedBook.cshtml" />
+    <Content Include="Views\Book\DestroyedBook.cshtml" />
+    <Content Include="Views\Book\LiquidatedBook.cshtml" />
+    <Content Include="Views\Book\SendedBackBook.cshtml" />
+    <Content Include="Views\Book\SendBackBook.cshtml" />
     <Content Include="Views\Room\Create.cshtml" />
     <Content Include="Views\Room\Edit.cshtml" />
     <Content Include="Views\Room\Delete.cshtml" />

@@ -11,6 +11,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using Newtonsoft.Json;
+using QL_ThuVien.DTO;
 
 
 namespace QL_ThuVien.Controllers
@@ -82,7 +83,7 @@ namespace QL_ThuVien.Controllers
         [AuthorizeRole(Roles = "Quản trị viên, Nhân Viên")]
         public ActionResult MailSender()
         {
-            SMail sMail = new SMail("", "dothesang20@gmail.com", "Hệ thống thư viện", "");//tienyoyoyo@gmail.com
+            SMail sMail = new SMail("", "tienyoyoyo@gmail.com", "Hệ thống thư viện", "");//tienyoyoyo@gmail.com
             string Body = System.IO.File.ReadAllText(HttpContext.Server.MapPath("~/Views/Shared/EmailTemplates/MailTemplate1.htm"));
             string name = "Đỗ Thế Sang";
             string headermess = "trễ thời hạn mượn trả sách";
@@ -136,15 +137,25 @@ namespace QL_ThuVien.Controllers
             return View();
         }
         [AllowAnonymous]
-        public ActionResult BookLookUp(int? page, string txtSearch)
+        public ActionResult BookLookUp(string txtSearch)
         {
-            int pageSize = 5;
-            int pageNumber = (page ?? 1);
             Session["NXBList"] = _services.DbContext.QueryTable<NhaXuatBan>("NhaXuatBan");
             Session["CDList"] = _services.DbContext.QueryTable<ChuDe>("ChuDe");
-            IEnumerable<Sach> books = _services.DbContext.Get<Sach>("SELECT * FROM F_TimSach(N'%" + txtSearch + "%')");
+            IEnumerable<Sach> books = _services.DbContext.Get<Sach>("SELECT * FROM F_TimSach(N'%" + txtSearch + "%')").Where(x => _services.Db.THANHLies.Where(tl => tl.MASACH == x.MaSach).Count() <= 0).ToList();
             Session["SearchCredential"] = txtSearch;
-            return View(books.ToPagedList(pageNumber, pageSize));
+            return View(books.Select(s => new SachDTO
+                                    {
+                                        MaSach = s.MaSach,
+                                        TenSach = s.TenSach,
+                                        AnhBia = s.AnhBia,
+                                        NamXuatBan = (DateTime)s.NamXuatBan,
+                                        TenNXB = _services.Db.NHAXUATBANs.Where(x => x.MANXB == s.MaNXB).Select(x => x.TENNXB).FirstOrDefault() ?? "",
+                                        TenChuDe = _services.Db.CHUDEs.Where(x => x.MACHUDE == s.MaChuDe).Select(x => x.TENCHUDE).FirstOrDefault() ?? "",
+                                        GiaSach = s.GiaSach,
+                                        SLBS = (_services.Db.BANSAOSACHes.Where(x => x.MASACH == s.MaSach && (_services.Db.TIEUHUYs.Where(th => th.MABANSAO == x.MABANSAO)).Count() <= 0)).Count(),
+                                        SLDangMuon = (_services.Db.BANSAOSACHes.Where(x => x.MASACH == s.MaSach && x.TINHTRANG)).Count()
+                                    })
+            );
         }
 
         public string[] GetViPham()

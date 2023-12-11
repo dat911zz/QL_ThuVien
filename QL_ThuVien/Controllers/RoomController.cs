@@ -9,6 +9,7 @@ using PagedList;
 using Newtonsoft.Json;
 using System.Globalization;
 using System.Web.Security;
+using System.Web.Http.Results;
 
 namespace QL_ThuVien.Controllers
 {
@@ -134,9 +135,27 @@ namespace QL_ThuVien.Controllers
         {
             return View();
         }
-        public ActionResult EmptyRoom()
+        public ActionResult CheckOut()
         {
-            return View();
+            IEnumerable<CHITIETMUONPHONG> rooms = _services.Db.CHITIETMUONPHONGs.ToList().OrderByDescending(ct => ct.THOIGIANMUON);
+            return View(rooms);
+        }
+        [HttpPost]
+        public string AjaxCheckOut(int maNSD, int maPhong, string tgMuon)
+        {
+            DateTime tStart = DateTime.Parse(tgMuon, CultureInfo.InvariantCulture);
+            DateTime tEnd = DateTime.Now;
+            var lendRoomDetail = _services.Db.CHITIETMUONPHONGs.FirstOrDefault(ctmp => ctmp.MANSD == maNSD && ctmp.MAPHONG == maPhong && ctmp.THOIGIANMUON.Equals(tStart));
+            if (lendRoomDetail != null)
+            {
+                lendRoomDetail.THOIGIANTRA = tEnd;
+                _services.Db.SubmitChanges();
+            }
+            else
+            {
+                return "Thao tác thất bại, vui lòng kiểm tra lại!";
+            }
+            return "ok";
         }
         [HttpPost]
         public ActionResult AjaxGetEmptyRooms(string dateTimeSend, double hourUse)

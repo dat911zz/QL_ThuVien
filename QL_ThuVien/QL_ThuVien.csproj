@@ -618,7 +618,8 @@
     <Content Include="Views\Error\Index.cshtml" />
     <Content Include="Views\Book\Index.cshtml" />
     <Content Include="Views\Book\BorrowBook.cshtml" />
-    <Content Include="Views\Room\EmptyRoom.cshtml" />
+    <Content Include="Views\Book\SendBackBook.cshtml" />
+    <Content Include="Views\Room\CheckOut.cshtml" />
     <Content Include="Views\Room\LendRoom.cshtml" />
     <Content Include="Views\Home\LibaryStats.cshtml" />
     <Content Include="Views\Home\InventoryLibary.cshtml" />

@@ -1,16 +1,21 @@
-﻿@model QL_ThuVien.DTO.PhieuMuon
+﻿@model QL_ThuVien.DTO.PhieuTra
 
 @{
-    ViewBag.Title = "Chi Tiết Phiếu Mượn";
+    ViewBag.Title = "Chi Tiết Phiếu Trả";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
+    var viphams = Session["ViPhams"] as List<QL_ThuVien.Models.VIPHAM>;
 }
 
 <h2>Thông tin chi tiết</h2>
 
 <div>
     <div class="row">
-        <div class="col-3">Mã phiếu mượn</div>
-        <div class="col-9">@Html.DisplayFor(model => model.MAPHIEUMUON)</div>
+        <div class="col-3">Mã phiếu Trả</div>
+        <div class="col-9">@Model.MaPhieuTra</div>
+    </div>
+    <div class="row">
+        <div class="col-3">Mã phiếu Mượn</div>
+        <div class="col-9">@Model.MaPhieuMuon</div>
     </div>
     <div class="row" style="color:red; font-weight:bold;">
         <div class="col-3">Mã nhân viên</div>
@@ -40,34 +45,40 @@
         <div class="col-3">Ngày mượn</div>
         <div class="col-9">@(Model.NGAYMUON.ToString("dd/MM/yyyy HH:mm:ss"))</div>
     </div>
-    <div class="row" style="color:@(Model.NGAYTRA == null ? "red" : "green")">
+    <div class="row">
         <div class="col-3">Ngày trả</div>
-        <div class="col-9">@(Model.NGAYTRA == null ? "Chưa trả" : Model.NGAYTRA?.ToString("dd/MM/yyyy HH:mm:ss"))</div>
+        <div class="col-9">@(Model.NgayTra.ToString("dd/MM/yyyy HH:mm:ss"))</div>
     </div>
 </div>
 
 <h4 style="margin-left:10px;">Thông tin sách</h4>
-<table class="table" id="table_id" width="100%" cellspacing="0">
+<table width="100%" cellspacing="0" class="table-bordered">
     <colgroup>
+        <col style="width: 10%;">
+        <col style="width: 10%;">
+        <col style="width: 65%;">
         <col style="width: 15%;">
-        <col style="width: 15%;">
-        <col style="width: 70%;">
     </colgroup>
     <thead>
         <tr class="text-center">
             <th>Mã Sách</th>
             <th>Mã Bản Sao</th>
             <th>Tên Sách</th>
+            <th>Vi Phạm</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.ChiTietPhieuMuons)
+        @foreach (var item in Model.ChiTietPhieuTras)
         {
+            var vp = viphams.Where(x => x.MAVIPHAM == item.MaViPham).FirstOrDefault();
             <tr>
-                <td class="text-center">@item.MaSach</td>
-                <td class="text-center">@item.MaBanSao</td>
-                <td>
+                <td class="text-center masach">@item.MaSach</td>
+                <td class="text-center mabansao">@item.MaBanSao</td>
+                <td class="tensach">
                     @item.TenSach
+                </td>
+                <td>
+                    @vp.TENVIPHAM
                 </td>
             </tr>
         }

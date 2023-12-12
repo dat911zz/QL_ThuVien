@@ -17,6 +17,7 @@ namespace QL_ThuVien.DTO
         public string SODIENTHOAI_ND { get; set; }
         public DateTime NGAYMUON { get; set; }
         public DateTime? NGAYTRA {  get; set; }
+        public bool isSended { get; set; } = false;
         public List<ChiTietPhieuMuon> ChiTietPhieuMuons { get; set; } = new List<ChiTietPhieuMuon>();
     }
 }

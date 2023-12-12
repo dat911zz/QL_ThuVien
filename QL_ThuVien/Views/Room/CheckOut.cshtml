@@ -1,0 +1,166 @@
+﻿@model IEnumerable<QL_ThuVien.Models.CHITIETMUONPHONG>
+@{
+    ViewBag.Title = "CheckOut";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+    bool isValidUser = QL_ThuVien.Intergrate.Services.Helper.SecurityHelper.HasPermission(HttpContext.Current);
+}
+<style>
+    .dataTables_filter > label, .dataTables_length > label {
+        font-size: 1rem;
+    }
+
+    table {
+        border-collapse: collapse;
+        table-layout: fixed;
+        width: 310px;
+    }
+
+    .table th {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .table td, .table th {
+        white-space: normal !important;
+    }
+
+    .short-tent {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 5;
+        -webkit-box-orient: vertical;
+        word-break: break-word;
+        min-height: 3em;
+    }
+
+    a.btn.btn-secondary.btn-edit.m-l-0.px-075, a.btn.btn-danger.px-075 {
+        padding-left: 0.75rem !important;
+    }
+
+    table.dataTable thead > tr > th {
+        text-align: center;
+        background-color: #333333;
+        color: #ffffff;
+    }
+    .red {
+        color: red;
+    }
+</style>
+<body>
+    <div class="test">
+        <div class="header ml-0">
+            <h2 class="position-relative" style="color: #440ccb ">DANH SÁCH PHIẾU MƯỢN</h2>
+            <hr class="bg-dark"></hr>
+        </div>
+    </div>
+    <div class="container">
+        <div>Ghi chú: </br>+ Dòng chữ đỏ là phiếu mượn đặt trước bị hủy trước thời gian đặt </br> + Check out trước thời gian đặt phòng tương đương với hủy đặt phòng</div>
+        <div class="table">
+            <table class="table" id="table_id" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Tên phòng</th>
+                        <th>Vị trí</th>
+                        <th>Người mượn</th>
+                        <th>Nhân viên</th>
+                        <th>Thời gian mượn</th>
+                        <th>Thời gian trả</th>
+                        <th>Check out</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+
+                        string clss = "";
+                        if (item.THOIGIANTRA <= item.THOIGIANMUON)
+                        {
+                            clss = "red";
+                        }
+
+                        <tr class="@clss">
+                            <td>@item.PHONG.TENPHONG</td>
+                            <td>@item.PHONG.VITRI</td>
+                            <td>@item.THETHUVIEN.HOTEN</td>
+                            <td>
+                                @{
+                                    var staff = item.NHANVIEN == null ? "" : item.NHANVIEN.HOTEN;
+                                }
+                                @staff
+                            </td>
+                            <td>@item.THOIGIANMUON.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                            <td>@item.THOIGIANTRA.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                            <td class="text-center">
+
+                                @if (isValidUser && item.THOIGIANTRA >= DateTime.Now)
+                                {
+                                    <a class="btn btn-primary btn-edit m-l-0 px-075" onclick="DVNConfirm1('Check Out', 'Phiếu mượn', '/Room/AjaxCheckOut', { maNSD: @item.THETHUVIEN.MATTV, maPhong: @item.MAPHONG, tgMuon: '@item.THOIGIANMUON' })" title="Check Out">
+                                        <i class="fa fa-check" aria-hidden="true"></i>
+                                    </a>
+                                    @*<a class="btn btn-primary btn-edit m-l-0 px-075" href="/Room/Edit/@item.MAPHONG" title="Chỉnh sửa thông tin">
+                                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                                        </a>
+                                        <a class="btn btn-danger btn-edit m-l-0 px-075" onclick="DVNConfirm('Xóa', 'Phòng', '/Room/Delete', @item.MAPHONG)" title="Xóa">
+                                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                        </a>*@
+                                }
+                            </td>
+                        </tr>
+
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    @if (Model.Count() == 0)
+    {
+        <div style="text-align: center; margin-top: 20px">Không tìm thầy kết quả</div>
+    }
+</body>
+<script>
+    var DVNConfirm1 = (functionName, objectName, url, obj) => {
+        
+        Swal.fire({
+            icon: 'warning',
+            title: 'Cảnh Báo!',
+            html: '<div>Bạn có chắc muốn thực hiện hành động này?</div>',
+            showCancelButton: true,
+            confirmButtonText: functionName,
+            cancelButtonText: 'Hủy'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                console.log(obj);
+                debugger;
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: obj,
+                    success: function (r) {
+                        if (r == 'ok') {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Thành Công',
+                                text: 'Đã Check out thành công!',
+                                showConfirmButton: true,
+                                timer: 2000
+                            }).then((result) => {
+                                location.reload();
+                            });
+                        }
+                        else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Thất Bại',
+                                html: '<span style="font-weight: bold">Có lỗi đã xảy ra, vui lòng thử lại! <br/>Chi tiết: </span><span style="color: red;">' + r + '</span>',
+                                showConfirmButton: true,
+                                timer: 3500
+                            })
+                        }
+                    }
+                });
+            }
+        })
+    }
+</script>

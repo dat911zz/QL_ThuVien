@@ -49,11 +49,11 @@
                 <tbody>
                     @foreach (var item in Model)
                     {
-                        <tr class="@(item.NGAYTRA == null ? "borrow" : "borrowed")">
+                        <tr class="@(item.isSended ? "borrowed" : "borrow")">
                             <td>@item.MAPHIEUMUON</td>
                             <td>@item.HOTEN_NV</td>
                             <td>@item.NGAYMUON.ToString("dd/MM/yyyy HH:mm:ss")</td>
-                            <td>@(item.NGAYTRA == null ? "Chưa trả" : item.NGAYTRA?.ToString("dd/MM/yyyy HH:mm:ss"))</td>
+                            <td>@((!item.isSended) ? "Chưa trả" : item.NGAYTRA?.ToString("dd/MM/yyyy HH:mm:ss"))</td>
                             <td>@item.HOTEN_ND</td>
                             <td>@item.SODIENTHOAI_ND</td>
                             @if (isValidUser)

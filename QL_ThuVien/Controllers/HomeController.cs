@@ -54,6 +54,9 @@ namespace QL_ThuVien.Controllers
                     ViewBag.TotalViolations = _services.Db.BIVIPHAMs.Count();
                     ViewBag.TotalBorrowBooks = _services.Db.PHIEUMUONs.Count();
                     ViewBag.TotalBookBacks = _services.Db.PHIEUTRAs.Count();
+                    ViewBag.SLViPham = GetViPham();
+                    ViewBag.SLMuon = GetMuonSach();
+                    ViewBag.SLTraSach = GetTraSach();
                     //ViewBag.TotalReaders = 100;
                     //ViewBag.TotalBooks = 203;
                     //ViewBag.TotalViolations = 12;
@@ -156,6 +159,59 @@ namespace QL_ThuVien.Controllers
                                         SLDangMuon = (_services.Db.BANSAOSACHes.Where(x => x.MASACH == s.MaSach && x.TINHTRANG)).Count()
                                     })
             );
+        }
+        public string[] GetViPham()
+        {
+            string[] viPham = new string[12]; // Khởi tạo mảng với kích thước là 12
+
+            for (int i = 0; i < 12; i++)
+            {
+                DateTime date = DateTime.Now; 
+                int dateYear = date.Year - 1;
+                int sl = (from pt in _services.Db.PHIEUTRAs
+                          join bvp in _services.Db.BIVIPHAMs on pt.MAPHIEUTRA equals bvp.MAPHIEUTRA
+                          where pt.NGAYTRATHAT.Year == dateYear && pt.NGAYTRATHAT.Month == i+1
+                          select pt).Count();
+
+                viPham[i] = sl.ToString();
+            }
+
+            return viPham;
+        }
+
+
+        public string[] GetMuonSach()
+        {
+            string[] muonSach = new string[12]; // Khởi tạo mảng với kích thước là 12
+
+            for (int i = 0; i < 12; i++)
+            {
+                DateTime date = DateTime.Now; 
+                int dateYear = date.Year - 1;
+                int sl = (from pt in _services.Db.PHIEUMUONs
+                          where pt.NGAYMUON.Year == dateYear && pt.NGAYMUON.Month == i + 1
+                          select pt).Count();
+
+                muonSach[i] = sl.ToString();
+            }
+                return muonSach;
+        }
+        public string[] GetTraSach()
+        {
+            string[] traSach = new string[12]; // Khởi tạo mảng với kích thước là 12
+
+            for (int i = 0; i < 12; i++)
+            {
+                DateTime date = DateTime.Now;
+                int dateYear = date.Year - 1;
+                int sl = (from pt in _services.Db.PHIEUTRAs
+                          where pt.NGAYTRATHAT.Year == dateYear && pt.NGAYTRATHAT.Month == i + 1
+                          select pt).Count();
+
+                traSach[i] = sl.ToString();
+            }
+
+            return traSach;
         }
     }
 }

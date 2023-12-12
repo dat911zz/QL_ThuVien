@@ -255,7 +255,9 @@
                         borderRadius: 4,
                         borderSkipped: false,
                         backgroundColor: "#ef1c21",
-                        data: [150, 200, 120, 220, 100, 190, 160, 230, 100, 200, 120, 210],
+                        /*data: [150, 200, 120, 220, 100, 190, 160, 230, 100, 200, 120, 210],*/
+                        data: @Html.Raw(Json.Encode(ViewBag.SLViPham)),
+
                         maxBarThickness: 6
                     },],
                 },
@@ -335,7 +337,9 @@
                         borderWidth: 3,
                         backgroundColor: gradientStroke1,
                         fill: true,
-                        data: [150, 200, 120, 220, 100, 190, 160, 230, 100, 200, 120, 210],
+                        /* data: [150, 200, 120, 220, 100, 190, 160, 230, 100, 200, 120, 210],*/
+                        data: @Html.Raw(Json.Encode(ViewBag.SLMuon)),
+
                         maxBarThickness: 6
 
                     },
@@ -348,7 +352,9 @@
                         borderWidth: 3,
                         backgroundColor: gradientStroke2,
                         fill: true,
-                        data: [150, 200, 120, 220, 400, 190, 260, 130, 100, 200, 120, 210],
+                        /*data: [150, 200, 120, 220, 400, 190, 260, 130, 100, 200, 120, 210],*/
+                        data: @Html.Raw(Json.Encode(ViewBag.SLTraSach)),
+
                         maxBarThickness: 6
                     },
                     ],

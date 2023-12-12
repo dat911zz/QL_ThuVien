@@ -24,7 +24,7 @@
                                     window.location = '/Auth/SignOut'
                                 </script>
                             }
-                            @Session["username"].ToString()
+                            @((Session["username"] != null) ? Session["username"].ToString() : "Chờ cập nhật")
                         }
                     </div>
                     <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4" aria-labelledby="dropdown">

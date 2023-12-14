@@ -60,7 +60,7 @@
                 </div>
                 <div class="col-75">
                     @*@Html.EditorFor(model => model.NAMXUATBAN, new { htmlAttributes = new { type = "date", @class = "form-control" } })*@
-                    <input class="form-control" type="date" id="NAMXUATBAN" name="NAMXUATBAN" value="@Model.NAMXUATBAN.Value.ToString("yyyy-MM-dd")" />
+                    <input class="form-control" type="date" id="NAMXUATBAN" name="NAMXUATBAN" value="@Model.NAMXUATBAN.ToString("yyyy-MM-dd")" />
                     @Html.ValidationMessageFor(model => model.NAMXUATBAN, "", new { @class = "text-danger" })
                 </div>
             </div>

@@ -641,7 +641,6 @@
     <Content Include="Views\RegistrationQueue\BorrowBook.cshtml" />
     <Content Include="Views\RegistrationQueue\BorrowRoom.cshtml" />
     <Content Include="Views\LibCard\Create.cshtml" />
-    <Content Include="Views\LibCard\Edit.cshtml" />
     <Content Include="Views\LibCard\Index.cshtml" />
     <Content Include="Views\Auth\CaptchaPartial.cshtml" />
     <Content Include="Views\Book\CreateFromFile.cshtml" />
@@ -661,6 +660,7 @@
     <Content Include="Views\Room\Delete.cshtml" />
     <Content Include="Views\Room\Detail.cshtml" />
     <Content Include="Views\Book\DetailsSendedBackBook.cshtml" />
+    <Content Include="Views\LibCard\Edit.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

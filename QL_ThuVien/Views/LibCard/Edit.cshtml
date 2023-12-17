@@ -1,8 +1,179 @@
-﻿
+﻿@model QL_ThuVien.Models.THETHUVIEN
 @{
     ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
 }
 
-<h2>Edit</h2>
+
+<div class="test">
+    <div class="header ml-0">
+        <h2 class="position-relative" style="color: #440ccb ">CHỈNH SỬA THÔNG TIN THỂ THƯ VIỆN</h2>
+        <hr class="bg-dark">
+    </div>
+</div>
+
+<div class="container">
+    @using (Html.BeginForm("Edit", "LibCard", FormMethod.Post, new { @id = "frmBookAction", enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.MATTV)
+        <div class="form-horizontal">
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="row">
+                <div class="col-25">
+                    <label for="fname">Họ tên <span style="color: red">(*)</span>:</label>
+                </div>
+                <div class="col-75">
+                    @Html.EditorFor(model => model.HOTEN, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.HOTEN, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                    <label for="lname">Số điện thoại<span style="color: red">(*)</span>:</label>
+                </div>
+                <div class="col-75">
+                    @Html.EditorFor(model => model.SODIENTHOAI, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.SODIENTHOAI, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                    <label for="lname">Người ngoài <span style="color: red">(*)</span>:</label>
+                </div>
+                <div class="col-75">
+                    @Html.CheckBox("NGUOINGOAI", Model.NGUOINGOAI ?? false, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.NGUOINGOAI, "", new { @class = "text-danger" })
+                    @*<input type="text" id="NguoiNgoai" name="NguoiNgoai">*@
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                    <label for="lname">Email <span style="color: red">(*)</span>:</label>
+                </div>
+                <div class="col-75">
+                    @Html.EditorFor(model => model.EMAIL, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.EMAIL, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                    <label for="lname">Địa chỉ <span style="color: red">(*)</span>:</label>
+                </div>
+                <div class="col-75">
+                    @Html.EditorFor(model => model.DIACHI, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.DIACHI, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                    <label for="lname">Ngày cấp <span style="color: red">(*)</span>:</label>
+                </div>
+                <div class="col-75">
+                    @Html.EditorFor(model => model.NGAYCAP, new { htmlAttributes = new { type = "datetime", @class = "form-control", max = DateTime.Now.ToString("yyyy-MM-dd"), min = "1760-01-01" } })
+                    @Html.ValidationMessageFor(model => model.NGAYCAP, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                    <label for="lname">Ngày hết hạn <span style="color: red">(*)</span>:</label>
+                </div>
+                <div class="col-75">
+                    @Html.EditorFor(model => model.NGAYHETHAN, new { htmlAttributes = new { type = "datetime", @class = "form-control", max = DateTime.Now.ToString("yyyy-MM-dd"), min = "1760-01-01" } })
+                    @Html.ValidationMessageFor(model => model.NGAYHETHAN, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row" style="margin-top: 20px;">
+                <input value="Tạo" onclick="SubmitConfrim()" class="btn btn-primary" />
+            </div>
+        </div>
+    }
+    <div>
+        @Html.ActionLink("Trở về trang trước", "Index")
+    </div>
+</div>
+<style>
+    .test {
+        max-width: max-content;
+        padding: 20px;
+        display: block;
+    }
+
+    .header {
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    input[type=text], select, textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        resize: vertical;
+    }
+
+    label {
+        padding: 12px 12px 12px 0;
+        display: inline-block;
+        font-size: 16px;
+    }
+
+    input[type=submit] {
+        background-color: #440ccb;
+        color: white;
+        margin: auto;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        float: right;
+        max-width: 250px;
+    }
+
+    .container {
+        border-radius: 5px;
+        background-color: #f2f2f2;
+        padding: 20px;
+    }
+
+    .col-25 {
+        float: left;
+        width: 25%;
+        margin-top: 6px;
+    }
+
+    .col-75 {
+        float: left;
+        width: 75%;
+        margin-top: 6px;
+    }
+
+    .row:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+</style>
+<script type="text/javascript">
+    var SubmitConfrim = () => {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Cảnh Báo!',
+            html: '<div>Bạn có muốn thực hiện hành động này?</div>',
+            showCancelButton: true,
+            confirmButtonText: 'Tạo',
+            cancelButtonText: 'Hủy'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('#frmBookAction').submit()
+            }
+        })
+    };
+</script>
 

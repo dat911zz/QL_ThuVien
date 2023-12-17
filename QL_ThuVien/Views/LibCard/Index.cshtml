@@ -72,7 +72,7 @@
                             <td class="text-center">@item.NgayCap</td>
                             <td class="text-center">@item.NgayHetHan</td>
                             <td class="text-center">
-                                <a class="btn btn-secondary btn-edit m-l-0 px-075" href="@Url.Action("Edit","LibCard")"><span><img src="https://img.icons8.com/windows/23/null/pencil.png" /></span>Sửa</a>
+                                <a class="btn btn-secondary btn-edit m-l-0 px-075" href="@Url.Action("Edit","LibCard", new { id = item.MaTTV })"><span><img src="https://img.icons8.com/windows/23/null/pencil.png" /></span>Sửa</a>
                                 <a class="btn btn-danger btn-edit m-l-0 px-075" onclick="DVNConfirm('Xóa', 'Thẻ thư viện', '/LibCard/Delete', @item.MaTTV)">
                                     <span><img src="https://img.icons8.com/plasticine/30/null/waste.png" />Xóa</span>
                                 </a>

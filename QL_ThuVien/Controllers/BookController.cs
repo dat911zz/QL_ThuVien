@@ -178,7 +178,7 @@ namespace QL_ThuVien.Controllers
             OleDbDataAdapter oda = new OleDbDataAdapter(query, Econ);
             Econ.Close();
             oda.Fill(ds);
-            DataTable dt = ds.Tables[0];
+            System.Data.DataTable dt = ds.Tables[0];
             SqlBulkCopy objbulk = new SqlBulkCopy(con);
             objbulk.DestinationTableName = "SACH";
             objbulk.ColumnMappings.Add("MANXB", "MANXB");
@@ -195,7 +195,7 @@ namespace QL_ThuVien.Controllers
         public ActionResult ExportFromFile()
         {
             string query = "select * From SACH";
-            DataTable dt = new DataTable();
+            System.Data.DataTable dt = new System.Data.DataTable();
             con.Open();
             SqlDataAdapter da = new SqlDataAdapter(query, con);
             da.Fill(dt);

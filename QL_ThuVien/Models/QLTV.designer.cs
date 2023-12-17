@@ -108,6 +108,9 @@ namespace QL_ThuVien.Models
     partial void InsertPHIEUTRA(PHIEUTRA instance);
     partial void UpdatePHIEUTRA(PHIEUTRA instance);
     partial void DeletePHIEUTRA(PHIEUTRA instance);
+    partial void InsertHOADONVIPHAM(HOADONVIPHAM instance);
+    partial void UpdateHOADONVIPHAM(HOADONVIPHAM instance);
+    partial void DeleteHOADONVIPHAM(HOADONVIPHAM instance);
         #endregion
         public QLTVDataContext() :
 				base(System.Configuration.ConfigurationManager.ConnectionStrings["DoAnLienMonConnectionString"].ConnectionString, mappingSource)
@@ -343,6 +346,14 @@ namespace QL_ThuVien.Models
 			get
 			{
 				return this.GetTable<PHIEUTRA>();
+			}
+		}
+		
+		public System.Data.Linq.Table<HOADONVIPHAM> HOADONVIPHAMs
+		{
+			get
+			{
+				return this.GetTable<HOADONVIPHAM>();
 			}
 		}
 	}
@@ -1879,6 +1890,8 @@ namespace QL_ThuVien.Models
 		
 		private EntitySet<TIEUHUY> _TIEUHUYs;
 		
+		private EntitySet<HOADONVIPHAM> _HOADONVIPHAMs;
+		
 		private EntityRef<TAIKHOAN> _TAIKHOAN;
 		
     #region Extensibility Method Definitions
@@ -1910,6 +1923,7 @@ namespace QL_ThuVien.Models
 			this._TAIKHOANs = new EntitySet<TAIKHOAN>(new Action<TAIKHOAN>(this.attach_TAIKHOANs), new Action<TAIKHOAN>(this.detach_TAIKHOANs));
 			this._THANHLies = new EntitySet<THANHLY>(new Action<THANHLY>(this.attach_THANHLies), new Action<THANHLY>(this.detach_THANHLies));
 			this._TIEUHUYs = new EntitySet<TIEUHUY>(new Action<TIEUHUY>(this.attach_TIEUHUYs), new Action<TIEUHUY>(this.detach_TIEUHUYs));
+			this._HOADONVIPHAMs = new EntitySet<HOADONVIPHAM>(new Action<HOADONVIPHAM>(this.attach_HOADONVIPHAMs), new Action<HOADONVIPHAM>(this.detach_HOADONVIPHAMs));
 			this._TAIKHOAN = default(EntityRef<TAIKHOAN>);
 			OnCreated();
 		}
@@ -2149,6 +2163,19 @@ namespace QL_ThuVien.Models
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="NHANVIEN_HOADONVIPHAM", Storage="_HOADONVIPHAMs", ThisKey="MANHANVIEN", OtherKey="MANHANVIEN")]
+		public EntitySet<HOADONVIPHAM> HOADONVIPHAMs
+		{
+			get
+			{
+				return this._HOADONVIPHAMs;
+			}
+			set
+			{
+				this._HOADONVIPHAMs.Assign(value);
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TAIKHOAN_NHANVIEN", Storage="_TAIKHOAN", ThisKey="MATAIKHOAN", OtherKey="MATAIKHOAN", IsForeignKey=true)]
 		public TAIKHOAN TAIKHOAN
 		{
@@ -2282,6 +2309,18 @@ namespace QL_ThuVien.Models
 		}
 		
 		private void detach_TIEUHUYs(TIEUHUY entity)
+		{
+			this.SendPropertyChanging();
+			entity.NHANVIEN = null;
+		}
+		
+		private void attach_HOADONVIPHAMs(HOADONVIPHAM entity)
+		{
+			this.SendPropertyChanging();
+			entity.NHANVIEN = this;
+		}
+		
+		private void detach_HOADONVIPHAMs(HOADONVIPHAM entity)
 		{
 			this.SendPropertyChanging();
 			entity.NHANVIEN = null;
@@ -4469,6 +4508,8 @@ namespace QL_ThuVien.Models
 		
 		private EntitySet<PHIEUMUON> _PHIEUMUONs;
 		
+		private EntitySet<HOADONVIPHAM> _HOADONVIPHAMs;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -4495,6 +4536,7 @@ namespace QL_ThuVien.Models
 		{
 			this._CHITIETMUONPHONGs = new EntitySet<CHITIETMUONPHONG>(new Action<CHITIETMUONPHONG>(this.attach_CHITIETMUONPHONGs), new Action<CHITIETMUONPHONG>(this.detach_CHITIETMUONPHONGs));
 			this._PHIEUMUONs = new EntitySet<PHIEUMUON>(new Action<PHIEUMUON>(this.attach_PHIEUMUONs), new Action<PHIEUMUON>(this.detach_PHIEUMUONs));
+			this._HOADONVIPHAMs = new EntitySet<HOADONVIPHAM>(new Action<HOADONVIPHAM>(this.attach_HOADONVIPHAMs), new Action<HOADONVIPHAM>(this.detach_HOADONVIPHAMs));
 			OnCreated();
 		}
 		
@@ -4684,6 +4726,19 @@ namespace QL_ThuVien.Models
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="THETHUVIEN_HOADONVIPHAM", Storage="_HOADONVIPHAMs", ThisKey="MATTV", OtherKey="MATTV")]
+		public EntitySet<HOADONVIPHAM> HOADONVIPHAMs
+		{
+			get
+			{
+				return this._HOADONVIPHAMs;
+			}
+			set
+			{
+				this._HOADONVIPHAMs.Assign(value);
+			}
+		}
+		
 		public event PropertyChangingEventHandler PropertyChanging;
 		
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -4723,6 +4778,18 @@ namespace QL_ThuVien.Models
 		}
 		
 		private void detach_PHIEUMUONs(PHIEUMUON entity)
+		{
+			this.SendPropertyChanging();
+			entity.THETHUVIEN = null;
+		}
+		
+		private void attach_HOADONVIPHAMs(HOADONVIPHAM entity)
+		{
+			this.SendPropertyChanging();
+			entity.THETHUVIEN = this;
+		}
+		
+		private void detach_HOADONVIPHAMs(HOADONVIPHAM entity)
 		{
 			this.SendPropertyChanging();
 			entity.THETHUVIEN = null;
@@ -5619,6 +5686,8 @@ namespace QL_ThuVien.Models
 		
 		private EntitySet<CHITIETTRASACH> _CHITIETTRASACHes;
 		
+		private EntitySet<HOADONVIPHAM> _HOADONVIPHAMs;
+		
 		private EntityRef<PHIEUMUON> _PHIEUMUON;
 		
     #region Extensibility Method Definitions
@@ -5639,6 +5708,7 @@ namespace QL_ThuVien.Models
 		{
 			this._BIVIPHAMs = new EntitySet<BIVIPHAM>(new Action<BIVIPHAM>(this.attach_BIVIPHAMs), new Action<BIVIPHAM>(this.detach_BIVIPHAMs));
 			this._CHITIETTRASACHes = new EntitySet<CHITIETTRASACH>(new Action<CHITIETTRASACH>(this.attach_CHITIETTRASACHes), new Action<CHITIETTRASACH>(this.detach_CHITIETTRASACHes));
+			this._HOADONVIPHAMs = new EntitySet<HOADONVIPHAM>(new Action<HOADONVIPHAM>(this.attach_HOADONVIPHAMs), new Action<HOADONVIPHAM>(this.detach_HOADONVIPHAMs));
 			this._PHIEUMUON = default(EntityRef<PHIEUMUON>);
 			OnCreated();
 		}
@@ -5753,6 +5823,19 @@ namespace QL_ThuVien.Models
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="PHIEUTRA_HOADONVIPHAM", Storage="_HOADONVIPHAMs", ThisKey="MAPHIEUTRA", OtherKey="MAPHIEUTRA")]
+		public EntitySet<HOADONVIPHAM> HOADONVIPHAMs
+		{
+			get
+			{
+				return this._HOADONVIPHAMs;
+			}
+			set
+			{
+				this._HOADONVIPHAMs.Assign(value);
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="PHIEUMUON_PHIEUTRA", Storage="_PHIEUMUON", ThisKey="MAPHIEUMUON", OtherKey="MAPHIEUMUON", IsForeignKey=true)]
 		public PHIEUMUON PHIEUMUON
 		{
@@ -5829,6 +5912,299 @@ namespace QL_ThuVien.Models
 		{
 			this.SendPropertyChanging();
 			entity.PHIEUTRA = null;
+		}
+		
+		private void attach_HOADONVIPHAMs(HOADONVIPHAM entity)
+		{
+			this.SendPropertyChanging();
+			entity.PHIEUTRA = this;
+		}
+		
+		private void detach_HOADONVIPHAMs(HOADONVIPHAM entity)
+		{
+			this.SendPropertyChanging();
+			entity.PHIEUTRA = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.HOADONVIPHAM")]
+	public partial class HOADONVIPHAM : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _MAHOADON;
+		
+		private int _MAPHIEUTRA;
+		
+		private int _MANHANVIEN;
+		
+		private int _MATTV;
+		
+		private System.Nullable<double> _THANHTIEN;
+		
+		private EntityRef<PHIEUTRA> _PHIEUTRA;
+		
+		private EntityRef<NHANVIEN> _NHANVIEN;
+		
+		private EntityRef<THETHUVIEN> _THETHUVIEN;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnMAHOADONChanging(int value);
+    partial void OnMAHOADONChanged();
+    partial void OnMAPHIEUTRAChanging(int value);
+    partial void OnMAPHIEUTRAChanged();
+    partial void OnMANHANVIENChanging(int value);
+    partial void OnMANHANVIENChanged();
+    partial void OnMATTVChanging(int value);
+    partial void OnMATTVChanged();
+    partial void OnTHANHTIENChanging(System.Nullable<double> value);
+    partial void OnTHANHTIENChanged();
+    #endregion
+		
+		public HOADONVIPHAM()
+		{
+			this._PHIEUTRA = default(EntityRef<PHIEUTRA>);
+			this._NHANVIEN = default(EntityRef<NHANVIEN>);
+			this._THETHUVIEN = default(EntityRef<THETHUVIEN>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_MAHOADON", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int MAHOADON
+		{
+			get
+			{
+				return this._MAHOADON;
+			}
+			set
+			{
+				if ((this._MAHOADON != value))
+				{
+					this.OnMAHOADONChanging(value);
+					this.SendPropertyChanging();
+					this._MAHOADON = value;
+					this.SendPropertyChanged("MAHOADON");
+					this.OnMAHOADONChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_MAPHIEUTRA", DbType="Int NOT NULL")]
+		public int MAPHIEUTRA
+		{
+			get
+			{
+				return this._MAPHIEUTRA;
+			}
+			set
+			{
+				if ((this._MAPHIEUTRA != value))
+				{
+					if (this._PHIEUTRA.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnMAPHIEUTRAChanging(value);
+					this.SendPropertyChanging();
+					this._MAPHIEUTRA = value;
+					this.SendPropertyChanged("MAPHIEUTRA");
+					this.OnMAPHIEUTRAChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_MANHANVIEN", DbType="Int NOT NULL")]
+		public int MANHANVIEN
+		{
+			get
+			{
+				return this._MANHANVIEN;
+			}
+			set
+			{
+				if ((this._MANHANVIEN != value))
+				{
+					if (this._NHANVIEN.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnMANHANVIENChanging(value);
+					this.SendPropertyChanging();
+					this._MANHANVIEN = value;
+					this.SendPropertyChanged("MANHANVIEN");
+					this.OnMANHANVIENChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_MATTV", DbType="Int NOT NULL")]
+		public int MATTV
+		{
+			get
+			{
+				return this._MATTV;
+			}
+			set
+			{
+				if ((this._MATTV != value))
+				{
+					if (this._THETHUVIEN.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnMATTVChanging(value);
+					this.SendPropertyChanging();
+					this._MATTV = value;
+					this.SendPropertyChanged("MATTV");
+					this.OnMATTVChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_THANHTIEN", DbType="Float")]
+		public System.Nullable<double> THANHTIEN
+		{
+			get
+			{
+				return this._THANHTIEN;
+			}
+			set
+			{
+				if ((this._THANHTIEN != value))
+				{
+					this.OnTHANHTIENChanging(value);
+					this.SendPropertyChanging();
+					this._THANHTIEN = value;
+					this.SendPropertyChanged("THANHTIEN");
+					this.OnTHANHTIENChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="PHIEUTRA_HOADONVIPHAM", Storage="_PHIEUTRA", ThisKey="MAPHIEUTRA", OtherKey="MAPHIEUTRA", IsForeignKey=true)]
+		public PHIEUTRA PHIEUTRA
+		{
+			get
+			{
+				return this._PHIEUTRA.Entity;
+			}
+			set
+			{
+				PHIEUTRA previousValue = this._PHIEUTRA.Entity;
+				if (((previousValue != value) 
+							|| (this._PHIEUTRA.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._PHIEUTRA.Entity = null;
+						previousValue.HOADONVIPHAMs.Remove(this);
+					}
+					this._PHIEUTRA.Entity = value;
+					if ((value != null))
+					{
+						value.HOADONVIPHAMs.Add(this);
+						this._MAPHIEUTRA = value.MAPHIEUTRA;
+					}
+					else
+					{
+						this._MAPHIEUTRA = default(int);
+					}
+					this.SendPropertyChanged("PHIEUTRA");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="NHANVIEN_HOADONVIPHAM", Storage="_NHANVIEN", ThisKey="MANHANVIEN", OtherKey="MANHANVIEN", IsForeignKey=true)]
+		public NHANVIEN NHANVIEN
+		{
+			get
+			{
+				return this._NHANVIEN.Entity;
+			}
+			set
+			{
+				NHANVIEN previousValue = this._NHANVIEN.Entity;
+				if (((previousValue != value) 
+							|| (this._NHANVIEN.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._NHANVIEN.Entity = null;
+						previousValue.HOADONVIPHAMs.Remove(this);
+					}
+					this._NHANVIEN.Entity = value;
+					if ((value != null))
+					{
+						value.HOADONVIPHAMs.Add(this);
+						this._MANHANVIEN = value.MANHANVIEN;
+					}
+					else
+					{
+						this._MANHANVIEN = default(int);
+					}
+					this.SendPropertyChanged("NHANVIEN");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="THETHUVIEN_HOADONVIPHAM", Storage="_THETHUVIEN", ThisKey="MATTV", OtherKey="MATTV", IsForeignKey=true)]
+		public THETHUVIEN THETHUVIEN
+		{
+			get
+			{
+				return this._THETHUVIEN.Entity;
+			}
+			set
+			{
+				THETHUVIEN previousValue = this._THETHUVIEN.Entity;
+				if (((previousValue != value) 
+							|| (this._THETHUVIEN.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._THETHUVIEN.Entity = null;
+						previousValue.HOADONVIPHAMs.Remove(this);
+					}
+					this._THETHUVIEN.Entity = value;
+					if ((value != null))
+					{
+						value.HOADONVIPHAMs.Add(this);
+						this._MATTV = value.MATTV;
+					}
+					else
+					{
+						this._MATTV = default(int);
+					}
+					this.SendPropertyChanged("THETHUVIEN");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
 		}
 	}
 }

@@ -20,6 +20,9 @@ using NPOI.XWPF.UserModel;
 using QL_ThuVien.DTO;
 using System.Web.Security;
 using NPOI.SS.Formula.Functions;
+using System.Text.RegularExpressions;
+using Microsoft.Office.Interop.Excel;
+using Org.BouncyCastle.Utilities;
 
 namespace QL_ThuVien.Controllers
 {
@@ -696,6 +699,7 @@ namespace QL_ThuVien.Controllers
             }
             var ticket = FormsAuthentication.Decrypt(cookie.Value);
             int manv = (int)_services.Db.TAIKHOANs.Where(x => x.TENDN == ticket.Name).First().MANHANVIEN;
+            int mattv = _services.Db.PHIEUMUONs.Where(x => x.MAPHIEUMUON == maphieumuon).First().MANSD;
             foreach (var item in list)
             {
                 if(item.MaViPham == -1)
@@ -707,6 +711,8 @@ namespace QL_ThuVien.Controllers
                     biViPham.Add(item);
                 }
             }
+            float tongtienvipham = 0;
+            string html = "";
             foreach (var item in biViPham)
             {
                 DateTime date = DateTime.Now;
@@ -718,8 +724,13 @@ namespace QL_ThuVien.Controllers
                 });
                 _services.Db.SubmitChanges();
                 PHIEUTRA pt_new = _services.Db.PHIEUTRAs.Where(x => x.MAPHIEUMUON == maphieumuon && x.NGAYTRATHAT == date).OrderByDescending(x => x.MAPHIEUTRA).FirstOrDefault();
-                if(pt_new != null)
+                if (pt_new != null)
                 {
+                    var vipham = _services.Db.VIPHAMs.Where(vp => vp.MAVIPHAM == item.MaViPham).First();
+                    float xulyvipham = float.Parse(vipham.XULYVIPHAM);
+                    var sach = _services.Db.BANSAOSACHes.Where(bs => bs.MABANSAO == item.MaBanSao).First();
+                    int giasach = _services.Db.SACHes.Where(x => x.MASACH == (sach.MASACH)).First().GIASACH;
+                    float tt = xulyvipham * giasach;
                     _services.Db.BIVIPHAMs.InsertOnSubmit(new BIVIPHAM
                     {
                         MAVIPHAM = item.MaViPham,
@@ -730,7 +741,26 @@ namespace QL_ThuVien.Controllers
                         MAPHIEUTRA = pt_new.MAPHIEUTRA,
                         MABANSAO = item.MaBanSao
                     });
+                    _services.Db.HOADONVIPHAMs.InsertOnSubmit(new HOADONVIPHAM
+                    {
+                        MAPHIEUTRA = pt_new.MAPHIEUTRA,
+                        MANHANVIEN = manv,
+                        MATTV = mattv,
+                        THANHTIEN = tt
+                    });
                     _services.Db.SubmitChanges();
+                    tongtienvipham += tt;
+                    html += string.Format(@"
+                            <tr>
+                                <td>{0}</td>
+                                <td>{1}</td>
+                                <td>{2}</td>
+                                <td>{3}</td>
+                                <td>{4}</td>
+                                <td>{5}</td>
+                            </tr>
+                        ", pt_new.MAPHIEUTRA, sach.MASACH, item.MaBanSao, item.TenSach, string.Format("{0:#,###}", tt).Replace(",", "."), vipham.TENVIPHAM);
+                    
                 }
             }
             bool newed = false;
@@ -774,6 +804,13 @@ namespace QL_ThuVien.Controllers
                     pm.NGAYTRA = pt.NGAYTRATHAT;
                     _services.Db.SubmitChanges();
                 }
+            }
+            if(!string.IsNullOrEmpty(html))
+            {
+                Session["HTMLHD"] = html;
+                Session["TTHD"] = tongtienvipham;
+                Session["MATTV"] = mattv;
+                return Redirect("/Book/HoaDon");
             }
             return Redirect("/Book/SendedBackBook");
         }
@@ -972,6 +1009,17 @@ namespace QL_ThuVien.Controllers
                               GiaThanhLy = (int)tl.DONGIA
                           }).OrderByDescending(x => x.MaSach).ToList();
             return View(saches);
+        }
+
+        public ActionResult HoaDon()
+        {
+            int mattv = int.Parse(Session["MATTV"].ToString());
+            var nd = _services.Db.THETHUVIENs.Where(x => x.MATTV == mattv).FirstOrDefault();
+            if(nd == null)
+            {
+                throw new Exception("Lỗi mã thư viện");
+            }
+            return View(nd);
         }
     }
 }

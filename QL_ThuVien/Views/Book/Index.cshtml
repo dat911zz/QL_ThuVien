@@ -4,6 +4,8 @@
     ViewBag.Title = "Sách";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
     bool isValidUser = QL_ThuVien.Intergrate.Services.Helper.SecurityHelper.HasPermission(HttpContext.Current);
+    var thembsSach = Session["ThemBanSaoSach"];
+    Session["ThemBanSaoSach"] = null;
 }
 <style>
     .dataTables_filter > label, .dataTables_length > label {
@@ -111,6 +113,9 @@
                                     <a class="btn btn-primary btn-edit m-l-0 px-075" href="/Book/Edit/@item.MaSach" title="Chỉnh sửa thông tin">
                                         <i class="fa fa-pencil" aria-hidden="true"></i>
                                     </a>
+                                    <a class="btn btn-primary btn-edit m-l-0 px-075 them-ban-sao" data-id="@item.MaSach" title="Thêm bản sao">
+                                        <i class="fa fa-plus-square" aria-hidden="true"></i>
+                                    </a>
                                     <a class="btn btn-danger btn-edit m-l-0 px-075 btn-liquidation-book" data-mas="@item.MaSach" data-dg="@item.GiaSach" title="Thanh Lý">
                                         <i class="fa fa-trash-o" aria-hidden="true"></i>
                                     </a>
@@ -131,6 +136,13 @@
 </body>
 <script>
     $(document).ready(function () {
+        if ('@Html.Raw(thembsSach)' != 'null' && '@Html.Raw(thembsSach)' != '') {
+            Swal.fire({
+                icon: 'success',
+                title: 'Thông Báo',
+                text: 'Thêm bản sao thành công'
+            });
+        }
         $(".btn-liquidation-book").click(function () {
             var mas = $(this).data('mas');
             var giaSach = $(this).data('dg');
@@ -170,6 +182,51 @@
                 `
             );
             addEventPopup();
+        });
+        $('.them-ban-sao').click(function () {
+            let masach = $(this).attr("data-id");
+            $('body').append(
+                `
+                    <div id="id-them-bs">
+                        <div style="position: fixed; top: 0; bottom: 0; left: 0; right: 0; z-index: 1000; background-color: rgba(0, 0, 0, 0.5); display:flex; align-items:center; justify-content:center;">
+                            <div class="content" style="background-color:white; width:60%; border-radius:10px; padding:20px 40px;">
+                                <div><h4 style="color:blue; text-transform: uppercase; text-align: center;">Thêm bản sao</h4></div>
+                                <div class="row">
+                                    <div class="col-4">Số lượng bản sao</div>
+                                    <div class="col-8">
+                                        <input class="form-control" type="number" min="1" max="1000000000" value="1" />
+                                    </div>
+                                </div>
+                                <div style="text-align: right; padding-right: 12px;"><div class="btn btn-primary">Thực hiện</div></div>
+                            </div>
+                        </div>
+                        <style>
+                            .content > div {
+                                margin: 10px 0;
+                            }
+                        </style>
+                    </div>
+                `
+            );
+            $('#id-them-bs').click(function () {
+                $(this).remove();
+            });
+            $('#id-them-bs .content').click(function (e) {
+                e.stopPropagation();
+            });
+            $('#id-them-bs .btn').click(function () {
+                let sl = $('#id-them-bs input').val();
+                if (sl == '') {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Cảnh Báo!',
+                        text: 'Số lượng không được bỏ trống'
+                    });
+                }
+                else {
+                    document.location = '/Book/ThemBanSaoSach?masach=' + masach + '&soluong=' + sl;
+                }
+            });
         });
     });
     function addEventPopup() {

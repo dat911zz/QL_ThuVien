@@ -23,6 +23,7 @@ using NPOI.SS.Formula.Functions;
 using System.Text.RegularExpressions;
 using Microsoft.Office.Interop.Excel;
 using Org.BouncyCastle.Utilities;
+using System.Reflection;
 
 namespace QL_ThuVien.Controllers
 {
@@ -148,6 +149,22 @@ namespace QL_ThuVien.Controllers
             }
             ModelState.AddModelError("", "Vui lòng điền đẩy đủ thông tin!");
             return View();
+        }
+        public ActionResult ThemBanSaoSach(int masach, int soluong)
+        {
+            SACH s = _services.Db.SACHes.Where(t => t.MASACH == masach).FirstOrDefault();
+            if (s != null)
+            {
+                for (int i = 0; i < soluong; i++)
+                {
+                    BANSAOSACH bss = new BANSAOSACH();
+                    bss.MASACH = s.MASACH;
+                    _services.Db.BANSAOSACHes.InsertOnSubmit(bss);
+                    _services.Db.SubmitChanges();
+                }
+            }
+            Session["ThemBanSaoSach"] = true;
+            return RedirectToAction("Index");
         }
         public ActionResult CreateFromFile()
         {

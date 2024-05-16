@@ -47,14 +47,11 @@ namespace QL_ThuVien.Intergrate.Services.Mailing
         /// <summary>
         /// Use for setup Smtp Client (Do not change this method!)
         /// </summary>
-        /// d2USih1asAJD
-        /// 3GsFUy4!e0!J
-        /// pO9uaDKs@45$
         /// <param name="smtp"></param>
         public void SetupSmtpClient(ref SmtpClient smtp)
         {
-            Username = "noreply.QLTV@gmail.com";
-            Password = "fpwqwihtowquhepv";//App password
+            Username = "Your-mail";
+            Password = "Password";//App password
             smtp.Host = "smtp.gmail.com";
             smtp.Port = 587;
             smtp.UseDefaultCredentials = true;

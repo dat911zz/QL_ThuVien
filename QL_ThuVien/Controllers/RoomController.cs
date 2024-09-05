@@ -39,8 +39,8 @@ namespace QL_ThuVien.Controllers
             double tLenght = hourUse;
             DateTime tEnd = tStart.AddHours(tLenght);
             return Content(JsonConvert.SerializeObject(_services.DbContext.Get<string>(String.Format("select * from F_TimPhongTrongTrongKhoangThoiGianAB ('{0}','{1}')",
-                tStart.GetDateTimeFormats()[42],
-                tEnd.GetDateTimeFormats()[42]
+                tStart.ToString("yyyy-MM-dd HH:mm:ss"),
+                tEnd.ToString("yyyy-MM-dd HH:mm:ss")
                 ))
             ));
         }
